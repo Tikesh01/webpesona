@@ -9,7 +9,6 @@ class website:
         self.size = "100%"
         self.admin = "templates/adminPanel.html"
         self.folder = "templates/"
-        self.allfolders = os.listdir('../webpersona/')
         self.extantion = ".html"
         self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) ]
         self.folders =  [page for page in os.listdir('templates/') if os.path.isdir('templates/'+page) ]
