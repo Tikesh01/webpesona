@@ -1,0 +1,90 @@
+/* Classy-Clean */
+:root {
+  --navbar: #1e1e2f;
+  --navbarText: #ffffff;
+  --brandname: #00bcd4;
+  --buttons: #6200ea;
+  --button-hover: #3700b3;
+  --main-bg: #f5f5f5;
+  --main-heading: #212121;
+  --main-subheading: #424242;
+  --main-text: #616161;
+  --childDivs-bg: #eeeeee;
+  --footer-bg: #121212;
+  --highlight: #ff5722;
+}
+/* Favourite */
+:root {
+  --navbar: linear-gradient(135deg, #141e30, #243b55);
+  --navbarText: #fdfdfd;
+  --brandname: linear-gradient(135deg, #c471f5, #fa71cd);
+  --buttons: linear-gradient(135deg, #667eea, #764ba2);
+  --button-hover: linear-gradient(135deg, #6a11cb, #2575fc);
+  --main-bg: linear-gradient(135deg, #ece9e6, #ffffff);
+  --main-heading: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
+  --main-subheading: linear-gradient(135deg, #ffecd2, #fcb69f);
+  --main-text: #2c3e50;
+  --childDivs-bg: linear-gradient(135deg, #dfe9f3, #ffffff);
+  --footer-bg: linear-gradient(135deg, #2c3e50, #4ca1af);
+  --highlight: linear-gradient(135deg, #fa709a, #fee140);
+}
+/* Simple */
+:root {
+  --navbar: #0f172a;
+  --navbarText: #f8fafc;
+  --brandname: #0ea5e9;
+  --buttons: #0ea5e9;
+  --button-hover: #06b6d4;
+  --main-bg: #1e293b;
+  --main-heading: #7c3aed;
+  --main-subheading: #22d3ee;
+  --main-text: #cbd5e1;
+  --childDivs-bg: #334155;
+  --footer-bg: #0f172a;
+  --highlight: #38bdf8;
+}
+/* Night-Gradient */
+:root {
+  --navbar: linear-gradient(135deg, #0f172a, #1e293b);
+  --navbarText: #f8fafc;
+  --brandname: linear-gradient(135deg, #17dff1, #7a1d59);
+  --buttons: linear-gradient(135deg, #0ea5e9, #06b6d4);
+  --button-hover: linear-gradient(135deg, #06b6d4, #22d3ee);
+  --main-bg: linear-gradient(135deg, #1e293b, #334155);
+  --main-heading: linear-gradient(135deg, #7c3aed, #8b5cf6);
+  --main-subheading: linear-gradient(135deg, #22d3ee, #67e8f9);
+  --main-text: #cbd5e1;
+  --childDivs-bg: linear-gradient(135deg, #334155, #475569);
+  --footer-bg: linear-gradient(135deg, #0f172a, #1e293b);
+  --highlight: linear-gradient(135deg, #38bdf8, #22d3ee);
+}
+/* Royal-Elegance */
+:root {
+  --navbar: #1a1a2e;                 /* Deep royal navy */
+  --navbarText: #f3f3f3;             /* Off-white text */
+  --brandname: #d4af37;              /* Royal gold */
+  --buttons: #4b0082;                /* Indigo */
+  --button-hover: #6a0dad;           /* Deep violet */
+  --main-bg: #f0f0f5;                /* Subtle soft gray */
+  --main-heading: #0f0f3d;           /* Dark rich blue */
+  --main-subheading: #2e2e60;        /* Muted royal tone */
+  --main-text: #4c4c66;              /* Soft gray-blue */
+  --childDivs-bg: #e6e6f0;           /* Very light royal lavender */
+  --footer-bg: #14142b;              /* Dark majestic footer */
+  --highlight: #c19a6b;              /* Antique gold */
+}
+/* Sunrise */
+:root {
+  --navbar: linear-gradient(135deg, #2c003e, #6a0572);
+  --navbarText: #fef9ff;
+  --brandname: linear-gradient(135deg, #ff6ec4, #7873f5);
+  --buttons: linear-gradient(135deg, #f953c6, #b91d73);
+  --button-hover: linear-gradient(135deg, #fc466b, #3f5efb);
+  --main-bg: linear-gradient(135deg, #1a1a2e, #16213e);
+  --main-heading: linear-gradient(135deg, #ff9a8b, #ff6a88, #ff99ac);
+  --main-subheading: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+  --main-text: #e0e0e0;
+  --childDivs-bg: linear-gradient(135deg, #2e1f47, #3a2a5e);
+  --footer-bg: linear-gradient(135deg, #12002f, #3c1053);
+  --highlight: linear-gradient(135deg, #ff6ec4, #7873f5);
+}

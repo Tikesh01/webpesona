@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="shortcut icon"
+			href="../../static/favicon/{{all['favicon'][0]}}"
+			type="image/x-icon"
+		/>
+		<link rel="stylesheet" href="../../static/root.css">
+		<link rel="stylesheet" href="../../static/index.css" />
+		<title>h</title>
+	</head>
+	{% if all['currentPage']== 'adminPanel.html' %}
+	<body contenteditable="True">
+		{% include "partials/header.html" %} {% include "partials/body.html" %} {%
+		include "partials/footer.html" %}
+	</body>
+	{% elif all['currentPage']!='adminPanel.html' %}
+	<body contenteditable="flase">
+		{% include "partials/header.html" %} {% include "partials/body.html" %} {%
+		include "partials/footer.html" %}
+	</body>
+    {% endif %}
+</html>

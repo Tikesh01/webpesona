@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="shortcut icon"
+			href="../static/favicon/{{all['favicon'][0]}}"
+			type="image/x-icon"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+		/>
+		<title>WebPersona-Admin Pannel</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+			}
+
+			body,
+			html {
+				height: 100%;
+				width: 100%;
+				background-color: #f5f5f5;
+			}
+
+			nav {
+				height: 60px;
+				background-color: #2c3e50;
+				text-align: center;
+				color: white;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+			}
+
+			nav h1 {
+				font-size: 1.5rem;
+			}
+
+			nav h1 i {
+				margin-right: 10px;
+				color: #3498db;
+			}
+
+			main {
+				display: grid;
+				grid-template-columns: 250px 1fr 250px;
+				gap: 10px;
+				padding: 5px;
+				height: calc(100% - 60px);
+			}
+
+			#web_containers,
+			#preview_container,
+			#feature_list {
+				background: white;
+				border-radius: 8px;
+				padding: 10px;
+				box-shadow: 0 2px 10px #0000000d;
+			}
+			#containers_list {
+				margin-top: 2em;
+				display: flex;
+				flex-direction: column;
+				gap: 15px;
+			}
+			#containers_list details {
+				margin-bottom: 10px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				padding: 10px;
+				transition: all 0.2s;
+			}
+
+			#containers_list details:hover {
+				border-color: #3498db;
+				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+			}
+
+			#containers_list summary {
+				cursor: pointer;
+				padding: 8px;
+				background-color: #f8f9fa;
+				border-radius: 4px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				transition: background-color 0.2s;
+			}
+
+			#containers_list summary:hover {
+				background-color: #e9ecef;
+			}
+
+			#preview_container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 10px;
+				padding: 0px;
+				width: 62.26em;
+			}
+
+			#preview_container h1 {
+				color: #2c3e50;
+				font-size: 1.8rem;
+			}
+
+			#preview_container #frameContainer {
+				height: 100vh;
+				max-width: 100%;
+				width: 99.5%;
+				overflow: auto;
+			}
+			#preview_container input {
+				padding: 0.4em 0.7em;
+				margin: 0.4em;
+				border-radius: 10px;
+				border: none;
+				background-color: #3498db;
+				color: aliceblue;
+			}
+
+			#feature_list {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+			}
+
+			#feature_list h1,
+			#web_containers h1 {
+				color: #2c3e50;
+				text-align: center;
+				font-size: 1.5rem;
+				margin-bottom: 10px;
+			}
+
+			#feature_list input {
+				width: 100%;
+				padding: 8px 12px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				font-size: 14px;
+				transition: border-color 0.2s;
+			}
+
+			#feature_list input:focus {
+				border-color: #3498db;
+				outline: none;
+			}
+
+			#feature_list button {
+				width: 100%;
+				padding: 8px 16px;
+				background-color: #3498db;
+				color: white;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+				transition: background-color 0.2s;
+				margin: 1em 0;
+			}
+
+			#feature_list button:hover {
+				background-color: #2980b9;
+			}
+			#feature_list #favicons_container {
+				width: 100%;
+				display: flex;
+				align-items: center;
+
+				/* background-color: #3498db; */
+				gap: 0.8em;
+
+				img {
+					max-height: 100%;
+					width: 20px;
+				}
+				p {
+					width: 42%;
+					max-width: 40%;
+					overflow: hidden;
+				}
+			}
+			#edit_favicon {
+				display: block;
+				width: 50%;
+				margin: 0.5em 0;
+				/* background-color: antiquewhite; */
+
+				label {
+					cursor: pointer;
+					color: #3498db;
+					transition: color 0.2s;
+					float: right;
+					margin: 0 0.5em;
+				}
+
+				label:hover {
+					color: #2980b9;
+				}
+				input {
+					display: none;
+				}
+			}
+			#color{
+				width: 100%;
+				form{
+					width: 100%;
+					display: flex;
+					align-items: center;
+					h4{
+						color: rgb(110, 2, 103);
+						border: 1px solid #3498db;
+						padding: 0.3em  0.5em;
+						border-radius: 5px;
+						margin: 1em 0.8em;
+						text-align: center;
+					}
+					button{
+						width: auto;
+						padding: 0.7em 1.2em;
+						border-radius: 15px;
+						background-color: #3498db;
+						color: #ddd;
+					}
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<nav>
+			<h1><i class="fas fa-home"></i>Control Panel</h1>
+		</nav>
+		<main>
+			<div id="web_containers">
+				<h1>Pages</h1>
+				<div id="containers_list">
+					{% for page in all['pages'] %}
+					<details id="favicons_container">
+						<summary>
+							{{page}}
+							<form
+								action="/delete-change-Favicon-page"
+								method="post"
+								enctype="multipart/form-data"
+								id="edit_favicon"
+							>
+								<label for="del{{page}}"
+									><i class="fas fa-trash-alt"></i
+								></label>
+								<input
+									type="submit"
+									id="del{{page}}"
+									name="delete_page"
+									value="{{page}}"
+								/>
+								<label for="view{{page}}"><i class="fas fa-eye"></i></label>
+								<input
+									type="submit"
+									id="view{{page}}"
+									name="preview_page"
+									value="{{page}}"
+								/>
+							</form>
+						</summary>
+					</details>
+					{% endfor %} {% for folder in all['folderDict'].keys() %}
+					<details>
+						<summary>{{folder}}</summary>
+						{% for page in all['folderDict'][folder] %}
+						<details
+							style="
+								width: 90%;
+								float: right;
+								border: none;
+								margin: 0;
+								padding: 0.5;
+							"
+						>
+							<summary>{{page}}</summary>
+						</details>
+						{% endfor %}
+					</details>
+					{% endfor %}
+				</div>
+			</div>
+			<div id="preview_container">
+				<h1>Your Website</h1>
+				<form
+					action="/frameSizeChange"
+					method="post"
+					enctype="multipart/form-data"
+				>
+					<input type="submit" value="100%" name="frame_size">
+					<input type="submit" value="320px" name="frame_size" />
+					<input type="submit" value="360px" name="frame_size" />
+					<input type="submit" value="390px" name="frame_size" />
+					<input type="submit" value="414px" name="frame_size" />
+					<input type="submit" value='480px' name="frame_size" />
+					<input type="submit" value="768px" name="frame_size" />
+					<input type="submit" value="820px" name="frame_size" />
+					<input type="submit" value="1024px" name="frame_size" />
+					<input type="submit" value="1280px" name="frame_size" />
+					<input type="submit" value="1440px" name="frame_size" />
+					<input type="submit" value="1536px" name="frame_size" />
+					<input type="submit" value="2560px" name="frame_size" />
+				</form>
+				<div id="frameContainer">
+					<iframe
+						src="{{all['previewPage']}}"
+						width="{{ all['size'] }}"
+						height="99.3%"
+						style="display: block; margin: auto"
+					></iframe>
+				</div>
+			</div>
+			<div id="feature_list">
+				<h1>Features</h1>
+				<div class="features">
+					<h3>Add New page</h3>
+					<form
+						action="/pageAddition"
+						method="post"
+						enctype="multipart/form-data"
+						style="margin-top: 1em"
+					>
+						<input
+							type="text"
+							name="fileName"
+							id="filName"
+							placeholder="Eg.  About, New etc."
+						/>
+						<button type="submit">Add</button>
+					</form>
+				</div>
+				<div class="features">
+					<h3>Add Favicon</h3>
+					<div style="max-height: 8em;overflow: auto;">
+						{% for icon in all['favicons'] %}
+						<div id="favicons_container">
+							<img src="../static/favicons/{{icon}}" alt="icon" />
+							<p>{{icon}}</p>
+							<form
+								action="/delete-change-Favicon-page"
+								method="post"
+								enctype="multipart/form-data"
+								id="edit_favicon"
+							>
+								<label for="del{{icon}}"
+									><i class="fas fa-trash-alt"></i
+								></label>
+								<input
+									type="submit"
+									id="del{{icon}}"
+									name="delete_favicon"
+									value="{{icon}}"
+								/>
+								<label for="ch{{icon}}"
+									><i class="fas fa-plus-circle"></i
+								></label>
+								<input
+									type="submit"
+									id="ch{{icon}}"
+									name="change_favicon"
+									value="{{icon}}"
+								/>
+								<label for="logo{{icon}}"><i class="fas fa-plus"></i></label>
+								<input
+									type="submit"
+									id="logo{{icon}}"
+									name="change_logo"
+									value="{{icon}}"
+								/>
+							</form>
+						</div>
+						{% endfor %}
+					</div>
+					<form
+						action="/faviconAddition"
+						method="post"
+						enctype="multipart/form-data"
+					>
+						<input type="file" name="icon_path" id="Favicon" accept="image/*" />
+
+						<button type="submit">Add</button>
+					</form>
+				</div>
+				<div class="features" id="color">
+					<h3>Choose Color</h3>
+					<form action="/theme-rotate" method="post" enctype="multipart/form-data">
+						<button type="submit" name="change_theme" value="left" class="theme-btn">
+							<i class="fa fa-angle-left"></i>
+						</button>
+
+						<h4>{{ all['themes'][-15:][0].removesuffix('*/\n').removeprefix('/*') }}</h4>
+
+						<button type="submit" name="change_theme" value="right" class="theme-btn">
+							<i class="fas fa-angle-right"></i>
+						</button>
+					</form>
+				</div>
+			</div>
+		</main>
+	</body>
+</html>
+
