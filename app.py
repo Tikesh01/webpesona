@@ -97,6 +97,7 @@ w =website()
 @app.route('/')
 def interface():
     print(w.currentPage)
+    w.currentPage = "home.html"
     return render_template('home' + w.extantion, all=w.__dict__)
 
 @app.route('/admin')

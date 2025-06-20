@@ -82,7 +82,9 @@
 		font-size: 1em;
 		transition: transform 0.3s ease;
 	}
-
+	nav ul li details[open]{
+		background: var(--highlight);
+	}
 	nav ul li details[open] summary::after {
 		transform: rotate(180deg);
 	}
@@ -91,7 +93,7 @@
 		position: absolute;
 		top: 100%;
 		left: 0;
-		background: var(--navbar);
+		background: var(--main-bg);
 		backdrop-filter: blur(10px);
 		min-width: 200px;
 		padding: 1rem;
