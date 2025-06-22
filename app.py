@@ -128,7 +128,7 @@ def fuc3():
     size = request.form.get('frame_size')
     w.changeFrameSize(size)
     
-    return render_template("adminPanel.html", all=w.__dict__)
+    return redirect(url_for('admin'))
 
 @app.route('/delete-change-Favicon-page',methods=['POST'])
 def fuc4():
