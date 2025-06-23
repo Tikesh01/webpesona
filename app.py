@@ -18,7 +18,7 @@ class website:
         self.pages.remove('adminPanel.html')
         self.previewPage = "/"
         self.logo = os.listdir("static/logo/")
-        self.contentEditable = True
+        self.contentEditable = False
         self.currentPage="home.html"
         self.themes = self.theme()
 
@@ -97,12 +97,14 @@ w =website()
 @app.route('/')
 def interface():
     print(w.currentPage)
+    w.contentEditable = False
     w.currentPage = "home.html"
     return render_template('home' + w.extantion, all=w.__dict__)
 
 @app.route('/admin')
 def admin():
     w.currentPage = "adminPanel.html"
+    w.contentEditable = True
     print(w.currentPage)
     return render_template("adminPanel.html",  all=w.__dict__)
         
@@ -153,7 +155,7 @@ def fuc4():
     if pathTochangeLogo:
         w.changeLogo("static/favicons/"+pathTochangeLogo)
         
-    return render_template("adminPanel.html", all=w.__dict__)
+    return redirect(url_for('admin'))
 
 @app.route('/theme-rotate', methods=['POST'])
 def rotate_theme():
@@ -167,8 +169,15 @@ def rotate_theme():
 
 @app.route('/<name>')
 def render_page(name):
-    w.currentPage = name if name != "home.html" or name !="adminPanel.html" else redirect('/')
-    return render_template(f"{name}", all=w.__dict__)
+    if name != "home.html" or name !="adminPanel.html" :
+        w.currentPage = name 
+        return render_template(f"{name}", all=w.__dict__)
+    else:
+        if name=="home.html":
+            redirect(url_for(''))
+        else:
+            redirect(url_for('admin'))
+            
 
 if __name__ == "__main__":
     app.run(debug=True)

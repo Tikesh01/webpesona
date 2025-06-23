@@ -40,7 +40,8 @@
                 0% { transform: translateY(20px); opacity: 0; }
                 100% { transform: translateY(0); opacity: 1; }
             }
-             button{
+             
+            button{
                     background: var(--highlight);
                     margin: 1em 0;
                     padding: 0.8em 1em;
@@ -50,27 +51,23 @@
                     font-size: larger;
                     transition: 3s ease;
                     z-index: 3;
-                }
-                button:hover{
-                    background: var(--button-hover);
+            }
+            button:hover{
+                background: var(--button-hover);
             
-                }
-                body{
-                    width: 100%;
-                }
+            }
             #main-hero-section
             {
                 background: var(--navbar);
-                margin-top: 30px;
-                height: 100vh;
-                width: 99vw;
+                height: calc(100vh - 70px);
+                width: 100vw;
+                max-height: 150vh;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                
             }
             #hero-section {
-                z-index: 40;
                 padding: 2em;
                 width: auto;
                 height: auto;
@@ -89,14 +86,6 @@
                 left: 0;
                 right: 0;
                 bottom: 0;
-                /* background: linear-gradient(
-                    45deg,
-                    rgba(216, 112, 147, 0.229),
-                    rgba(213, 84, 105, 0.216)
-                ); */
-                background-size: 100% 100%;
-                animation: gradientBG 15s ease infinite;
-                border-radius: 38px;
             }
 
             #hero-section section {
@@ -111,7 +100,7 @@
             }
 
             #hero-section h1 {
-                font-size: 4em;
+                font-size: 3.5em;
                 text-align: center;
                 background: var(--brandname);
                 margin: 0;
@@ -136,7 +125,7 @@
             .hero-description {
                 font-size: 1.1em;
                 margin-top: 1.7em;
-                color: var(--main-text);
+                color: var(--navbarText);
                 max-width: 600px;
                 letter-spacing: 2px;
                 word-spacing: 0.35em;
@@ -231,7 +220,10 @@
                     width: 100vw;
                 }
                 #hero-section{
-                    max-width: 85%;
+                    max-width:   85%;
+                    h1{
+                        font-size: 3em ;
+                    }
                     section{
                         padding: 2em 7em;
                     }
@@ -345,11 +337,9 @@
             
         </style>
 	</head>
-	{% if all['currentPage']== 'adminPanel.html' %}
-	<body contenteditable="True">
-	{% else%}
-	<body contenteditable="flase">
-    {% endif %}
+	
+	<body contenteditable= "{{ all['contentEditable'] }}" >
+    <!-- <body contenteditable="True"> -->
 		{% include "partials/header.html" %} 
         <section id="main-hero-section">
             <section id="hero-section">

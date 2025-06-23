@@ -117,6 +117,10 @@
 				max-width: 100%;
 				width: 99.5%;
 				overflow: auto;
+				iframe{
+		
+				}
+				
 			}
 			#preview_container input {
 				padding: 0.4em 0.7em;
@@ -215,6 +219,7 @@
 					width: 100%;
 					display: flex;
 					align-items: center;
+					justify-content: space-between;
 					h4{
 						color: rgb(110, 2, 103);
 						border: 1px solid #3498db;
@@ -232,9 +237,15 @@
 					}
 				}
 			}
+			#CurrPage{
+				position: fixed;
+				top: 97%;
+				right: 1%;
+			}
 		</style>
 	</head>
 	<body>
+		<p id="CurrPage">{{ all['currentPage'] }}</p>
 		<nav>
 			<h1><i class="fas fa-home"></i>Control Panel</h1>
 		</nav>
