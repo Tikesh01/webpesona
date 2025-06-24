@@ -1,33 +1,3 @@
-/* Simple */
-:root {
-  --navbar: #0f172a;
-  --navbarText: #f8fafc;
-  --brandname: #0ea5e9;
-  --buttons: #0ea5e9;
-  --button-hover: #06b6d4;
-  --main-bg: #1e293b;
-  --main-heading: #7c3aed;
-  --main-subheading: #22d3ee;
-  --main-text: #cbd5e1;
-  --childDivs-bg: #334155;
-  --footer-bg: #0f172a;
-  --highlight: #38bdf8;
-}
-/* Night-Gradient */
-:root {
-  --navbar: linear-gradient(135deg, #0f172a, #1e293b);
-  --navbarText: #f8fafc;
-  --brandname: linear-gradient(135deg, #17dff1, #7a1d59);
-  --buttons: linear-gradient(135deg, #0ea5e9, #06b6d4);
-  --button-hover: linear-gradient(135deg, #06b6d4, #22d3ee);
-  --main-bg: linear-gradient(135deg, #1e293b, #334155);
-  --main-heading: linear-gradient(135deg, #7c3aed, #8b5cf6);
-  --main-subheading: linear-gradient(135deg, #22d3ee, #67e8f9);
-  --main-text: #cbd5e1;
-  --childDivs-bg: linear-gradient(135deg, #334155, #475569);
-  --footer-bg: linear-gradient(135deg, #0f172a, #1e293b);
-  --highlight: linear-gradient(135deg, #38bdf8, #22d3ee);
-}
 /* Royal-Elegance */
 :root {
   --navbar: #1a1a2e;                 /* Deep royal navy */
@@ -87,4 +57,34 @@
   --childDivs-bg: linear-gradient(135deg, #dfe9f3, #ffffff);
   --footer-bg: linear-gradient(135deg, #2c3e50, #4ca1af);
   --highlight: linear-gradient(135deg, #fa709a, #fee140);
+}
+/* Simple */
+:root {
+  --navbar: #0f172a;
+  --navbarText: #f8fafc;
+  --brandname: #0ea5e9;
+  --buttons: #0ea5e9;
+  --button-hover: #06b6d4;
+  --main-bg: #1e293b;
+  --main-heading: #7c3aed;
+  --main-subheading: #22d3ee;
+  --main-text: #cbd5e1;
+  --childDivs-bg: #334155;
+  --footer-bg: #0f172a;
+  --highlight: #38bdf8;
+}
+/* Night-Gradient */
+:root {
+  --navbar: linear-gradient(135deg, #0f172a, #1e293b);
+  --navbarText: #f8fafc;
+  --brandname: linear-gradient(135deg, #17dff1, #7a1d59);
+  --buttons: linear-gradient(135deg, #0ea5e9, #06b6d4);
+  --button-hover: linear-gradient(135deg, #06b6d4, #22d3ee);
+  --main-bg: linear-gradient(135deg, #1e293b, #334155);
+  --main-heading: linear-gradient(135deg, #7c3aed, #8b5cf6);
+  --main-subheading: linear-gradient(135deg, #22d3ee, #67e8f9);
+  --main-text: #cbd5e1;
+  --childDivs-bg: linear-gradient(135deg, #334155, #475569);
+  --footer-bg: linear-gradient(135deg, #0f172a, #1e293b);
+  --highlight: linear-gradient(135deg, #38bdf8, #22d3ee);
 }

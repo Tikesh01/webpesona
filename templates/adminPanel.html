@@ -209,6 +209,7 @@
 				label:hover {
 					color: #2980b9;
 				}
+				
 				input {
 					display: none;
 				}
@@ -237,15 +238,47 @@
 					}
 				}
 			}
-			#CurrPage{
-				position: fixed;
-				top: 97%;
-				right: 1%;
+	
+			#EditContent form.content_edit {
+				display: flex;
+				align-items: center;
+				box-shadow: 0 2px 8px #00000010;
+				border: 1px solid #e0e0e0;
+				border-radius: 10px;
+				padding: 1em 1em;
+				margin-top: 1em;
+				gap: 0.7em;
 			}
+			#EditContent input[type="checkbox"] {
+				width: 22px;
+				height: 22px;
+				accent-color: #3498db;
+				border-radius: 6px;
+				border: 1.5px solid #3498db;
+				margin-right: 0.5em;
+				transition: box-shadow 0.2s;
+				box-shadow: 0 1px 3px #00000010;
+			}
+			#EditContent label {
+				font-size: 1.1em;
+				color: #2c3e50;
+				font-weight: 500;
+				cursor: pointer;
+				letter-spacing: 0.5px;
+				transition: color 0.2s;
+			}
+			#EditContent input[type="checkbox"]:hover {
+				box-shadow: 0 0 0 2px #3498db33;
+			}
+			#EditContent label:hover {
+				color: #3498db;
+			}
+			
 		</style>
 	</head>
 	<body>
-		<p id="CurrPage">{{ all['currentPage'] }}</p>
+		<!-- <p id="CurrPage">{{ all['currentPage'] }}</p> -->
+		
 		<nav>
 			<h1><i class="fas fa-home"></i>Control Panel</h1>
 		</nav>
@@ -263,6 +296,7 @@
 								enctype="multipart/form-data"
 								id="edit_favicon"
 							>
+							{% if page != 'home.html' %}
 								<label for="del{{page}}"
 									><i class="fas fa-trash-alt"></i
 								></label>
@@ -272,6 +306,8 @@
 									name="delete_page"
 									value="{{page}}"
 								/>
+							{% else %}
+							{% endif %}
 								<label for="view{{page}}"><i class="fas fa-eye"></i></label>
 								<input
 									type="submit"
@@ -282,7 +318,8 @@
 							</form>
 						</summary>
 					</details>
-					{% endfor %} {% for folder in all['folderDict'].keys() %}
+					{% endfor %} 
+					{% for folder in all['folderDict'].keys() %}
 					<details>
 						<summary>{{folder}}</summary>
 						{% for page in all['folderDict'][folder] %}
@@ -352,7 +389,7 @@
 					</form>
 				</div>
 				<div class="features">
-					<h3>Add Favicon</h3>
+					<h3>Add Favicon/Logo</h3>
 					<div style="max-height: 8em;overflow: auto;">
 						{% for icon in all['favicons'] %}
 						<div id="favicons_container">
@@ -416,6 +453,19 @@
 							<i class="fas fa-angle-right"></i>
 						</button>
 					</form>
+				</div>
+				<div  class ="features" id="EditContent">
+					<h3>Make Content Editable</h3>
+					<form action="/Content-editable" method="post" enctype="multipart/form-data" class="content_edit">
+						{% if all['body_content_editable']==False %}
+						<input type="checkbox" name="contentEditable" id="Content_editable" onchange="this.form.submit()" />
+						{% else %}
+						<input type="checkbox" name="contentEditable" id="Content_editable" onchange="this.form.submit()" checked/>
+						{% endif %}
+						<label for="Content_editable">Content Editable</label>
+					</form>
+					<span style="font-size: xx-small; float: inline-end;">Off Before Leaving!</span>
+
 				</div>
 			</div>
 		</main>

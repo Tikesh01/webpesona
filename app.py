@@ -18,9 +18,9 @@ class website:
         self.pages.remove('adminPanel.html')
         self.previewPage = "/"
         self.logo = os.listdir("static/logo/")
-        self.contentEditable = False
         self.currentPage="home.html"
         self.themes = self.theme()
+        self.body_content_editable = False
 
     def theme(self):
         file = open("static/root.css", "r")
@@ -47,6 +47,12 @@ class website:
         self.themes = self.theme()
         return redirect('/admin')
     
+    def make_content_editabele(self):
+        if self.body_content_editable == False:
+            self.body_content_editable = True
+        else:
+            self.body_content_editable = False
+            
 
     def addPage(self, name):  
         # Create the page file if it doesn't exist
@@ -97,15 +103,15 @@ w =website()
 @app.route('/')
 def interface():
     print(w.currentPage)
-    w.contentEditable = False
-    w.currentPage = "home.html"
+    print(w.body_content_editable)
     return render_template('home' + w.extantion, all=w.__dict__)
 
 @app.route('/admin')
 def admin():
     w.currentPage = "adminPanel.html"
-    w.contentEditable = True
     print(w.currentPage)
+    print(w.body_content_editable)
+
     return render_template("adminPanel.html",  all=w.__dict__)
         
         
@@ -167,19 +173,27 @@ def rotate_theme():
 
     return redirect(url_for('admin')) 
 
+@app.route("/Content-editable", methods=["POST"])
+def fuc7():
+    w.make_content_editabele()
+    return render_template("adminPanel.html", all=w.__dict__)
+    
+
 @app.route('/<name>')
 def render_page(name):
-    if name != "home.html" or name !="adminPanel.html" :
+    if name not in ["home.html", "adminPanel.html"]:
         w.currentPage = name 
+        print("dynamic")
         return render_template(f"{name}", all=w.__dict__)
     else:
-        if name=="home.html":
-            redirect(url_for(''))
+        print("dynamic-n")
+        if name == "home.html":
+            return redirect(url_for('interface'))
         else:
-            redirect(url_for('admin'))
+            return redirect(url_for('admin'))
             
 
 if __name__ == "__main__":
     app.run(debug=True)
-    
-    
+
+

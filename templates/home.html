@@ -338,8 +338,7 @@
         </style>
 	</head>
 	
-	<body contenteditable= "{{ all['contentEditable'] }}" >
-    <!-- <body contenteditable="True"> -->
+	<body contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}">
 		{% include "partials/header.html" %} 
         <section id="main-hero-section">
             <section id="hero-section">
