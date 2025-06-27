@@ -338,9 +338,9 @@
         </style>
 	</head>
 	
-	<body contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}">
+	<body >
 		{% include "partials/header.html" %} 
-        <section id="main-hero-section">
+        <section id="main-hero-section" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}">
             <section id="hero-section">
                 <div class="floating-shapes">
                     <div class="shape"></div>

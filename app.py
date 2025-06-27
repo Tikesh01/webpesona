@@ -7,6 +7,7 @@ app = Flask(__name__)
 class website:
     def __init__(self):
         self.size = "100%"
+        self.sizes = ["100%",'320px','360px','390px','414px','480px','768px','820px','1024px','1280px','1440px','1536px','2560px']
         self.admin = "templates/adminPanel.html"
         self.folder = "templates/"
         self.extantion = ".html"
@@ -78,8 +79,15 @@ class website:
         print(self.favicons)
         
     def changeFrameSize(self,FrameSize):
-        self.size = FrameSize
-        print(self.size)
+        if FrameSize in self.sizes:
+            self.size = FrameSize
+            return 1
+            
+        fsize = str(FrameSize)+"px"
+        if fsize not in w.sizes and FrameSize>0:
+            self.sizes.append(fsize)
+            self.size = fsize
+            print(self.size)
         
     def deleteFile(self,path):
         os.remove(path) 
@@ -104,7 +112,7 @@ w =website()
 def interface():
     print(w.currentPage)
     print(w.body_content_editable)
-    return render_template('home' + w.extantion, all=w.__dict__)
+    return render_template('home' + w.extantion, all=w.__dict__ ,web=w)
 
 @app.route('/admin')
 def admin():
@@ -112,7 +120,7 @@ def admin():
     print(w.currentPage)
     print(w.body_content_editable)
 
-    return render_template("adminPanel.html",  all=w.__dict__)
+    return render_template("adminPanel.html",  all=w.__dict__,web=w)
         
         
 @app.route('/pageAddition', methods=['POST'])
@@ -154,9 +162,9 @@ def fuc4():
         w.deleteFile("templates/"+pathToDelPage)
     
     if pathForPreview:
-        print(w.previewPage)
+        print('last : ',w.previewPage)
         w.previewPage = pathForPreview
-        print(w.previewPage)
+        print('current : ',w.previewPage)
     
     if pathTochangeLogo:
         w.changeLogo("static/favicons/"+pathTochangeLogo)
@@ -176,14 +184,45 @@ def rotate_theme():
 @app.route("/Content-editable", methods=["POST"])
 def fuc7():
     w.make_content_editabele()
-    return render_template("adminPanel.html", all=w.__dict__)
+    return redirect(url_for('admin'))
     
+@app.route('/save-block-multi', methods=['POST'])
+def save_block_multi():
+    print('saving on')
+    data = request.get_json()
+    file = "partials/" + data.get("file")
+    block_id = data.get("block")
+    html = data.get("html")
+    print(data)
+    with open('templates/'+file, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    import re
+    # Replace inside the element with id=block_id
+    pattern = fr'(<[^>]*id=["\']{block_id}["\'][^>]*>)(.*?)(</[^>]+>)'
+    match = re.search(pattern, content, re.DOTALL)
+    if match:
+        print("✅ Match found")
+    else:
+        print("❌ No match")
+    updated = re.sub(pattern, r'\1' + html + r'\3', content, flags=re.DOTALL)
+
+    print(updated)
+    with open('templates/'+file, "w", encoding="utf-8") as f:
+        f.write(updated)
+
+    return redirect(url_for('admin'))
+
 
 @app.route('/<name>')
 def render_page(name):
     if name not in ["home.html", "adminPanel.html"]:
         w.currentPage = name 
         print("dynamic")
+        try:
+            return render_template(f"partials/{name}", all=w.__dict__)
+        except:
+            pass
         return render_template(f"{name}", all=w.__dict__)
     else:
         print("dynamic-n")

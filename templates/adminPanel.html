@@ -15,7 +15,7 @@
 		<title>WebPersona-Admin Pannel</title>
 		<style>
 			* {
-				margin: 0;
+				margin: 0; 
 				padding: 0;
 				box-sizing: border-box;
 				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -29,7 +29,7 @@
 			}
 
 			nav {
-				height: 60px;
+				height:50px;
 				background-color: #2c3e50;
 				text-align: center;
 				color: white;
@@ -49,11 +49,11 @@
 			}
 
 			main {
-				display: grid;
-				grid-template-columns: 250px 1fr 250px;
 				gap: 10px;
 				padding: 5px;
-				height: calc(100% - 60px);
+				height: 100vh;
+				width: 100%;
+				display: flex;
 			}
 
 			#web_containers,
@@ -64,17 +64,22 @@
 				padding: 10px;
 				box-shadow: 0 2px 10px #0000000d;
 			}
+			#web_containers{
+				height: 100%;
+				width: 250px;
+			}
 			#containers_list {
 				margin-top: 2em;
 				display: flex;
 				flex-direction: column;
-				gap: 15px;
+				gap: 10px;
+				
 			}
 			#containers_list details {
 				margin-bottom: 10px;
 				border: 1px solid #ddd;
 				border-radius: 4px;
-				padding: 10px;
+				padding: 7px;
 				transition: all 0.2s;
 			}
 
@@ -85,7 +90,8 @@
 
 			#containers_list summary {
 				cursor: pointer;
-				padding: 8px;
+				padding: 6px;
+				padding-right: 0;
 				background-color: #f8f9fa;
 				border-radius: 4px;
 				display: flex;
@@ -102,9 +108,10 @@
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				gap: 10px;
-				padding: 0px;
-				width: 62.26em;
+				height: 100vh;
+				width: calc(100% - 520px);
+				max-width: calc(100% - 520px);
+				padding: 0 1px;
 			}
 
 			#preview_container h1 {
@@ -113,19 +120,15 @@
 			}
 
 			#preview_container #frameContainer {
-				height: 100vh;
+				width: 100%;
+				height: 100%;
 				max-width: 100%;
-				width: 99.5%;
 				overflow: auto;
-				iframe{
-		
-				}
-				
 			}
-			#preview_container input {
-				padding: 0.4em 0.7em;
+			#preview_container input{
+				padding: 0.3em 0.6em;
 				margin: 0.4em;
-				border-radius: 10px;
+				border-radius: 20px;
 				border: none;
 				background-color: #3498db;
 				color: aliceblue;
@@ -135,8 +138,18 @@
 				display: flex;
 				flex-direction: column;
 				gap: 8px;
+				width: 250px;
+				height: 100%;
 			}
-
+			.features{
+				form{
+					display: flex;
+					flex-direction: row;
+					justify-content: center;
+					align-items: center;
+					gap: 10px;
+				}
+			}
 			#feature_list h1,
 			#web_containers h1 {
 				color: #2c3e50;
@@ -146,7 +159,7 @@
 			}
 
 			#feature_list input {
-				width: 100%;
+				width: 45%;
 				padding: 8px 12px;
 				border: 1px solid #ddd;
 				border-radius: 4px;
@@ -160,13 +173,13 @@
 			}
 
 			#feature_list button {
-				width: 100%;
-				padding: 8px 16px;
+				width: 45%;
+				padding: 9px 12px;
 				background-color: #3498db;
 				color: white;
 				border: none;
-				border-radius: 4px;
 				cursor: pointer;
+				border-radius: 20px;
 				transition: background-color 0.2s;
 				margin: 1em 0;
 			}
@@ -273,12 +286,81 @@
 			#EditContent label:hover {
 				color: #3498db;
 			}
-			
+			@media(max-width: 768px){
+				main{
+					display: block;
+				}
+				#web_containers{
+					width: 100%;
+					height: auto;
+					max-height: 20em;
+					margin-bottom: 10px;
+					#containers_list{
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						justify-content: space-between;
+						details{
+							width: 40%;
+						}
+					}
+				}
+				#preview_container{
+					float: inline-start;
+					width: calc(100% - 205px);
+					max-width: calc(100% - 205px);
+				}
+				#feature_list{
+					float: right;
+					width: 200px;
+					font-size: smaller;
+					input{
+						transform: scale(0.9);
+					}
+					button{
+						transform: scale(0.9);
+					}
+				}
+			}
+			#saveEditedButton{
+				background: yellowgreen;
+				padding: 0.7em 1.2em;
+				position: fixed;
+				top: 93%;
+				right: 19%;
+				border-radius: 20px;
+				border: none;
+				color:#2c3e50;
+				font-weight: bolder;
+				cursor: pointer;
+			}
 		</style>
+		<script>
+			function saveBlock(fileName, blockId, divId) {
+				const iframe = document.getElementById('Iframe');
+				const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+				const html = iframeDoc.getElementById(divId).innerHTML;
+				msg="Edition saved succesfully"
+				fetch('/save-block-multi', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+					file: fileName,
+					block: blockId,
+					html: html
+					})
+				})
+				.then(res => res.text())
+				.then(msg => alert(msg));
+			}
+		</script>
 	</head>
 	<body>
-		<!-- <p id="CurrPage">{{ all['currentPage'] }}</p> -->
-		
+		{{all['body_content_editable']}}
+		{% if all['body_content_editable'] %}
+		<button type="button" id="saveEditedButton"  onclick="saveBlock('{{web.previewPage}}', '{{web.previewPage}}', '{{web.previewPage}}')" >Save the edited</button>
+		{% else %}
+		{%endif%}
 		<nav>
 			<h1><i class="fas fa-home"></i>Control Panel</h1>
 		</nav>
@@ -326,13 +408,29 @@
 						<details
 							style="
 								width: 90%;
-								float: right;
+								float:inline-end;
 								border: none;
 								margin: 0;
 								padding: 0.5;
 							"
 						>
-							<summary>{{page}}</summary>
+							<summary>
+								{{page}}
+								<form
+									action="/delete-change-Favicon-page"
+									method="post"
+									enctype="multipart/form-data"
+									id="edit_favicon"
+								>
+									<label for="view{{page}}"><i class="fas fa-eye"></i></label>
+									<input
+										type="submit"
+										id="view{{page}}"
+										name="preview_page"
+										value="{{page}}"
+									/>
+								</form>
+							</summary>
 						</details>
 						{% endfor %}
 					</details>
@@ -345,27 +443,21 @@
 					action="/frameSizeChange"
 					method="post"
 					enctype="multipart/form-data"
-				>
-					<input type="submit" value="100%" name="frame_size">
-					<input type="submit" value="320px" name="frame_size" />
-					<input type="submit" value="360px" name="frame_size" />
-					<input type="submit" value="390px" name="frame_size" />
-					<input type="submit" value="414px" name="frame_size" />
-					<input type="submit" value='480px' name="frame_size" />
-					<input type="submit" value="768px" name="frame_size" />
-					<input type="submit" value="820px" name="frame_size" />
-					<input type="submit" value="1024px" name="frame_size" />
-					<input type="submit" value="1280px" name="frame_size" />
-					<input type="submit" value="1440px" name="frame_size" />
-					<input type="submit" value="1536px" name="frame_size" />
-					<input type="submit" value="2560px" name="frame_size" />
+				>	
+					{% for size in all['sizes'] %}
+					<input type="submit" value="{{ size }}" name="frame_size">
+					{% endfor %}
+					
+					<input type="number" name="frame_size" id="new_frame_size" style="background: #2c3e5020; width: 50px;" placeholder="912" />
+					<button type="submit"><i class="fas fa-add"></i></button >
 				</form>
 				<div id="frameContainer">
 					<iframe
-						src="{{all['previewPage']}}"
+						src="{{ all['previewPage']}}"
 						width="{{ all['size'] }}"
-						height="99.3%"
-						style="display: block; margin: auto"
+						height="100%"
+						style="display: block; margin: auto; border: none;"
+						id="Iframe"
 					></iframe>
 				</div>
 			</div>
@@ -464,11 +556,12 @@
 						{% endif %}
 						<label for="Content_editable">Content Editable</label>
 					</form>
-					<span style="font-size: xx-small; float: inline-end;">Off Before Leaving!</span>
+					{% if all['body_content_editable'] %} 
+					<span style="font-size: xx-small; float: inline-end; color:rgba(255, 0, 0, 0.71)"><i class="fas fa-info-circle"></i> Off Before Leaving!</span>
+					{% else %} {% endif %}
 
 				</div>
 			</div>
 		</main>
 	</body>
 </html>
-
