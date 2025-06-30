@@ -1,69 +1,9 @@
-<style>
-	#content {
-		min-height: calc(100vh - 140px);
-		padding: 2em;
-		background: var(--main-bg);
-		color: var(--main-text);
-	}
-	.content-wrapper {
-		max-width: 1200px;
-		margin: 0 auto;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-		gap: 2rem;
-		padding: 2rem;
-	}
-	.card {
-		background: var(--childDivs-bg);
-		border-radius: 15px;
-		padding: 2rem;
-		box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
-		backdrop-filter: blur(4px);
-		border: 1px solid rgba(255, 255, 255, 0.18);
-		transition: transform 0.3s ease, box-shadow 0.3s ease;
-	}
-	.card:hover {
-		transform: translateY(-5px);
-		box-shadow: 0 12px 40px rgba(31, 38, 135, 0.25);
-	}
-	h1 {
-		font-family: "Poppins", sans-serif;
-		color: var(--main-heading);
-		font-size: 2.5rem;
-		text-align: center;
-		margin-bottom: 2rem;
-		position: relative;
-	}
-	#content h1::after {
-		content: "";
-		position: absolute;
-		bottom: -10px;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 60px;
-		height: 3px;
-		background: linear-gradient(90deg, #3498db, #2ecc71);
-		border-radius: 3px;
-	}
-	@media (max-width: 768px) {
-		section {
-			padding: 1rem;
-		}
-		.content-wrapper {
-			grid-template-columns: 1fr;
-			padding: 1rem;
-		}
-		h1 {
-			font-size: 2rem;
-		}
-	}
-</style>
-
-<section id="content" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}">
+<section id="write_id" class="content" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}"><!--start-->
 	<div class="content-wrapper">
 		<div class="card">
 			<h1>Welcome to WebPersona</h1>
 			<p>Your dynamic web content goes here</p>
 		</div>
 	</div>
-</section>
+</section><!--Close-->
+{%endblock%}

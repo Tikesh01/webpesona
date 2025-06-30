@@ -3,6 +3,7 @@
 		font-family: "Poppins", sans-serif;
 		margin: 0;
 		padding: 0;
+		width: 100%;
 	}
 	footer {
 		background: var(--footer-bg);
@@ -73,7 +74,7 @@
 </style>
 
 <footer>
-	<div class="footer-content" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}">
+	<div class="footer-content" contenteditable="{{ 'true' if all['body_content_editable'] and all['previewPage']=='footer.html' else 'false' }}">
 		<p>&copy; 2025 WebPersona. All rights reserved.</p>
 		<div class="social-links">
 			<a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>

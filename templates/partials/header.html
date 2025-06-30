@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-<link rel="stylesheet" href="../../static/partials/header.css">
-<link rel="stylesheet" href="../../static/root.css">
+<link rel="stylesheet" href="../../static/partials/header.css" />
+<link rel="stylesheet" href="../../static/root.css" />
 <link rel="stylesheet" href="../../static/index.css" />
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
@@ -54,32 +54,31 @@
 		});
 	});
 </script>
-<header id="header.html" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}" >
-	<div class="extraUp">
-		<i class="fas fa-pen-fancy" style="margin: 0.5em 0; "></i>
-	</div>
+<style>
+	.vis {
+		margin: 0.5em 0;
+	}
+	.non-vis {
+		display: none;
+	}
+</style>
+<header id="header.html" contenteditable="{{ 'true' if all['body_content_editable'] and all['previewPage']=='hrader.html' else 'false' }}" ><!--start-->
+	<div class="extraUp"></div>
 	<nav>
 		<div class="nav-brand">
-			<img
-				src="../../static/logo/{{all['logo'][0]}}"
-				alt="webpersona"
-				id="Logo"
-				contenteditable="False"
-			/>
+			<!--NO--><img src="../../static/logo/{{all['logo'][0]}}" alt="webpersona" id="Logo" contenteditable="False">
 			<h1>WEBPERSONA</h1>
 		</div>
-
-		<button class="hamburger" type="button">
+		<button class="hamburger" type="button" contenteditable="False">
 			<span></span>
-			<span></span>
+			<span></span> 
 			<span></span>
 		</button>
-
 		<ul type="none">
 			<li>
 				<details>
 					<summary>About</summary>
-					<div></div>
+					<div>Write Your Own</div>
 				</details>
 			</li>
 			<li>
@@ -94,18 +93,13 @@
 					<div>hiii</div>
 				</details>
 			</li>
-			{% if all['currentPage'] != 'home.html'%}
-			<li contenteditable="false"><a href="">Home</a></li>
-			{% else %} {% endif %}
+			<!--NO--><li contenteditable="false" class="{{'showHome' if all['currentPage'] != 'home.html' else 'non-vis' }}">
+				<a href="">Home</a>
+			</li>
 			<button>Login</button>
 			<button>Sign Up</button>
 		</ul>
-		<div id="buttons">
-			<button>Login</button>
-			<button>Sign Up</button>
-		</div>
+		<div id="buttons"><button>Login</button> <button>Sign Up</button></div>
 	</nav>
-	<div class="extraDown">
-		<i class="fas fa-pen-fancy" contenteditable="false" style="margin: 0.5em 0;"></i>
-	</div>
-</header>
+	<div class="extraDown"></i></div>
+</header><!--Close-->

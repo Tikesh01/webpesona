@@ -6,24 +6,51 @@ header {
     left: 0;
     z-index: 1000;
     background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.07);
 }
 
 .extraDown,
 .extraUp {
+    width: 100%;
+    min-height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: small;
-    
+    font-size: 1.08em;
+    font-family: 'Great Vibes', cursive;
+    letter-spacing: 1.2px;
+    padding: 0.3em 0.7em;
+    border: none;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
+    transition: background 0.3s, color 0.3s;
 }
 
 .extraUp {
-    background: var(--navbar);
+    background: linear-gradient(90deg, var(--navbar) 80%, var(--highlight) 100%);
     color: var(--main-text);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+    font-weight: 500;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.04);
 }
 
 .extraDown {
-    background: var(--highlight);
+    background: linear-gradient(90deg, var(--highlight) 80%, var(--navbar) 100%);
+    color: var(--navbarText);
+    border-top: 1px solid rgba(255, 255, 255, 0.13);
+    font-weight: 500;
+    border-radius: 18px 18px 0 0;
+    box-shadow: 0 -2px 8px rgba(44, 62, 80, 0.04);
+}
+
+.extraUp i,
+.extraDown i {
+    margin-right: 0.5em;
+    font-size: 1.1em;
+    color: var(--brandname);
 }
 
 nav {
@@ -39,7 +66,7 @@ nav {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     transition: all 0.3s ease;
     position: relative;
-    font-size: 0.89em;
+    font-size: 0.82em;
 }
 
 .nav-brand {
@@ -62,7 +89,7 @@ nav img:hover {
 nav ul {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -112,10 +139,10 @@ nav ul li details[open] summary::after {
 nav ul li details div {
     position: absolute;
     top: 100%;
-    left: 0;
+    left: -80%;
     background: var(--main-bg);
     backdrop-filter: blur(10px);
-    min-width: 200px;
+    min-width: 400px;
     padding: 1rem;
     color: var(--main-text);
     border-radius: 8px;
@@ -411,4 +438,14 @@ nav h1 {
     nav h1 {
         font-size: 2rem;
     }
+}
+
+.extraUp:empty,
+.extraDown:empty {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
 }

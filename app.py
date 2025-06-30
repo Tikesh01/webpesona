@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request,redirect, url_for
-import os
-import shutil
+import re, os, shutil
+from jinja2 import Environment
 
 app = Flask(__name__)
-
+app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 class website:
     def __init__(self):
         self.size = "100%"
@@ -12,14 +12,15 @@ class website:
         self.folder = "templates/"
         self.extantion = ".html"
         self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) ]
+        self.unremovablePages = ['Home.html']
+        self.unviewPages = ['adminPanel.html','skeleton.html','Base.html']
         self.folders =  [page for page in os.listdir('templates/') if os.path.isdir('templates/'+page) ]
         self.folderDict = {folder : os.listdir("templates/"+folder) for folder in self.folders}
         self.favicons = os.listdir("static/favicons/")
         self.favicon = os.listdir("static/favicon/")
-        self.pages.remove('adminPanel.html')
         self.previewPage = "/"
         self.logo = os.listdir("static/logo/")
-        self.currentPage="home.html"
+        self.currentPage="Home.html"
         self.themes = self.theme()
         self.body_content_editable = False
 
@@ -55,15 +56,30 @@ class website:
             self.body_content_editable = False
             
 
-    def addPage(self, name):  
+    def addPage(self, name, title,HTML):  
         # Create the page file if it doesn't exist
+       
         file_path = self.folder + name + self.extantion
         if not os.path.exists(file_path):
-            with open("templates/partials/skeleton.html", "r") as skeleton:
-                with open(file_path, "w") as file:
-                    file.write(skeleton.read())        
-        self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) ]
-        self.pages.remove('adminPanel.html')
+            with open("templates/Base.html", "r") as base:
+                baseF = base.readlines()
+                for i,line in enumerate(baseF):
+                    if "<!--title-->" in line:
+                        baseF[i] = baseF[i].replace("<!--title-->",title) 
+                        break
+            with open('templates/partials/body.html','r') as body:
+                bodyF = body.readlines()
+                for i,line in enumerate(bodyF):
+                    if 'write_id' in line:
+                        bodyF[i] = bodyF[i].replace('write_id', name+'.html')
+                        break
+            with open(file_path,'w') as file:
+                if HTML:
+                    file.write(str(baseF)+HTML)
+                else:
+                    file.writelines(baseF+bodyF)
+                      
+        self.pages = [page for page in os.listdir(self.folder) if not os.path.isdir(self.folder+page) ]
         
     def addFavicon(self,icon_path):
         if len(self.favicon) < 1:
@@ -107,7 +123,7 @@ class website:
         self.favicons = os.listdir("static/favicons")
         
 w =website()
-        
+print(w.folderDict)
 @app.route('/')
 def interface():
     print(w.currentPage)
@@ -126,7 +142,9 @@ def admin():
 @app.route('/pageAddition', methods=['POST'])
 def fuc():
     name = request.form.get("fileName")
-    w.addPage(name=name)
+    title = request.form.get('title')
+    HTML = request.form.get('ownHtml')
+    w.addPage(name,title,HTML)
     return render_template("adminPanel.html", all=w.__dict__)
     
 @app.route('/faviconAddition', methods =['POST'])
@@ -190,33 +208,108 @@ def fuc7():
 def save_block_multi():
     print('saving on')
     data = request.get_json()
-    file = "partials/" + data.get("file")
+    file = data.get("file")
+    if data.get('file') in w.folderDict['partials']:
+        file = "partials/" + file
+
     block_id = data.get("block")
     html = data.get("html")
-    print(data)
+    print(html)
+    if html[0] == '':
+        html.pop(0)
+    if html[len(html)-1]=='':
+        html.pop(len(html)-1)
+    print(html)
     with open('templates/'+file, "r", encoding="utf-8") as f:
-        content = f.read()
+        content = f.readlines()
+        
+    pattern = fr'(<[^>]+id=["\']{block_id}["\'][^>]*>)'
 
-    import re
-    # Replace inside the element with id=block_id
-    pattern = fr'(<[^>]*id=["\']{block_id}["\'][^>]*>)(.*?)(</[^>]+>)'
-    match = re.search(pattern, content, re.DOTALL)
-    if match:
-        print("✅ Match found")
-    else:
-        print("❌ No match")
-    updated = re.sub(pattern, r'\1' + html + r'\3', content, flags=re.DOTALL)
+    # 1. Find start of block 
+    start_idx = None
+    for i, line in enumerate(content):
+        if re.match(pattern, line) or "<!--start-->" in line:
+            start_idx = i
+            break
 
-    print(updated)
-    with open('templates/'+file, "w", encoding="utf-8") as f:
-        f.write(updated)
+    if start_idx is None:
+        raise ValueError("Start tag not found")
+    
+    # 2. Find end of block
+    end_idx = None
+    for i in range(len(content)-1,1,-1):
+        if '<!--Close-->' in content[i]:
+            end_idx = i
+            break
+
+    if end_idx is None:
+        raise ValueError("Closing tag not found")
+
+    # 3. Prepare prefix and suffix
+    prefix = content[:start_idx + 1]
+    suffix = content[end_idx:]
+
+    # 4. Extract block to replace
+    oldblock = content[start_idx + 1:end_idx]
+
+    # 5. Replace line-by-line
+    new = []
+    jinja_pattern = r'{[{%#].*?[}%]}'  # Matches all Jinja tag types
+
+    for a, line in enumerate(oldblock):
+        if a >= len(html):
+            break
+
+        updated_line = html[a]
+
+        if "<!--NO-->" in line:
+            new.append(line)  # Preserve line
+        elif re.search(jinja_pattern, line.strip()):
+            jinja_match = re.search(jinja_pattern, line)
+            if jinja_match:
+                preserved = jinja_match.group()
+                # inject Jinja back into updated line
+                rebuilt = ''
+                i = 0
+                once = True
+                for l in updated_line:
+                    if line[i] != '{':
+                        rebuilt +=  l
+                    elif line[i] == '{' and once==True:
+                        rebuilt += line[line.find('{'):line.rfind('}')+1]
+                        g = line.rfind('}')-line.find('{')
+                        # i = i+g
+                        once = False
+                    i=i+1
+                
+                half_1 = rebuilt[:rebuilt.rfind('}')+1]
+                half_2 = rebuilt[rebuilt.rfind('}')+1:]
+            
+                for t in half_2:
+                    if t == '"':
+                        break
+                    elif t != '"':
+                        half_2 = half_2.removeprefix(t)
+
+                rebuilt = half_1+half_2
+                new.append(rebuilt)        
+                
+            else:
+                new.append(updated_line)        
+        else:
+            new.append(updated_line)
+            
+    final = prefix+new+suffix
+    
+    with open('templates/'+file, 'w',encoding='utf-8') as f:
+        f.writelines(final)
 
     return redirect(url_for('admin'))
 
 
 @app.route('/<name>')
 def render_page(name):
-    if name not in ["home.html", "adminPanel.html"]:
+    if name not in ["Home.html", "adminPanel.html"]:
         w.currentPage = name 
         print("dynamic")
         try:
@@ -226,7 +319,7 @@ def render_page(name):
         return render_template(f"{name}", all=w.__dict__)
     else:
         print("dynamic-n")
-        if name == "home.html":
+        if name == "Home.html":
             return redirect(url_for('interface'))
         else:
             return redirect(url_for('admin'))
