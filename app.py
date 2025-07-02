@@ -23,11 +23,26 @@ class website:
         self.currentPage="Home.html"
         self.themes = self.theme()
         self.body_content_editable = False
+        self.debugMode = False
+        self.previewPageHtml = self.readSourceCode()
 
     def theme(self):
         file = open("static/root.css", "r")
         return file.readlines()
             
+    def readSourceCode(self):
+        page = self.previewPage
+        if page == '/':
+            return ["Select a Page!"]
+        if page in self.folderDict['partials']:
+            page = 'partials/'+page
+            
+        page = self.folder+page
+
+        with open(page,'r',encoding='utf-8') as f:
+            code = f.readlines()
+        return code
+        
     def changeTheme(self, direction):
         with open("static/root.css", "r") as file:
             lines = file.readlines()
@@ -121,6 +136,95 @@ class website:
             shutil.copy(path,"static/logo/")
         self.logo = os.listdir("static/logo/")
         self.favicons = os.listdir("static/favicons")
+    
+    def edit_content(file,block_id,html):
+        if html[0] == '':
+            html.pop(0)
+        if html[len(html)-1]=='':
+            html.pop(len(html)-1)
+        with open('templates/'+file, "r", encoding="utf-8") as f:
+            content = f.readlines()
+            
+        pattern = fr'(<[^>]+id=["\']{block_id}["\'][^>]*>)'
+
+        # 1. Find start of block 
+        start_idx = None
+        for i, line in enumerate(content):
+            if re.match(pattern, line) or "<!--start-->" in line:
+                start_idx = i
+                break
+
+        if start_idx is None:
+            raise ValueError("Start tag not found")
+        
+        # 2. Find end of block
+        end_idx = None
+        for i in range(len(content)-1,1,-1):
+            if '<!--Close-->' in content[i]:
+                end_idx = i
+                break
+
+        if end_idx is None:
+            raise ValueError("Closing tag not found")
+
+        # 3. Prepare prefix and suffix
+        prefix = content[:start_idx + 1]
+        suffix = content[end_idx:]
+
+        # 4. Extract block to replace
+        oldblock = content[start_idx + 1:end_idx]
+
+        # 5. Replace line-by-line
+        new = []
+        jinja_pattern = r'{[{%#].*?[}%]}'  # Matches all Jinja tag types
+
+        for a, line in enumerate(oldblock):
+            if a >= len(html):
+                break
+
+            updated_line = html[a]
+
+            if "<!--NO-->" in line:
+                new.append(line)  # Preserve line
+            elif re.search(jinja_pattern, line.strip()):
+                jinja_match = re.search(jinja_pattern, line)
+                if jinja_match:
+                    preserved = jinja_match.group()
+                    # inject Jinja back into updated line
+                    rebuilt = ''
+                    i = 0
+                    once = True
+                    for l in updated_line:
+                        if line[i] != '{':
+                            rebuilt +=  l
+                        elif line[i] == '{' and once==True:
+                            rebuilt += line[line.find('{'):line.rfind('}')+1]
+                            g = line.rfind('}')-line.find('{')
+                            # i = i+g
+                            once = False
+                        i=i+1
+                    
+                    half_1 = rebuilt[:rebuilt.rfind('}')+1]
+                    half_2 = rebuilt[rebuilt.rfind('}')+1:]
+                
+                    for t in half_2:
+                        if t == '"':
+                            break
+                        elif t != '"':
+                            half_2 = half_2.removeprefix(t)
+
+                    rebuilt = half_1+half_2
+                    new.append(rebuilt)        
+                    
+                else:
+                    new.append(updated_line)        
+            else:
+                new.append(updated_line)
+                
+        final = prefix+new+suffix
+        
+        with open('templates/'+file, 'w',encoding='utf-8') as f:
+            f.writelines(final)
         
 w =website()
 print(w.folderDict)
@@ -203,6 +307,12 @@ def rotate_theme():
 def fuc7():
     w.make_content_editabele()
     return redirect(url_for('admin'))
+
+@app.route('/Debug-mode', methods=['POST'])
+def debug_mode_change():
+    w.debugMode = True if w.debugMode==False else False
+    w.previewPageHtml = w.readSourceCode()
+    return redirect(url_for('admin'))
     
 @app.route('/save-block-multi', methods=['POST'])
 def save_block_multi():
@@ -214,95 +324,7 @@ def save_block_multi():
 
     block_id = data.get("block")
     html = data.get("html")
-    print(html)
-    if html[0] == '':
-        html.pop(0)
-    if html[len(html)-1]=='':
-        html.pop(len(html)-1)
-    print(html)
-    with open('templates/'+file, "r", encoding="utf-8") as f:
-        content = f.readlines()
-        
-    pattern = fr'(<[^>]+id=["\']{block_id}["\'][^>]*>)'
-
-    # 1. Find start of block 
-    start_idx = None
-    for i, line in enumerate(content):
-        if re.match(pattern, line) or "<!--start-->" in line:
-            start_idx = i
-            break
-
-    if start_idx is None:
-        raise ValueError("Start tag not found")
-    
-    # 2. Find end of block
-    end_idx = None
-    for i in range(len(content)-1,1,-1):
-        if '<!--Close-->' in content[i]:
-            end_idx = i
-            break
-
-    if end_idx is None:
-        raise ValueError("Closing tag not found")
-
-    # 3. Prepare prefix and suffix
-    prefix = content[:start_idx + 1]
-    suffix = content[end_idx:]
-
-    # 4. Extract block to replace
-    oldblock = content[start_idx + 1:end_idx]
-
-    # 5. Replace line-by-line
-    new = []
-    jinja_pattern = r'{[{%#].*?[}%]}'  # Matches all Jinja tag types
-
-    for a, line in enumerate(oldblock):
-        if a >= len(html):
-            break
-
-        updated_line = html[a]
-
-        if "<!--NO-->" in line:
-            new.append(line)  # Preserve line
-        elif re.search(jinja_pattern, line.strip()):
-            jinja_match = re.search(jinja_pattern, line)
-            if jinja_match:
-                preserved = jinja_match.group()
-                # inject Jinja back into updated line
-                rebuilt = ''
-                i = 0
-                once = True
-                for l in updated_line:
-                    if line[i] != '{':
-                        rebuilt +=  l
-                    elif line[i] == '{' and once==True:
-                        rebuilt += line[line.find('{'):line.rfind('}')+1]
-                        g = line.rfind('}')-line.find('{')
-                        # i = i+g
-                        once = False
-                    i=i+1
-                
-                half_1 = rebuilt[:rebuilt.rfind('}')+1]
-                half_2 = rebuilt[rebuilt.rfind('}')+1:]
-            
-                for t in half_2:
-                    if t == '"':
-                        break
-                    elif t != '"':
-                        half_2 = half_2.removeprefix(t)
-
-                rebuilt = half_1+half_2
-                new.append(rebuilt)        
-                
-            else:
-                new.append(updated_line)        
-        else:
-            new.append(updated_line)
-            
-    final = prefix+new+suffix
-    
-    with open('templates/'+file, 'w',encoding='utf-8') as f:
-        f.writelines(final)
+    w.edit_content(file,block_id,html)
 
     return redirect(url_for('admin'))
 

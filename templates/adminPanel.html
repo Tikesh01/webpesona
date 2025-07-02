@@ -32,6 +32,24 @@
 				.then(res => res.text())
 				.then(msg => alert('Succesfull Saved to '+fileName));
 			}
+
+			function showCode(file,checkboxId,divId){
+				const checkbox = document.getElementById(checkboxId);
+				const container = document.getElementById(divId);
+				const iframe = document.getElementById('Iframe');
+				const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+				const html = iframeDoc.getElementById(divId).innerHTML
+				etch('/save-block-multi', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+					file: fileName,
+					block: blockId,
+					html: html
+					})
+				})
+				alert(file, "Debug Mode On")
+			}
 		</script>
 	</head>
 	<body>
@@ -45,9 +63,21 @@
 				<li>FAQs</li>
 				<li>Help</li>
 				<li>Contect</li>
-				<li><form action="" method="post">
-					<input type="checkbox" name="debugMode" id="debugging"><label for="debugging">Debug Mode</label>
-				</form></li>
+				
+				<li>
+					<form action="/Debug-mode" method="POST" id="debugModeForm">
+						{% if web.previewPage != '/' %}
+							{% if web.debugMode %}
+							<input type="checkbox" name="debugMode" id="debugging" onchange="this.form.submit()" checked />
+							{%else%}
+							<input type="checkbox" name="debugMode" id="debugging"  onchange="this.form.submit()" />
+							{%endif%}
+						{% else %}
+							<input type="checkbox" name="debugMode" id="debugging" disabled >
+						{%endif%}
+						<label for="debugging">Debug Mode</label>
+					</form>
+				</li>
 			</ul>
 		</nav>
 		<main>
@@ -56,8 +86,8 @@
 				<div id="containers_list">
 					{% for page in all['pages'] %}
 					{% if page not in all['unviewPages'] %} 
-					<details id="favicons_container">
-						<summary>
+					<details id="favicons_container" class="{{'highlight' if page==all['previewPage'] else 'none'}}">
+						<summary >
 							{{page.removesuffix('.html')}} 
 							<form
 								action="/delete-change-Favicon-page"
@@ -66,7 +96,7 @@
 								id="edit_favicon"
 							>
 							{% if page not in all['unremovablePages'] %}
-								<label for="del{{page}}"
+								<label for="del{{page}}" title="Delete the Page"
 									><i class="fas fa-trash-alt"></i
 								></label>
 								<input
@@ -77,7 +107,7 @@
 								/>
 							{% else %}
 							{% endif %}
-								<label for="view{{page}}"><i class="fas fa-eye"></i></label>
+								<label for="view{{page}}" title="Preview Page"><i class="fas fa-eye"></i></label>
 								<input
 									type="submit"
 									id="view{{page}}"
@@ -102,7 +132,7 @@
 								border: none;
 								margin: 0;
 								padding: 0.5;
-							"
+							" class="{{'highlight' if page==all['previewPage'] else 'none'}}"
 						>
 							<summary>
 								{{page.removesuffix('.html')}}
@@ -142,6 +172,14 @@
 					<button type="submit"><i class="fas fa-add"></i></button >
 				</form>
 				<div id="frameContainer">
+					{% if web.debugMode %}
+					<div id="codeContainer">
+						{% for i in all['previewPageHtml'] %}
+							{{i}}
+							<br>
+						{%endfor%}
+					</div>
+					{%else%}
 					<iframe
 						src="{{ all['previewPage']}}"
 						width="{{ all['size'] }}"
@@ -149,12 +187,13 @@
 						style="display: block; margin: auto; border: none;"
 						id="Iframe"
 					></iframe>
+					{%endif%}
 				</div>
 			</div>
 			<div id="feature_list">
 				<h1>Features</h1>
 				<div class="features" id="addPage">
-					<h3>Add New page</h3>
+					<h3><i class="fas fa-file-alt" title="Add New Page"></i>Add New page</h3>
 					<form
 						action="/pageAddition"
 						method="post"
@@ -163,13 +202,21 @@
 					>
 						<input type="text" name="fileName" id="filName" placeholder="Page name" required/>
 						<input type="text" name="title" id="fileTitle" placeholder="Page title" required/>
-						<textarea name="ownHtml" id="htmlInp" cols="30" rows="3" placeholder="If You have your own Html structure, put here after reading the instructions"></textarea>
+						<textarea name="ownHtml" id="htmlInp" cols="31" rows="3" placeholder="If You have your own Html structure, put here after reading the instructions"></textarea>
+						<select name="pageType" id="pageType" placeholder="Page Type" >
+							<option value="None" selected >Page Type</option>
+							<option value="">Forms</option>
+							<option value="">Mini</option>
+							<option value="">Blog container</option>
+						</select>
+						<div id="addPageButtons">
 						<button type="reset">reset</button>
 						<button type="submit">Add</button>
+						</div>
 					</form>
 				</div>
 				<div class="features">
-					<h3>Add Favicon/Logo</h3>
+					<h3><i class="fas fa-star" title="Add Logo / Favicon"></i>Add Favicon/Logo</h3>
 					<div style="max-height: 8em;overflow: auto;">
 						{% for icon in all['favicons'] %}
 						<div id="favicons_container">
@@ -181,7 +228,7 @@
 								enctype="multipart/form-data"
 								id="edit_favicon"
 							>
-								<label for="del{{icon}}"
+								<label for="del{{icon}}" title="Remove the image"
 									><i class="fas fa-trash-alt"></i
 								></label>
 								<input
@@ -190,16 +237,15 @@
 									name="delete_favicon"
 									value="{{icon}}"
 								/>
-								<label for="ch{{icon}}"
-									><i class="fas fa-plus-circle"></i
-								></label>
+								<label for="ch{{icon}}" title="Set as Favicon"><i class="fas fa-star"></i></label>
 								<input
 									type="submit"
 									id="ch{{icon}}"
 									name="change_favicon"
 									value="{{icon}}"
 								/>
-								<label for="logo{{icon}}"><i class="fas fa-plus"></i></label>
+								<label for="logo{{icon}}" title="Set as Logo"><i class="fas fa-plus-circle"></i
+								></label>
 								<input
 									type="submit"
 									id="logo{{icon}}"
@@ -221,7 +267,7 @@
 					</form>
 				</div>
 				<div class="features" id="color">
-					<h3>Choose Theme</h3>
+					<h3><i class="fas fa-palette" title="Choose Theme"></i>Choose Theme</h3>
 					<form action="/theme-rotate" method="post" enctype="multipart/form-data">
 						<button type="submit" name="change_theme" value="left" class="theme-btn">
 							<i class="fa fa-angle-left"></i>
@@ -234,22 +280,24 @@
 						</button>
 					</form>
 				</div>
-				{% if web.previewPage != '/' %}
 				<div  class ="features" id="EditContent">
-					<h3>Make Content Editable</h3>
+					<h3><i class="fas fa-pen-to-square" title="Edit Page"></i>Make Page Editable</h3>
 					<form action="/Content-editable" method="post" enctype="multipart/form-data" class="content_edit">
-						{% if all['body_content_editable']==False %}
-						<input type="checkbox" name="contentEditable" id="Content_editable" onchange="this.form.submit()" />
-						{% else %}
-						<input type="checkbox" name="contentEditable" id="Content_editable" onchange="this.form.submit()" checked/>
-						{% endif %}
+						{% if web.previewPage != '/' %}
+							{% if all['body_content_editable']==False %}
+							<input type="checkbox" name="contentEditable" id="Content_editable" onchange="this.form.submit()" />
+							{% else %}
+							<input type="checkbox" name="contentEditable" id="Content_editable" onchange="this.form.submit()" checked/>
+							{% endif %}
+						{%else%}
+							<input type="checkbox" name="contentEditable" id="Content_editable" disabled />
+						{%endif%}
 						<label for="Content_editable">Content Editable</label>
 					</form>
 					{% if all['body_content_editable'] %} 
 					<span style="font-size: xx-small; float: inline-end; color:rgba(255, 0, 0, 0.71)"><i class="fas fa-info-circle"></i> Off Before Leaving!</span>
 					{% else %} {% endif %}
 				</div>
-				{%else%}{%endif%}
 			</div>
 		</main>
 	</body>
