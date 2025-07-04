@@ -53,6 +53,17 @@
 			}
 		});
 	});
+	
+</script>
+<script>
+	function setHeaderHeight() {
+		const header = document.querySelector('header');
+		if (header) {
+			document.documentElement.style.setProperty('--header-height', header.offsetHeight + 'px');
+		}
+	}
+	window.addEventListener('DOMContentLoaded', setHeaderHeight);
+	window.addEventListener('resize', setHeaderHeight);
 </script>
 <style>
 	.vis {
@@ -66,7 +77,7 @@
 	<div class="extraUp"></div>
 	<nav>
 		<div class="nav-brand">
-			<!--NO--><img src="../../static/logo/{{all['logo'][0]}}" alt="webpersona" id="Logo" contenteditable="False">
+			<!--NO--><img src="../../static/logo/{{all['logo'][0]}}" alt="webpersona" id="Logo" />
 			<h1>WEBPERSONA</h1>
 		</div>
 		<button class="hamburger" type="button" contenteditable="False">

@@ -44,23 +44,47 @@ class website:
         return code
         
     def changeTheme(self, direction):
-        with open("static/root.css", "r") as file:
+        # Read all lines from root.css
+        with open("static/root.css", "r", encoding="utf-8") as file:
             lines = file.readlines()
 
-        # Only rotate if enough lines
-        if len(lines) >= 15:
-            if direction == 'right':
-                first15 = lines[:15]
-                remaining = lines[15:]
-                newLines = remaining + first15
-            elif direction == 'left':
-                last15 = lines[-15:]
-                remaining = lines[:-15]
-                newLines = last15 + remaining
+        # Parse theme blocks: each starts with a comment (/* ThemeName */) and ends with '}'
+        blocks = []
+        current_block = []
+        in_block = False
+        for line in lines:
+            if line.strip().startswith("/*") and line.strip().endswith("*/"):
+                if current_block:
+                    blocks.append(current_block)
+                    current_block = []
+                in_block = True
+                current_block.append(line)
+            elif in_block:
+                current_block.append(line)
+                if line.strip() == "}":
+                    blocks.append(current_block)
+                    current_block = []
+                    in_block = False
+        # In case file doesn't end with a newline
+        if current_block:
+            blocks.append(current_block)
 
-            with open("static/root.css", "w") as file:
-                file.writelines(newLines)
-        
+        # Remove any empty blocks
+        blocks = [b for b in blocks if any(l.strip() for l in b)]
+
+        # Rotate blocks
+        if len(blocks) > 1:
+            if direction == 'right':
+                blocks = blocks[1:] + [blocks[0]]
+            elif direction == 'left':
+                blocks = [blocks[-1]] + blocks[:-1]
+
+        # Flatten blocks back to lines
+        newLines = [line for block in blocks for line in block]
+
+        with open("static/root.css", "w", encoding="utf-8") as file:
+            file.writelines(newLines)
+
         self.themes = self.theme()
         return redirect('/admin')
     
@@ -137,11 +161,13 @@ class website:
         self.logo = os.listdir("static/logo/")
         self.favicons = os.listdir("static/favicons")
     
-    def edit_content(file,block_id,html):
-        if html[0] == '':
+    def edit_content(self, file, block_id, html):
+        while html[0] == '' or html[0] == "<!--start-->\n":
             html.pop(0)
-        if html[len(html)-1]=='':
+        while html[len(html)-1]=='':
             html.pop(len(html)-1)
+            
+        print(html)
         with open('templates/'+file, "r", encoding="utf-8") as f:
             content = f.readlines()
             
@@ -170,10 +196,10 @@ class website:
         # 3. Prepare prefix and suffix
         prefix = content[:start_idx + 1]
         suffix = content[end_idx:]
-
+    
         # 4. Extract block to replace
         oldblock = content[start_idx + 1:end_idx]
-
+     
         # 5. Replace line-by-line
         new = []
         jinja_pattern = r'{[{%#].*?[}%]}'  # Matches all Jinja tag types
@@ -200,7 +226,6 @@ class website:
                         elif line[i] == '{' and once==True:
                             rebuilt += line[line.find('{'):line.rfind('}')+1]
                             g = line.rfind('}')-line.find('{')
-                            # i = i+g
                             once = False
                         i=i+1
                     
@@ -332,12 +357,13 @@ def save_block_multi():
 @app.route('/<name>')
 def render_page(name):
     if name not in ["Home.html", "adminPanel.html"]:
-        w.currentPage = name 
+      
         print("dynamic")
         try:
             return render_template(f"partials/{name}", all=w.__dict__)
         except:
             pass
+        w.currentPage = name 
         return render_template(f"{name}", all=w.__dict__)
     else:
         print("dynamic-n")

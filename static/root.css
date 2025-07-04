@@ -1,3 +1,33 @@
+/* Sunrise */
+:root {
+  --navbar: linear-gradient(135deg, #2c003e, #6a0572);
+  --navbarText: #fef9ff;
+  --brandname: linear-gradient(135deg, #ff6ec4, #7873f5);
+  --buttons: linear-gradient(135deg, #f953c6, #b91d73);
+  --button-hover: linear-gradient(135deg, #fc466b, #3f5efb);
+  --main-bg: linear-gradient(135deg, #1a1a2e, #16213e);
+  --main-heading: linear-gradient(135deg, #ff9a8b, #ff6a88, #ff99ac);
+  --main-subheading: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+  --main-text: #e0e0e0;
+  --childDivs-bg: linear-gradient(135deg, #2e1f47, #3a2a5e);
+  --footer-bg: linear-gradient(135deg, #12002f, #3c1053);
+  --highlight: linear-gradient(135deg, #ff6ec4, #7873f5);
+}
+/* Classy-Clean */
+:root {
+  --navbar: #1e1e2f;
+  --navbarText: #ffffff;
+  --brandname: #00bcd4;
+  --buttons: #6200ea;
+  --button-hover: #3700b3;
+  --main-bg: #f5f5f5;
+  --main-heading: #212121;
+  --main-subheading: #424242;
+  --main-text: #616161;
+  --childDivs-bg: #eeeeee;
+  --footer-bg: #121212;
+  --highlight: #ff5722;
+}
 /* Favourite */
 :root {
   --navbar: linear-gradient(135deg, #141e30, #243b55);
@@ -57,34 +87,4 @@
   --childDivs-bg: #e6e6f0;           /* Very light royal lavender */
   --footer-bg: #14142b;              /* Dark majestic footer */
   --highlight: #c19a6b;              /* Antique gold */
-}
-/* Sunrise */
-:root {
-  --navbar: linear-gradient(135deg, #2c003e, #6a0572);
-  --navbarText: #fef9ff;
-  --brandname: linear-gradient(135deg, #ff6ec4, #7873f5);
-  --buttons: linear-gradient(135deg, #f953c6, #b91d73);
-  --button-hover: linear-gradient(135deg, #fc466b, #3f5efb);
-  --main-bg: linear-gradient(135deg, #1a1a2e, #16213e);
-  --main-heading: linear-gradient(135deg, #ff9a8b, #ff6a88, #ff99ac);
-  --main-subheading: linear-gradient(135deg, #fbc2eb, #a6c1ee);
-  --main-text: #e0e0e0;
-  --childDivs-bg: linear-gradient(135deg, #2e1f47, #3a2a5e);
-  --footer-bg: linear-gradient(135deg, #12002f, #3c1053);
-  --highlight: linear-gradient(135deg, #ff6ec4, #7873f5);
-}
-/* Classy-Clean */
-:root {
-  --navbar: #1e1e2f;
-  --navbarText: #ffffff;
-  --brandname: #00bcd4;
-  --buttons: #6200ea;
-  --button-hover: #3700b3;
-  --main-bg: #f5f5f5;
-  --main-heading: #212121;
-  --main-subheading: #424242;
-  --main-text: #616161;
-  --childDivs-bg: #eeeeee;
-  --footer-bg: #121212;
-  --highlight: #ff5722;
 }
