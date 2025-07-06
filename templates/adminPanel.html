@@ -33,23 +33,42 @@
 				.then(msg => alert('Succesfull Saved to '+fileName));
 			}
 
-			function showCode(file,checkboxId,divId){
-				const checkbox = document.getElementById(checkboxId);
-				const container = document.getElementById(divId);
-				const iframe = document.getElementById('Iframe');
-				const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-				const html = iframeDoc.getElementById(divId).innerHTML
-				etch('/save-block-multi', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-					file: fileName,
-					block: blockId,
-					html: html
-					})
-				})
-				alert(file, "Debug Mode On")
-			}
+		</script>
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				const iframe = document.getElementById("Iframe");
+				// Wait until the iframe content has fully loaded
+				iframe.onload = function () {
+					const debug = iframe.dataset.debug === "true";
+
+					if (debug) {
+						try {
+						// Read the HTML of the iframe page
+						const doc = iframe.contentDocument || iframe.contentWindow.document;
+						const html = doc.documentElement.outerHTML;
+							
+						// Escape characters to show as source
+						const escaped = html
+							.replace(/</g, "&lt;")
+							.replace(/>/g, "&gt;");
+
+						// Clear and insert <pre> block with escaped HTML
+						doc.body.innerHTML = `<pre style="
+							white-space: pre-wrap;
+							font-family: monospace;
+							padding: 1rem;
+							background: #1e1e2f;
+							color: #f8f8f2;
+							font-size: 0.8rem;
+							line-height: 1.2;
+							overflow: auto;
+							">${escaped}</pre>`;
+						} catch (err) {
+						console.error("Debug Mode failed to read iframe source:", err);
+						}
+					}
+				};
+			});
 		</script>
 	</head>
 	<body>
@@ -173,22 +192,14 @@
 					<button type="submit"><i class="fas fa-add"></i></button >
 				</form>
 				<div id="frameContainer">
-					{% if web.debugMode %}
-					<div id="codeContainer">
-						{% for i in all['previewPageHtml'] %}
-							{{i}}
-							<br>
-						{%endfor%}
-					</div>
-					{%else%}
 					<iframe
 						src="{{ all['previewPage']}}"
 						width="{{ all['size'] }}"
 						height="100%"
+						data-debug="{{'true' if web.debugMode else 'false'}}"
 						style="display: block; margin: auto; border: none;"
 						id="Iframe"
 					></iframe>
-					{%endif%}
 				</div>
 			</div>
 			<div id="feature_list">

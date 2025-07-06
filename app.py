@@ -335,8 +335,7 @@ def fuc7():
 
 @app.route('/Debug-mode', methods=['POST'])
 def debug_mode_change():
-    w.debugMode = True if w.debugMode==False else False
-    w.previewPageHtml = w.readSourceCode()
+    w.debugMode = not w.debugMode
     return redirect(url_for('admin'))
     
 @app.route('/save-block-multi', methods=['POST'])
