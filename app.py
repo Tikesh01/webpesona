@@ -1,9 +1,60 @@
 from flask import Flask, render_template, request,redirect, url_for
 import re, os, shutil
 from jinja2 import Environment
+from models import db, User
 
 app = Flask(__name__)
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///webpersona.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+# Initialize the database (create tables if not exist)
+with app.app_context():
+    db.create_all()
+from flask import flash, session
+
+# Registration route
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        mobile = request.form.get('mobile')
+        address = request.form.get('address')
+        password = request.form.get('password')
+        # Check if user already exists
+        if User.query.filter((User.email == email) | (User.mobile == mobile)).first():
+            flash('Email or mobile already registered.', 'danger')
+            return render_template('register.html')
+        user = User(name=name, email=email, mobile=mobile, address=address, password=password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Registration successful! Please sign in.', 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+# Login route
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email, password=password).first()
+        if user:
+            session['user_id'] = user.id
+            flash('Login successful!', 'success')
+            return redirect(url_for('interface'))
+        else:
+            flash('Invalid credentials.', 'danger')
+    return render_template('login.html')
+
+# Logout route
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    flash('Logged out successfully.', 'info')
+    return redirect(url_for('login'))
 class website:
     def __init__(self):
         self.size = "100%"
@@ -117,8 +168,9 @@ class website:
                     file.write(str(baseF)+HTML)
                 else:
                     file.writelines(baseF+bodyF)
-                      
-        self.pages = [page for page in os.listdir(self.folder) if not os.path.isdir(self.folder+page) ]
+        else:
+            self.pages = [page for page in os.listdir(self.folder) if not os.path.isdir(self.folder+page) ]
+            return FileExistsError(name)
         
     def addFavicon(self,icon_path):
         if len(self.favicon) < 1:
@@ -274,7 +326,7 @@ def fuc():
     title = request.form.get('title')
     HTML = request.form.get('ownHtml')
     w.addPage(name,title,HTML)
-    return render_template("adminPanel.html", all=w.__dict__)
+    return redirect(url_for('admin'))
     
 @app.route('/faviconAddition', methods =['POST'])
 def fuc2():
