@@ -12,6 +12,10 @@
   --childDivs-bg: #eeeeee;
   --footer-bg: #121212;
   --highlight: #ff5722;
+  --primary: #6200ea;
+  --secondary: #00bcd4;
+  --dark: #1e1e2f;
+  --light: #ffffff;
 }
 /* Favourite */
 :root {
@@ -27,6 +31,10 @@
   --childDivs-bg: linear-gradient(135deg, #dfe9f3, #ffffff);
   --footer-bg: linear-gradient(135deg, #2c3e50, #4ca1af);
   --highlight: linear-gradient(135deg, #fa709a, #fee140);
+  --primary: #667eea;
+  --secondary: #764ba2;
+  --dark: #141e30;
+  --light: #fdfdfd;
 }
 /* Simple */
 :root {
@@ -42,6 +50,10 @@
   --childDivs-bg: #334155;
   --footer-bg: #0f172a;
   --highlight: #38bdf8;
+  --primary: #0ea5e9;
+  --secondary: #06b6d4;
+  --dark: #0f172a;
+  --light: #f8fafc;
 }
 /* Night-Gradient */
 :root {
@@ -57,6 +69,10 @@
   --childDivs-bg: linear-gradient(135deg, #334155, #475569);
   --footer-bg: linear-gradient(135deg, #0f172a, #1e293b);
   --highlight: linear-gradient(135deg, #38bdf8, #22d3ee);
+  --primary: #0ea5e9;
+  --secondary: #06b6d4;
+  --dark: #0f172a;
+  --light: #f8fafc;
 }
 /* Royal-Elegance */
 :root {
@@ -72,6 +88,10 @@
   --childDivs-bg: #e6e6f0;           /* Very light royal lavender */
   --footer-bg: #14142b;              /* Dark majestic footer */
   --highlight: #c19a6b;              /* Antique gold */
+  --primary: #d4af37;
+  --secondary: #4b0082;
+  --dark: #1a1a2e;
+  --light: #f3f3f3;
 }
 /* Sunrise */
 :root {
@@ -87,4 +107,8 @@
   --childDivs-bg: linear-gradient(135deg, #2e1f47, #3a2a5e);
   --footer-bg: linear-gradient(135deg, #12002f, #3c1053);
   --highlight: linear-gradient(135deg, #ff6ec4, #7873f5);
+  --primary: #f953c6;
+  --secondary: #b91d73;
+  --dark: #2c003e;
+  --light: #fef9ff;
 }

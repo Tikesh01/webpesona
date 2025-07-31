@@ -10,13 +10,159 @@
 		/>
 		<link rel="stylesheet" href="../../static/root.css">
 		<link rel="stylesheet" href="../../static/index.css" />
+		<link rel="stylesheet" href="../static/flash-messages.css">
 		<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+		<style>
+			.password_wrapper {
+				position: relative;
+			}
+			
+			.password_wrapper input {
+				padding-right: 40px; /* Space for the icon */
+			}
+			
+			.password_wrapper .toggle-password {
+				position: absolute;
+				right: 0px;
+				top:50%;
+				transform: translate(-50%, -50%);
+				cursor: pointer;
+				color: #666;
+				transition: all 0.3s ease;
+				padding: 3px;
+				border-radius: 50%;
+			}
+			
+			.password_wrapper .toggle-password:hover {
+				color: #333;
+				background: rgba(0,0,0,0.05);
+			}
+			
+			.password_wrapper input:focus + .toggle-password {
+				color: #0066cc;
+			}
+			
+			/* Password strength indicator */
+			.password-strength {
+				height: 4px;
+				margin-top: 5px;
+				border-radius: 2px;
+				transition: all 0.3s ease;
+				background: #eee;
+			}
+			
+			.password-strength.weak { background: #ff4444; width: 33%; }
+			.password-strength.medium { background: #ffbb33; width: 66%; }
+			.password-strength.strong { background: #00C851; width: 100%; }
+		</style>
 		<title>
 			{% block title %}
 			{% endblock %}
 		</title>
+		<script>
+			function togglePassword(inputId) {
+				const input = document.getElementById(inputId);
+				const icon = input.nextElementSibling;
+				
+				if (input.type === 'password') {
+					input.type = 'text';
+					icon.classList.remove('fa-eye');
+					icon.classList.add('fa-eye-slash');
+					icon.title = 'Hide password';
+				} else {
+					input.type = 'password';
+					icon.classList.remove('fa-eye-slash');
+					icon.classList.add('fa-eye');
+					icon.title = 'Show password';
+				}
+				
+				// Add focus to input after toggle
+				input.focus();
+			}
+			
+			function checkPasswordStrength(password) {
+				// Password strength criteria
+				const hasLower = /[a-z]/.test(password);
+				const hasUpper = /[A-Z]/.test(password);
+				const hasNumber = /\d/.test(password);
+				const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+				const isLongEnough = password.length >= 8;
+				
+				let strength = 0;
+				if (hasLower && hasUpper) strength++;
+				if (hasNumber) strength++;
+				if (hasSpecial) strength++;
+				if (isLongEnough) strength++;
+				
+				return {
+					score: strength,
+					feedback: getStrengthFeedback(strength)
+				};
+			}
+			
+			function getStrengthFeedback(score) {
+				switch(score) {
+					case 0: return { class: '', text: '' };
+					case 1: return { class: 'weak', text: 'Weak' };
+					case 2: return { class: 'medium', text: 'Medium' };
+					case 3:
+					case 4: return { class: 'strong', text: 'Strong' };
+					default: return { class: '', text: '' };
+				}
+			}
+			
+			document.addEventListener('DOMContentLoaded', function() {
+				// Setup password toggles
+				document.querySelectorAll('.password_wrapper input[type="password"]').forEach(input => {
+					const icon = input.nextElementSibling;
+					icon.classList.add('toggle-password', 'fa', 'fa-eye');
+					icon.title = 'Show password';
+					icon.onclick = () => togglePassword(input.id);
+					
+					// Add strength indicator if this is a registration password
+					if (input.closest('form').id === 'RegistrationWebpersona') {
+						const strengthDiv = document.createElement('div');
+						strengthDiv.className = 'password-strength';
+						input.parentElement.insertAdjacentElement('afterend', strengthDiv);
+						
+						input.addEventListener('input', function() {
+							const result = checkPasswordStrength(this.value);
+							strengthDiv.className = 'password-strength ' + result.feedback.class;
+							strengthDiv.title = result.feedback.text;
+						});
+					}
+				});
+			});
+		</script>
 	</head>
 	<body >
+		{% with messages = get_flashed_messages(with_categories=true) %}
+			{% if messages %}
+			<div id="flashed-messages">
+				{% for category, message in messages %}
+				<div class="flash-message flash-{{ category }}">
+					<span class="flash-icon">{% if category == 'success' %}✔️{% elif category in ['error', 'danger'] %}❌{% elif category == 'info' %}ℹ️{% else %}⚠️{% endif %}</span>
+					<span class="flash-text">{{ message }}</span>
+				</div>
+				{% endfor %}
+			</div>
+			<script>
+				window.addEventListener('DOMContentLoaded', function() {
+					setTimeout(function() {
+						var flashes = document.getElementById('flashed-messages');
+						if (flashes) {
+							flashes.style.transition = 'opacity 0.5s';
+							flashes.style.opacity = '0';
+							setTimeout(function() {
+								flashes.style.display = 'none';
+							}, 500);
+						}
+					}, 1800);
+				});
+			</script>
+			{% endif %}
+		{% endwith %}
 		{% include "partials/header.html" %} 
 		{% block page %}
 		{%endblock%}

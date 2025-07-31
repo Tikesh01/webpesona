@@ -166,7 +166,6 @@ nav ul li a::after {
     height: 2px;
     width: 0%;
     background: var(--brandname);
-    /* light blue or your theme */
     transition: width 0.3s ease;
 }
 
@@ -239,6 +238,13 @@ nav h1 {
 
     100% {
         background-position: 0% 50%;
+    }
+}
+@media (min-width: 1650x){
+}
+@media (min-width: 1537px){
+    nav{
+        font-size: larger;
     }
 }
 

@@ -13,8 +13,24 @@
 			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
 		/>
 		<link rel="stylesheet" href="../static/adminPanel.css">
+		<link rel="stylesheet" href="../static/flash-messages.css">
 		<title>WebPersona-Admin Pannel</title>
 		<script>
+			function showMessage(message, type) {
+				const flashContainer = document.createElement('div');
+				flashContainer.className = `alert alert-${type}`;
+				flashContainer.textContent = message;
+				
+				// Add to the messages container if it exists, otherwise add to body
+				const messagesContainer = document.querySelector('.messages') || document.body;
+				messagesContainer.appendChild(flashContainer);
+				
+				// Remove the message after 5 seconds
+				setTimeout(() => {
+					flashContainer.remove();
+				}, 5000);
+			}
+			
 			function saveBlock(fileName, blockId, divId) {
 				const iframe = document.getElementById('Iframe');
 				const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
@@ -24,15 +40,20 @@
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
-					file: fileName,
-					block: blockId,
-					html: html
+						file: fileName,
+						block: blockId,
+						html: html
 					})
 				})
-				.then(res => res.text())
-				.then(msg => alert('Succesfull Saved to '+fileName));
+				.then(response => response.json())
+				.then(data => {
+					const messageType = data.status === 'success' ? 'success' : 'danger';
+					showMessage(data.message, messageType);
+				})
+				.catch(error => {
+					showMessage('Error saving content: ' + error.message, 'danger');
+				});
 			}
-
 		</script>
 		<script>
 			document.addEventListener("DOMContentLoaded", function () {
@@ -72,8 +93,59 @@
 		</script>
 	</head>
 	<body>
+		{% with messages = get_flashed_messages(with_categories=true) %}
+		  {% if messages %}
+			<div id="flashed-messages">
+			  {% for category, message in messages %}
+				<div class="flash-message flash-{{ category }}">
+				  <span class="flash-icon">{% if category == 'success' %}✔️{% elif category in ['error', 'danger'] %}❌{% elif category == 'info' %}ℹ️{% else %}⚠️{% endif %}</span>
+				  <span class="flash-text">{{ message }}</span>
+				</div>
+			  {% endfor %}
+			</div>
+			<script>
+				window.addEventListener('DOMContentLoaded', function() {
+					setTimeout(function() {
+						var flashes = document.getElementById('flashed-messages');
+						if (flashes) {
+							flashes.style.transition = 'opacity 0.5s';
+							flashes.style.opacity = '0';
+							setTimeout(function() {
+								flashes.style.display = 'none';
+							}, 500);
+						}
+					}, 1800);
+				});
+			</script>
+		  {% endif %}
+		{% endwith %}
 		{% if all['body_content_editable'] %}
-		<button type="button" id="saveEditedButton"  onclick="saveBlock('{{web.previewPage}}', '{{web.previewPage}}', '{{web.previewPage}}')" >Save the edited</button>
+		<div class="form_to_add_card" id="add_card" >
+			{% include 'Forms/Form_to_add_form.html' %}
+
+			<button type="button" ondblclick="">remove</button>
+		</div>
+		<div class="editer_tool_wrapper">
+			<div class="tools">
+				<label for="" data-name="Form" onclick="show_form()"><i class="fas fa-file-text" aria-hidden="true" title="Add Form" ></i><i class="fa-solid fa-circle-plus"></i></label>
+				<label for="" onclick="show_form()"><i class="fa fa-table" aria-hidden="true" title="Add tabel"></i><i class="fa-solid fa-circle-plus"></i> </label>
+				<label for="Blogg" ><i class="fa-brands fa-blogger-b"></i><i class="fa-solid fa-circle-plus"></i></label>
+				<label for=""><i class="fa-solid fa-list"></i><i class="fa-solid fa-circle-plus"></i></label>
+				<label for=""><i class="fa-regular fa-file-code"></i><i class="fa-solid fa-circle-plus"></i></label>
+			</div>
+			<button type="button" id="saveEditedButton"  onclick="saveBlock('{{web.previewPage}}', '{{web.previewPage}}', '{{web.previewPage}}')" >Save the edited</button>
+			<script>
+				function show_form(){
+					const form = document.getElementById('add_card')
+					form.style.display = 'flex'
+
+					/*if(form.style.display === 'flex')
+					{
+						window.addEventListener('click', form.style.display='none')
+					}*/
+				}
+			</script>
+		</div>
 		{% else %}
 		{%endif%}
 		<nav>
@@ -87,9 +159,22 @@
 						<option value=""><a href="#the_web">others</a></option>
 					</select>
 				</li>
-				<li>FAQs</li>
-				<li>Help</li>
-				<li>Contect</li>
+				<li>
+					<details>
+						<summary>FAQs</summary>
+						<div>hii</div>
+					</details>
+				</li>
+				<li>
+					<details>
+						<summary>Help</summary>
+					</details>
+				</li>
+				<li>
+					<details>
+						<summary>Contect</summary>
+					</details>
+				</li>
 				<li>
 					<form action="/Debug-mode" method="POST" id="debugModeForm">
 						{% if web.previewPage != '/' %}
@@ -185,7 +270,7 @@
 					enctype="multipart/form-data"
 				>	
 					{% for size in all['sizes'] %}
-					<input type="submit" value="{{ size }}" name="frame_size">
+					<input type="submit" value="{{ size}}" name="frame_size">
 					{% endfor %}
 					
 					<input type="number" name="frame_size" id="new_frame_size" style="background: #2c3e5020; width: 50px;" placeholder="912" />
@@ -212,10 +297,10 @@
 						enctype="multipart/form-data"
 						style="margin-top: 1em"
 					>
-						<input type="text" name="fileName" id="filName" placeholder="Page name" required/>
-						<input type="text" name="title" id="fileTitle" placeholder="Page title" required/>
-						<textarea name="ownHtml" id="htmlInp"  rows="3" placeholder="If You have your own Html structure, put here after reading the instructions"></textarea>
-						<select name="pageType" id="pageType" placeholder="Page Type" >
+						<input type="text" name="fileName" id="filName" placeholder="Page name"/>
+						<input type="text" name="title" id="fileTitle" placeholder="Page title" />
+						<input type="file" name="ownHtml" id="htmlfile" accept=".html, .htm, .py" placeholder="Put you File">
+						<select name="pageType" id="pageType" placeholder="Page Type" required  >
 							<option value="None" selected >Page Type</option>
 							<option value="">Forms</option>
 							<option value="">Mini</option>
@@ -285,7 +370,7 @@
 							<i class="fa fa-angle-left"></i>
 						</button>
 
-						<h4>{{ all['themes'][-15:][0].removesuffix('*/\n').removeprefix('/*') }}</h4>
+						<h4>{{ all['themes'][-19:][0].removesuffix('*/\n').removeprefix('/*') }}</h4>
 
 						<button type="submit" name="change_theme" value="right" class="theme-btn">
 							<i class="fas fa-angle-right"></i>

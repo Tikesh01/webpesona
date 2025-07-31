@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request,redirect, url_for
 import re, os, shutil
 from jinja2 import Environment
+from flask import flash, session
 from models import db, User
 
 app = Flask(__name__)
+app.secret_key = 'happy_happy_happy'  # Use a long, random string in production!
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///webpersona.db'
@@ -12,49 +14,7 @@ db.init_app(app)
 # Initialize the database (create tables if not exist)
 with app.app_context():
     db.create_all()
-from flask import flash, session
 
-# Registration route
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
-        mobile = request.form.get('mobile')
-        address = request.form.get('address')
-        password = request.form.get('password')
-        # Check if user already exists
-        if User.query.filter((User.email == email) | (User.mobile == mobile)).first():
-            flash('Email or mobile already registered.', 'danger')
-            return render_template('register.html')
-        user = User(name=name, email=email, mobile=mobile, address=address, password=password)
-        db.session.add(user)
-        db.session.commit()
-        flash('Registration successful! Please sign in.', 'success')
-        return redirect(url_for('login'))
-    return render_template('register.html')
-
-# Login route
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        user = User.query.filter_by(email=email, password=password).first()
-        if user:
-            session['user_id'] = user.id
-            flash('Login successful!', 'success')
-            return redirect(url_for('interface'))
-        else:
-            flash('Invalid credentials.', 'danger')
-    return render_template('login.html')
-
-# Logout route
-@app.route('/logout')
-def logout():
-    session.pop('user_id', None)
-    flash('Logged out successfully.', 'info')
-    return redirect(url_for('login'))
 class website:
     def __init__(self):
         self.size = "100%"
@@ -63,7 +23,7 @@ class website:
         self.folder = "templates/"
         self.extantion = ".html"
         self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) ]
-        self.unremovablePages = ['Home.html']
+        self.unremovablePages = ['Home.html','login.html','register.html']
         self.unviewPages = ['adminPanel.html','skeleton.html','Base.html']
         self.folders =  [page for page in os.listdir('templates/') if os.path.isdir('templates/'+page) ]
         self.folderDict = {folder : os.listdir("templates/"+folder) for folder in self.folders}
@@ -71,11 +31,14 @@ class website:
         self.favicon = os.listdir("static/favicon/")
         self.previewPage = "/"
         self.logo = os.listdir("static/logo/")
-        self.currentPage="Home.html"
+        self.currentPage= str()
         self.themes = self.theme()
+        self.len_of_theme_block = int()
         self.body_content_editable = False
         self.debugMode = False
         self.previewPageHtml = self.readSourceCode()
+        self.isLogedin = False
+        self.isRegistered = False
 
     def theme(self):
         file = open("static/root.css", "r")
@@ -130,6 +93,9 @@ class website:
             elif direction == 'left':
                 blocks = [blocks[-1]] + blocks[:-1]
 
+        for i in blocks:
+            len_of_theme_block = len(i)
+            break
         # Flatten blocks back to lines
         newLines = [line for block in blocks for line in block]
 
@@ -137,18 +103,26 @@ class website:
             file.writelines(newLines)
 
         self.themes = self.theme()
-        return redirect('/admin')
+        return len_of_theme_block
     
     def make_content_editabele(self):
         if self.body_content_editable == False:
             self.body_content_editable = True
+            return 'On'
         else:
             self.body_content_editable = False
+            return 'Off'
             
 
     def addPage(self, name, title,HTML):  
         # Create the page file if it doesn't exist
-       
+        if '.' in name:
+            name = name[:name.find('name')]
+        if '" "' in name:
+            for i,d in enumerate(name):
+                if d== "' '":
+                    name[i] = name[i].replace(old='" "',new="_")
+                    
         file_path = self.folder + name + self.extantion
         if not os.path.exists(file_path):
             with open("templates/Base.html", "r") as base:
@@ -169,8 +143,8 @@ class website:
                 else:
                     file.writelines(baseF+bodyF)
         else:
-            self.pages = [page for page in os.listdir(self.folder) if not os.path.isdir(self.folder+page) ]
             return FileExistsError(name)
+        self.pages = [page for page in os.listdir(self.folder) if not os.path.isdir(self.folder+page) ]
         
     def addFavicon(self,icon_path):
         if len(self.favicon) < 1:
@@ -191,7 +165,7 @@ class website:
             return 1
             
         fsize = str(FrameSize)+"px"
-        if fsize not in w.sizes and FrameSize>0:
+        if fsize not in w.sizes and FrameSize > 0:
             self.sizes.append(fsize)
             self.size = fsize
             print(self.size)
@@ -251,7 +225,8 @@ class website:
     
         # 4. Extract block to replace
         oldblock = content[start_idx + 1:end_idx]
-     
+        print(oldblock)
+        
         # 5. Replace line-by-line
         new = []
         jinja_pattern = r'{[{%#].*?[}%]}'  # Matches all Jinja tag types
@@ -259,19 +234,22 @@ class website:
         for a, line in enumerate(oldblock):
             if a >= len(html):
                 break
-
+            
             updated_line = html[a]
-
+            
             if "<!--NO-->" in line:
                 new.append(line)  # Preserve line
+                print('preserved')
+                
             elif re.search(jinja_pattern, line.strip()):
                 jinja_match = re.search(jinja_pattern, line)
                 if jinja_match:
                     preserved = jinja_match.group()
-                    # inject Jinja back into updated line
+                    # inject Jinja back into updated line 
                     rebuilt = ''
                     i = 0
                     once = True
+                    
                     for l in updated_line:
                         if line[i] != '{':
                             rebuilt +=  l
@@ -299,54 +277,122 @@ class website:
                 new.append(updated_line)
                 
         final = prefix+new+suffix
-        
+        print(new)
         with open('templates/'+file, 'w',encoding='utf-8') as f:
             f.writelines(final)
+            
         
+    def remove_last_n_lines(self,filepath, n):
+        with open(filepath, 'r+b') as f:
+            f.seek(0, os.SEEK_END)  # Move to the end of the file
+            end = f.tell()
+
+            count = 0
+            while f.tell() > 0:
+                f.seek(-1, os.SEEK_CUR)  # Move back one byte
+                char = f.read(1)
+
+                if char == b'\n':
+                    count += 1
+                    if count == n + 1:  # Count an extra newline to find the start of the line to keep
+                        f.truncate()
+                        print(f"Removed {n} lines from the end of the file.")
+                        return 1
+                    
+                f.seek(-1, os.SEEK_CUR) # Move back again to process the previous byte
+                
+    def addLogic(self, path):
+        with open(path,'r') as f:
+            newLogic = f.readlines()
+        
+        with open("app.py",'r') as f:
+            data = f.readlines()
+            frrom = data.index('#New Logic\n')
+            till = len(data)
+            n = till - frrom-1
+            suffix = data[frrom:till]
+        
+        self.remove_last_n_lines("app.py",n)
+        
+        with open('app.py','a') as file:
+            file.writelines(newLogic+suffix)
+            
 w =website()
-print(w.folderDict)
+
 @app.route('/')
-def interface():
-    print(w.currentPage)
-    print(w.body_content_editable)
-    return render_template('home' + w.extantion, all=w.__dict__ ,web=w)
+def Home():
+    w.currentPage = "Home.html"
+    return render_template('Home' + w.extantion, all=w.__dict__ ,web=w)
 
 @app.route('/admin')
 def admin():
     w.currentPage = "adminPanel.html"
-    print(w.currentPage)
-    print(w.body_content_editable)
-
     return render_template("adminPanel.html",  all=w.__dict__,web=w)
         
         
 @app.route('/pageAddition', methods=['POST'])
-def fuc():
+def page_addition():
     name = request.form.get("fileName")
     title = request.form.get('title')
-    HTML = request.form.get('ownHtml')
-    w.addPage(name,title,HTML)
+    HTML = request.files['ownHtml']
+    if HTML and HTML.filename:
+        if HTML.filename.endswith('.py'):
+            fpath = os.path.join('../webpersona',HTML.filename)
+            if os.path.exists(fpath):
+                M='Rename the Python File'
+                C = 'info'
+            else:
+                HTML.save(fpath)
+                w.addLogic(fpath)
+                M = "Backend logic saved succesfully" 
+                C='success'
+        else:
+            fpath = os.path.join('templates',HTML.filename)
+            if not os.path.exists(fpath):
+                HTML.save(fpath) 
+                M = f'Your page {HTML.filename} added succesfully !'
+                C= 'success'
+                w.pages = [page for page in os.listdir(w.folder) if not os.path.isdir(w.folder+page)]
+            else:
+                M= f'{HTML.filename} already exist'
+                C = 'info'
+        flash(M,C)
+        
+    elif name and title:
+        result = w.addPage(name, title, HTML)
+        if isinstance(result, Exception):
+            flash(str(result), 'danger')
+        else:
+            flash('Page added successfully!', 'success')
+    elif (not name or not title):
+        flash('Seems you have not typed Page Name or Title','danger')
+    
     return redirect(url_for('admin'))
     
 @app.route('/faviconAddition', methods =['POST'])
-def fuc2():
-    icon= request.files["icon_path"]
-    iconPath = os.path.join("static/favicons",icon.filename)
-    icon.save(iconPath)
-    w.favicons = os.listdir("static/favicons")
-    print("done")
-    
-    return render_template("adminPanel.html", all=w.__dict__)
+def image_edition():
+    icon = request.files["icon_path"]
+    iconPath = os.path.join("static/favicons", icon.filename)
+    try:
+        icon.save(iconPath)
+        w.favicons = os.listdir("static/favicons")
+        flash("Favicon added successfully!", "success")
+    except Exception as e:
+        flash(f"Error adding favicon: {e}", "danger")
+    return redirect(url_for('admin'))
 
 @app.route('/frameSizeChange', methods = ['POST'])
-def fuc3(): 
+def responsiveness(): 
     size = request.form.get('frame_size')
-    w.changeFrameSize(size)
-    
+    result = w.changeFrameSize(size)
+    if result == 1:
+        flash('Frame size changed successfully!', 'success')
+    else:
+        flash('Frame size added!', 'info')
     return redirect(url_for('admin'))
 
 @app.route('/delete-change-Favicon-page',methods=['POST'])
-def fuc4():
+def operation_with_img_files():
     pathToDelete = request.form.get('delete_favicon')
     pathToChange = request.form.get('change_favicon')
     pathToDelPage = request.form.get('delete_page')
@@ -354,20 +400,34 @@ def fuc4():
     pathTochangeLogo = request.form.get('change_logo')
    
     if pathToDelete:
-        w.deleteFile("static/favicons/"+pathToDelete)
+        try:
+            w.deleteFile("static/favicons/" + pathToDelete)
+            flash("Favicon deleted successfully!", "success")
+        except Exception as e:
+            flash(f"Error deleting favicon: {e}", "danger")
     if pathToChange:
-        w.addFavicon("static/favicons/"+pathToChange)
+        try:
+            w.addFavicon("static/favicons/" + pathToChange)
+            flash("Favicon changed successfully!", "success")
+        except Exception as e:
+            flash(f"Error changing favicon: {e}", "danger")
     if pathToDelPage:
-        w.deleteFile("templates/"+pathToDelPage)
-    
+        try:
+            w.deleteFile("templates/" + pathToDelPage)
+            flash("Page deleted successfully!", "success")
+        except Exception as e:
+            flash(f"Error deleting page: {e}", "danger")
     if pathForPreview:
-        print('last : ',w.previewPage)
+        print('last : ', w.previewPage)
         w.previewPage = pathForPreview
-        print('current : ',w.previewPage)
-    
+        print('current : ', w.previewPage)
+        flash(f"Preview page set to {pathForPreview}", "info")
     if pathTochangeLogo:
-        w.changeLogo("static/favicons/"+pathTochangeLogo)
-        
+        try:
+            w.changeLogo("static/favicons/" + pathTochangeLogo)
+            flash("Logo changed successfully!", "success")
+        except Exception as e:
+            flash(f"Error changing logo: {e}", "danger")
     return redirect(url_for('admin'))
 
 @app.route('/theme-rotate', methods=['POST'])
@@ -375,19 +435,30 @@ def rotate_theme():
     direction = request.form.get('change_theme')
 
     if direction in ['left', 'right']:
-        w.changeTheme(direction)
-        print("Theme changed:", direction)
-
-    return redirect(url_for('admin')) 
+        n = w.changeTheme(direction)
+        if n:
+            flash(f"Theme changed: {direction}", "success")
+            w.len_of_theme_block = n
+        else: 
+            flash(f"Something happened wrong", 'danger')
+    return redirect(url_for('admin'))
 
 @app.route("/Content-editable", methods=["POST"])
-def fuc7():
-    w.make_content_editabele()
+def contetn_editable():
+    result = w.make_content_editabele()
+    if result == 'On':
+        flash('Content edit mode On.', 'success')
+    elif result == 'Off':
+        flash('Content edit mode Off.', 'info')
+    else:
+        flash(f'{Exception}','danger')
+        
     return redirect(url_for('admin'))
 
 @app.route('/Debug-mode', methods=['POST'])
 def debug_mode_change():
     w.debugMode = not w.debugMode
+    flash('Debug mode toggled.', 'info')
     return redirect(url_for('admin'))
     
 @app.route('/save-block-multi', methods=['POST'])
@@ -400,31 +471,84 @@ def save_block_multi():
 
     block_id = data.get("block")
     html = data.get("html")
-    w.edit_content(file,block_id,html)
-
+    try:
+        w.edit_content(file, block_id, html)
+        M = 'Edited block saved successfully!'
+        C = 'success'
+        print('done')
+        
+    except Exception as e:
+        M = f'Error saving content block: {e}' 
+        C = 'error'
+        print(e)
+        
+    flash(M,C)
     return redirect(url_for('admin'))
 
+# Registration route
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        mobile = request.form.get('mobile')
+        address = request.form.get('address')
+        password = request.form.get('password')
+        # Check if user already exists
+        if User.query.filter((User.email == email) | (User.mobile == mobile)).first():
+            flash('Email or mobile already registered.', 'danger')
+            return render_template('register.html')
+        user = User(name=name, email=email, mobile=mobile, address=address, password=password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Registration successful! Please sign in.', 'success')
+        w.isRegistered = True
+        return redirect(url_for('login'))
+    
+    w.currentPage = 'register.html'
+    return render_template('register.html', web=w, all=w.__dict__)
 
+# Login route
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email, password=password).first()
+        if user:
+            session['user_id'] = user.id
+            flash('Login successful!', 'success')
+            w.isLogedin = True
+            return redirect(url_for('Home'))
+        else:
+            flash('Invalid credentials.', 'danger')
+    
+    w.currentPage = 'login.html'
+    return render_template('login.html', all=w.__dict__, web=w)
+
+# Logout route
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    flash('Logged out successfully.', 'info')
+    w.isLogedin = False
+    return redirect(url_for('login'))
+
+#New Logic
 @app.route('/<name>')
 def render_page(name):
     if name not in ["Home.html", "adminPanel.html"]:
-      
-        print("dynamic")
+        w.currentPage = name
         try:
             return render_template(f"partials/{name}", all=w.__dict__)
         except:
-            pass
-        w.currentPage = name 
-        return render_template(f"{name}", all=w.__dict__)
+            return render_template(f"{name}", all=w.__dict__)
     else:
         print("dynamic-n")
         if name == "Home.html":
-            return redirect(url_for('interface'))
+            return redirect(url_for('Home'))
         else:
             return redirect(url_for('admin'))
             
-
 if __name__ == "__main__":
     app.run(debug=True)
-
-

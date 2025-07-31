@@ -1,79 +1,60 @@
-<style>
-	footer {
-		background: var(--footer-bg);
-		color: var(--main-text);
-		padding: 2rem 0;
-		position: relative;
-		overflow: hidden;
-	}
-	.footer-content {
-		margin: 0 auto;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 0 2rem;
-		position: relative;
-		z-index: 1;
-	}
-	.footer-content p {
-		font-family: "Poppins", sans-serif;
-		font-size: 1rem;
-		margin: 0;
-	}
-	.social-links {
-		display: flex;
-		gap: 1rem;
-	}
-	.social-links a {
-		color: var(--highlight);
-		text-decoration: none;
-		font-size: 1.5rem;
-		transition: transform 0.3s ease, color 0.3s ease;
-	}
-	.social-links a:hover {
-		transform: translateY(-3px);
-		color: #f1c40f;
-	}
-	footer::before {
-		content: "";
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		height: 3px;
-		background: linear-gradient(90deg, #f1c40f, #e74c3c, #3498db, #2ecc71);
-		animation: gradient-shift 15s linear infinite;
-		background-size: 300% 300%;
-	}
-	@keyframes gradient-shift {
-		0% {
-			background-position: 0% 50%;
-		}
-		50% {
-			background-position: 100% 50%;
-		}
-		100% {
-			background-position: 0% 50%;
-		}
-	}
-	@media (max-width: 768px) {
-		.footer-content {
-			flex-direction: column;
-			text-align: center;
-			gap: 1rem;
-			padding: 1rem;
-		}
-	}
-</style>
-
-<footer>
-	<div class="footer-content" contenteditable="{{ 'true' if all['body_content_editable'] and all['previewPage']=='footer.html' else 'false' }}">
-		<p>&copy; 2025 WebPersona. All rights reserved.</p>
-		<div class="social-links">
-			<a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
-			<a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
-			<a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-			<a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+<link
+	rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
+<link rel="stylesheet" href="../../static/partials/footer.css" />
+<link rel="stylesheet" href="../../static/root.css" />
+<link rel="stylesheet" href="../../static/index.css" />
+<footer id="footer.html", contenteditable="{{ 'true' if all['body_content_editable'] and all['previewPage']=='footer.html' else 'false' }}" ><!--start-->
+	<div class="footer-container">
+		<div class="footer-brand-social">
+			<div class="footer-brand">
+				<img
+					src="../../static/logo/{{all['logo'][0]}}"
+					alt="WebPersona Logo"
+					class="footer-logo"
+				/>
+				<p class="footer-brandname">WebPersona</p>
+			</div>
+			<div class="footer-social">
+				<a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+				<a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+				<a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+				<a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+			</div>
+			<p class="footer-copyright">&copy; 2025 WebPersona. All rights reserved.</p>
+		</div>
+		<div class="footer-columns">
+			<div class="footer-col">
+				<h3>Site map</h3>
+				<ul class="footer-sitemap">
+					{% for i in all['pages']%}
+					<li><a href="{{i}}">{{i}}</a></li>
+					{%endfor%}
+				</ul>
+			</div>
+			<div class="footer-col">
+				<h3>Contact Us</h3>
+				<div>
+					<p>Email: <a href="mailto:ts2665857@gmail.com">ts2665857@gmail.com</a></p>
+					<p>Mobile: <a href="tel:+91 8770006085">+91 8770006085</a></p>
+				</div>
+			</div>
+			<div class="footer-col">
+				<h3>Privacy Policy</h3>
+				<a href="">Link</a>
+			</div>
+			<div class="footer-col footer-feedback">
+				<form action="" method="post">
+					<label for="feedback">We need Your Feedback</label>
+					<textarea name="feedback" id="Feedback" cols="30" rows="4" placeholder="Please! Write Your Experience..."></textarea>
+					<div class="footer-feedback-buttons">
+						<button type="reset">Reset</button>
+						<button type="submit">Send</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 </footer>
+<h3 style="background:var(--footer-bg); text-align:center; color:hotpink;">Created with WEBPEROSNA</h3><!--Close-->

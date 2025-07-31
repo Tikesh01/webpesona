@@ -70,7 +70,7 @@
 		background: var(--navbar);
 		width: 100%;
 		max-width: 100vw;
-		height: calc(100vh - 70px);
+		min-height: calc(100vh - 70px);
 		overflow-x: hidden;
 		padding: 0;
 		display: flex;
@@ -381,11 +381,11 @@
 		<section>
 			<!--NO--><img src="../../static/logo/{{all['logo'][0]}}" alt="WebPersona" width="80px">
 			<div class="hero-content">
-				<h1>Design Meets Logic,</h1> 
-				<h1>Brilliancesgd Begins.</h1>
+				<h1>Design Meets,</h1> 
+				<h1>Brilliancesgd Bns.</h1>
 			</div>
 			<p class="hero-description">Transform your digital presence with our daadnnovative solutions that blend stunning design with powerful functionality. Let's create something extraordinary together.</p>
-			<button>Get started</button>
+			<a href="{{url_for('login')}}"><button>Get started</button></a>
 		</section>
 	</section>
 	<div class="floating-shapes" id="float-shapes">
