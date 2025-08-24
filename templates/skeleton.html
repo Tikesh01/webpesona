@@ -13,7 +13,7 @@
 		<link rel="stylesheet" href="../static/flash-messages.css">
 		<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-		<style>
+		<style id="common">
 			.password_wrapper {
 				position: relative;
 			}
@@ -139,28 +139,28 @@
 	<body >
 		{% with messages = get_flashed_messages(with_categories=true) %}
 			{% if messages %}
-			<div id="flashed-messages">
-				{% for category, message in messages %}
-				<div class="flash-message flash-{{ category }}">
-					<span class="flash-icon">{% if category == 'success' %}✔️{% elif category in ['error', 'danger'] %}❌{% elif category == 'info' %}ℹ️{% else %}⚠️{% endif %}</span>
-					<span class="flash-text">{{ message }}</span>
+				<div id="flashed-messages">
+					{% for category, message in messages %}
+					<div class="flash-message flash-{{ category }}">
+						<span class="flash-icon">{% if category == 'success' %}✔️{% elif category in ['error', 'danger'] %}❌{% elif category == 'info' %}ℹ️{% else %}⚠️{% endif %}</span>
+						<span class="flash-text">{{ message }}</span>
+					</div>
+					{% endfor %}
 				</div>
-				{% endfor %}
-			</div>
-			<script>
-				window.addEventListener('DOMContentLoaded', function() {
-					setTimeout(function() {
-						var flashes = document.getElementById('flashed-messages');
-						if (flashes) {
-							flashes.style.transition = 'opacity 0.5s';
-							flashes.style.opacity = '0';
-							setTimeout(function() {
-								flashes.style.display = 'none';
-							}, 500);
-						}
-					}, 1800);
-				});
-			</script>
+				<script>
+					window.addEventListener('DOMContentLoaded', function() {
+						setTimeout(function() {
+							var flashes = document.getElementById('flashed-messages');
+							if (flashes) {
+								flashes.style.transition = 'opacity 0.5s';
+								flashes.style.opacity = '0';
+								setTimeout(function() {
+									flashes.style.display = 'none';
+								}, 500);
+							}
+						}, 1800);
+					});
+				</script>
 			{% endif %}
 		{% endwith %}
 		{% include "partials/header.html" %} 

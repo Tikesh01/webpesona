@@ -1,7 +1,5 @@
-from flask import Flask, render_template, request,redirect, url_for
+from flask import Flask, render_template, request,redirect, url_for, flash, session
 import re, os, shutil
-from jinja2 import Environment
-from flask import flash, session
 from models import db, User
 
 app = Flask(__name__)
@@ -14,18 +12,18 @@ db.init_app(app)
 # Initialize the database (create tables if not exist)
 with app.app_context():
     db.create_all()
-
+ 
 class website:
     def __init__(self):
         self.size = "100%"
-        self.sizes = ["100%",'320px','360px','390px','414px','480px','768px','820px','1024px','1280px','1440px','1536px','2560px']
+        self.sizes = ("100%",'320px','360px','390px','414px','480px','768px','820px','1024px','1280px','1440px','1536px','2560px')
         self.admin = "templates/adminPanel.html"
         self.folder = "templates/"
         self.extantion = ".html"
-        self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) ]
+        self.pages = (page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) )
         self.unremovablePages = ['Home.html','login.html','register.html']
         self.unviewPages = ['adminPanel.html','skeleton.html','Base.html']
-        self.folders =  [page for page in os.listdir('templates/') if os.path.isdir('templates/'+page) ]
+        self.folders =  [page for page in os.listdir('templates/') if os.path.isdir('templates/'+page) and page!='Forms' ]
         self.folderDict = {folder : os.listdir("templates/"+folder) for folder in self.folders}
         self.favicons = os.listdir("static/favicons/")
         self.favicon = os.listdir("static/favicon/")
@@ -540,7 +538,10 @@ def render_page(name):
     if name not in ["Home.html", "adminPanel.html"]:
         w.currentPage = name
         try:
-            return render_template(f"partials/{name}", all=w.__dict__)
+            try:
+                return render_template(f'Mini-pages/{name}', all=w.__dict__)
+            except:
+                return render_template(f"partials/{name}", all=w.__dict__)
         except:
             return render_template(f"{name}", all=w.__dict__)
     else:

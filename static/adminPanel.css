@@ -342,13 +342,13 @@ nav h1 i {
     color: #3498db;
 }
 .form_to_add_card{
-    display: flex;
+    display: none;
     position: fixed;
     height: 100%;
     width: 100%;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(2px);
 }
 .editer_tool_wrapper{
     position: fixed;

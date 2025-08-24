@@ -127,23 +127,14 @@ footer a:hover{
 	resize: vertical;
 	font-family: inherit;
 }
-
-.footer-feedback-buttons {
+.footer-feedback #buttons-field{
 	display: flex;
-	align-items: center;
 	justify-content: space-between;
-	padding: 0 1em;
-}
-
-.footer-feedback button {
-	background: var(--buttons);
-	color: var(--light);
-	border: none;
-	border-radius: 4px;
-	padding: 0.4rem 1.1rem;
-	font-size: 1rem;
-	cursor: pointer;
-	transition: background 0.2s;
+	width: 90%;
+	margin: auto;
+	button{
+		font-size: smaller;
+	}
 }
 
 .footer-feedback button[type="reset"] {

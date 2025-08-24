@@ -120,29 +120,31 @@
 		  {% endif %}
 		{% endwith %}
 		{% if all['body_content_editable'] %}
-		<div class="form_to_add_card" id="add_card" >
-			{% include 'Forms/Form_to_add_form.html' %}
-
-			<button type="button" ondblclick="">remove</button>
-		</div>
+		<div class="form_to_add_card" id="add_form_card" >{% include 'Forms/Form_to_add_form.html' %}</div>
 		<div class="editer_tool_wrapper">
 			<div class="tools">
-				<label for="" data-name="Form" onclick="show_form()"><i class="fas fa-file-text" aria-hidden="true" title="Add Form" ></i><i class="fa-solid fa-circle-plus"></i></label>
+				<label for="" data-name="Form" onclick="show_form('add_form_card')"><i class="fas fa-file-text" aria-hidden="true" title="Add Form" ></i><i class="fa-solid fa-circle-plus"></i></label>
 				<label for="" onclick="show_form()"><i class="fa fa-table" aria-hidden="true" title="Add tabel"></i><i class="fa-solid fa-circle-plus"></i> </label>
-				<label for="Blogg" ><i class="fa-brands fa-blogger-b"></i><i class="fa-solid fa-circle-plus"></i></label>
-				<label for=""><i class="fa-solid fa-list"></i><i class="fa-solid fa-circle-plus"></i></label>
+				<label for="Blogg" onclick="show_form()"><i class="fa-brands fa-blogger-b"></i><i class="fa-solid fa-circle-plus"></i></label>
+				<label for=""  onclick="show_form()"><i class="fa-solid fa-list"></i><i class="fa-solid fa-circle-plus"></i></label>
 				<label for=""><i class="fa-regular fa-file-code"></i><i class="fa-solid fa-circle-plus"></i></label>
+				
 			</div>
 			<button type="button" id="saveEditedButton"  onclick="saveBlock('{{web.previewPage}}', '{{web.previewPage}}', '{{web.previewPage}}')" >Save the edited</button>
 			<script>
-				function show_form(){
-					const form = document.getElementById('add_card')
+				function show_form(id){
+					const form = document.getElementById(id)
 					form.style.display = 'flex'
-
-					/*if(form.style.display === 'flex')
+					if(form.style.display == 'none')
 					{
-						window.addEventListener('click', form.style.display='none')
-					}*/
+						form.style.display = 'flex'
+					}
+				}
+				function remove_form(id){
+					const form = document.getElementsByClassName(id)
+					for(let i =0; i<form.length; i++){
+						form[i].style.display = 'none'
+					}
 				}
 			</script>
 		</div>
@@ -300,12 +302,6 @@
 						<input type="text" name="fileName" id="filName" placeholder="Page name"/>
 						<input type="text" name="title" id="fileTitle" placeholder="Page title" />
 						<input type="file" name="ownHtml" id="htmlfile" accept=".html, .htm, .py" placeholder="Put you File">
-						<select name="pageType" id="pageType" placeholder="Page Type" required  >
-							<option value="None" selected >Page Type</option>
-							<option value="">Forms</option>
-							<option value="">Mini</option>
-							<option value="">Blog container</option>
-						</select>
 						<div id="addPageButtons">
 						<button type="reset">reset</button>
 						<button type="submit">Add</button>

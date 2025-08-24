@@ -371,28 +371,36 @@
 </style>
 {% extends 'skeleton.html' %}
 {% block title%} Home-Webpersona {%endblock%} {% block page %}
-<section id="Home.html" class="main-hero-section" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}"><!--start-->
-	<section id="hero-section">
-		<div class="floating-shapes">   
+<section id="Home.html"  contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}"><!--start-->
+	<section class="main-hero-section">
+		<section id="hero-section">
+			<div class="floating-shapes">   
+				<div class="shape"></div>
+				<div class="shape"></div>
+				<div class="shape"></div>
+			</div>
+			<section>
+				<!--NO--><img src="../../static/logo/{{all['logo'][0]}}" alt="WebPersona" width="80px">
+				<div class="hero-content">
+					<h1>Design Meets,</h1> 
+					<h1>Brilliance Begins.</h1>
+				</div>
+				<p class="hero-description">Transform your digital presence with our innovative solutions that blend stunning design with powerful functionality. Let's create something extraordinary together.</p>
+				<a href="{{url_for('login')}}"><button>Get started</button></a>
+			</section>
+		</section>
+		<div class="floating-shapes" id="float-shapes">
 			<div class="shape"></div>
 			<div class="shape"></div>
 			<div class="shape"></div>
 		</div>
-		<section>
-			<!--NO--><img src="../../static/logo/{{all['logo'][0]}}" alt="WebPersona" width="80px">
-			<div class="hero-content">
-				<h1>Design Meets,</h1> 
-				<h1>Brilliancesgd Bns.</h1>
-			</div>
-			<p class="hero-description">Transform your digital presence with our daadnnovative solutions that blend stunning design with powerful functionality. Let's create something extraordinary together.</p>
-			<a href="{{url_for('login')}}"><button>Get started</button></a>
-		</section>
 	</section>
-	<div class="floating-shapes" id="float-shapes">
-		<div class="shape"></div>
-		<div class="shape"></div>
-		<div class="shape"></div>
-		
+	<div class="content" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}">
+		<div class="content-wrapper">
+			<div class="card">
+				<h1>heading</h1>hii asgamfv apoojif apof poajivf aopjvf aopjfv aopjiv apojkla voia vpoav opav oav japv opiav jajv paov jav poacv jav ajv aojv ajv[ aopfjiv
+			</div>
+		</div>
 	</div>
 </section><!--Close-->
 {%endblock%}

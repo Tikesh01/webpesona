@@ -1,41 +1,3 @@
-/* Classy-Clean */
-:root {
-  --navbar: #1e1e2f;
-  --navbarText: #ffffff;
-  --brandname: #00bcd4;
-  --buttons: #6200ea;
-  --button-hover: #3700b3;
-  --main-bg: #f5f5f5;
-  --main-heading: #212121;
-  --main-subheading: #424242;
-  --main-text: #616161;
-  --childDivs-bg: #eeeeee;
-  --footer-bg: #121212;
-  --highlight: #ff5722;
-  --primary: #6200ea;
-  --secondary: #00bcd4;
-  --dark: #1e1e2f;
-  --light: #ffffff;
-}
-/* Favourite */
-:root {
-  --navbar: linear-gradient(135deg, #141e30, #243b55);
-  --navbarText: #fdfdfd;
-  --brandname: linear-gradient(135deg, #c471f5, #fa71cd);
-  --buttons: linear-gradient(135deg, #667eea, #764ba2);
-  --button-hover: linear-gradient(135deg, #6a11cb, #2575fc);
-  --main-bg: linear-gradient(135deg, #ece9e6, #ffffff);
-  --main-heading: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
-  --main-subheading: linear-gradient(135deg, #ffecd2, #fcb69f);
-  --main-text: #2c3e50;
-  --childDivs-bg: linear-gradient(135deg, #dfe9f3, #ffffff);
-  --footer-bg: linear-gradient(135deg, #2c3e50, #4ca1af);
-  --highlight: linear-gradient(135deg, #fa709a, #fee140);
-  --primary: #667eea;
-  --secondary: #764ba2;
-  --dark: #141e30;
-  --light: #fdfdfd;
-}
 /* Simple */
 :root {
   --navbar: #0f172a;
@@ -111,4 +73,42 @@
   --secondary: #b91d73;
   --dark: #2c003e;
   --light: #fef9ff;
+}
+/* Classy-Clean */
+:root {
+  --navbar: #1e1e2f;
+  --navbarText: #ffffff;
+  --brandname: #00bcd4;
+  --buttons: #6200ea;
+  --button-hover: #3700b3;
+  --main-bg: #f5f5f5;
+  --main-heading: #212121;
+  --main-subheading: #424242;
+  --main-text: #616161;
+  --childDivs-bg: #eeeeee;
+  --footer-bg: #121212;
+  --highlight: #ff5722;
+  --primary: #6200ea;
+  --secondary: #00bcd4;
+  --dark: #1e1e2f;
+  --light: #ffffff;
+}
+/* Favourite */
+:root {
+  --navbar: linear-gradient(135deg, #141e30, #243b55);
+  --navbarText: #fdfdfd;
+  --brandname: linear-gradient(135deg, #c471f5, #fa71cd);
+  --buttons: linear-gradient(135deg, #667eea, #764ba2);
+  --button-hover: linear-gradient(135deg, #6a11cb, #2575fc);
+  --main-bg: linear-gradient(135deg, #ece9e6, #ffffff);
+  --main-heading: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
+  --main-subheading: linear-gradient(135deg, #ffecd2, #fcb69f);
+  --main-text: #2c3e50;
+  --childDivs-bg: linear-gradient(135deg, #dfe9f3, #ffffff);
+  --footer-bg: linear-gradient(135deg, #2c3e50, #4ca1af);
+  --highlight: linear-gradient(135deg, #fa709a, #fee140);
+  --primary: #667eea;
+  --secondary: #764ba2;
+  --dark: #141e30;
+  --light: #fdfdfd;
 }

@@ -1,10 +1,159 @@
-
-<form action="" method="post">
+<style>
+    #form_to_add_stuffs{
+        padding: 2em;
+        border-radius: 10px;
+        display: flex;
+        gap: 2em;
+        flex-direction: column;
+        color: #3498db;
+        background: white;
+        position: relative;
+        #close{
+            position: absolute;
+            right: 5%;
+            font-size: x-large;
+            border-radius: 50%;
+            padding: 0.5em;
+        }
+        #close:hover{
+            scale: 1.2;
+        }
+        #Title{
+            text-align: center;
+        }
+        .form-group{
+            width:100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.1em;
+            label{
+                color: cadetblue;
+            }
+            input,select{
+                padding: 0.4em 1em;
+                border-radius: 20px;
+                border: 1px solid cadetblue;
+                background: transparent;
+            }
+            select{
+                width: 100%;
+            }
+        }
+        .buttons-group{
+            width: 90%;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            button{
+                padding: 0.5em 1em;
+                border-radius: 5px;
+                background: #3498db;
+                color: white;
+            }
+        }
+        #N{
+            margin-bottom: -1em;
+        }
+        #allDetails{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2em;
+        }
+        .numbers{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1em;
+            input{
+                width: 50%;
+            }
+        }
+        .detail{
+            display: none;
+        }   
+    }
+   
+</style>
+<form action="" method="post" id="form_to_add_stuffs">
+    <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
+    <h2 id="Title">Add Form Card</h2>
     <div class="form-group">
         <label for="T1">Heading</label>
-        <input type="text" name="headingOfForm" id="T1">
+        <input type="text" name="headingOfForm" id="T1" min="1">
     </div>
-    <div class="form-group">
-        
+    <h3 id="N">Number Of</h3>
+    <div class="numbers">
+        <div class="form-group">
+            <label for="T2">Inputs </label>
+            <input type="number" name="numOfInp" id="T2" oninput="showMultContainers('T2','detailsOfInp', 'allDetails','Input')">
+        </div>
+        <div class="form-group">
+            <label for="T6">Select tags </label>
+            <input type="number" name="numOfSO" id="T6">
+        </div>
+        <div class="form-group">
+            <label for="T7">Radios </label>
+            <input type="number" name="numOfRadio" id="T7">
+        </div>
+        <div class="form-group">
+            <label for="T8">Checkboxes </label>
+            <input type="number" name="numOfCheckbox" id="T8">
+        </div>
+    </div>
+    <!-- This will be shown according to number of inputs  other details can be added if needed -->
+    <div id="allDetails">
+        <div id="detailsOfInp" class="detail">
+            <div class="form-group">
+                <label for="T5">Type</label>
+                <select name="typeOfInp" id="T5">
+                    {% for t in ['Text', 'Email', 'Password','File','Number','Color','Date','Datetime','Month','Week','Time','Url','Tel'] %}
+                    <option value="{{t}}">{{t}}</option>
+                    {%endfor%}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="T3">Label</label>
+                <input type="text" name="labelOfInp" id="T3">
+            </div>
+            <div class="form-group">
+                <label for="T4">Placeholder</label>
+                <input type="text" name="typeOfInp" id="T4">
+            </div>
+            <div class="form-group">
+                <label for="T9">Logical name</label>
+                <input type="text" name="nameOfInp" id="T9">
+            </div>
+    </div>
+        <!-- This will be shown according to number of select and so on   -->
+    <div id="detailsOfSelect" class="detail">
+
+    </div>
+    <div id="detailsOfRadio" class="detail">
+
+    </div>
+    <div id="detailsOfCheckbox" class="detail">
+    </div>
+    </div>
+    <div class="buttons-group">
+            <button type="reset">Reset</button>
+            <button type="submit">Done</button>
     </div>
 </form>
+<script>
+    function showMultContainers(id, cont, mainCont, head){
+        let num = document.getElementById(id).value;
+        const largeContainer = document.getElementById(mainCont)
+        const container = document.getElementById(cont)
+
+        largeContainer.innerHTML = "";
+
+
+        for(let i=1; i<= num; i++){
+            let clone = container.cloneNode(true);
+            clone.style.display = "block";
+          
+            clone.id="";
+            largeContainer.appendChild(clone);
+        }
+    }
+</script>

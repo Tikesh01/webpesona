@@ -23,13 +23,13 @@ button,a {
     color: var(--main-text);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    padding: 3em;
 }
 
 .content-wrapper {
     max-width: 1200px;
-    width: 80%;
     margin: 0 auto;
     gap: 2rem;
     padding: 1rem;
@@ -67,8 +67,9 @@ button,a {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 2em;
-            margin: 0.6em 0;
+            width: 90%;
+            margin: auto;
+            padding: 0.6em 0;
         }
     }
     button,input[type='submit']{
