@@ -27,9 +27,16 @@ debugpy==1.8.0
 watchdog==3.0.0
 
 # Utility Packages
-Pillow~=10.1.0  # For image handling (using a version with pre-built wheels)
 python-dateutil==2.8.2
 requests==2.31.0
 
-# Gunicorn for production server
+# Image Processing
+pillow-simd==9.0.0.post1  # Alternative to Pillow with better compatibility
+
+# Production Server
 gunicorn==21.2.0
+
+# System dependencies for image processing
+# These will be installed by the build process
+setuptools>=68.0.0
+wheel>=0.40.0
