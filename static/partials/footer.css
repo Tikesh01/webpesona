@@ -13,6 +13,10 @@ footer {
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 0 4em;
+	button{
+		padding: 0.5em 1em;
+		background: var(--highlight);
+	}
 }
 
 .footer-brand-social {
@@ -83,6 +87,10 @@ footer {
 		flex-direction: column;
 		gap: 0.5em;
 	}
+	button{
+			font-size: large;
+			color: var(--main-text);
+		}
 }
 
 .footer-col h3 {

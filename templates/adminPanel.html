@@ -16,6 +16,19 @@
 		<link rel="stylesheet" href="../static/flash-messages.css">
 		<title>WebPersona-Admin Pannel</title>
 		<script>
+			const inputs = document.getElementsByTagName('input');
+
+			for (let input of inputs) {
+				if (input.required) {
+					alert(input.name);  // 👈 shows the input's name
+					const name = input.getAttribute('name');
+					const label = document.querySelector(`label[for='${name}']`);
+					if (label) {
+						label.innerHTML += ` <span style="color: red;">*</span>`;
+					}
+				}
+			}
+
 			function showMessage(message, type) {
 				const flashContainer = document.createElement('div');
 				flashContainer.className = `alert alert-${type}`;
@@ -54,11 +67,12 @@
 					showMessage('Error saving content: ' + error.message, 'danger');
 				});
 			}
+
 		</script>
 		<script>
 			document.addEventListener("DOMContentLoaded", function () {
 				const iframe = document.getElementById("Iframe");
-				// Wait until the iframe content has fully loaded
+				
 				iframe.onload = function () {
 					const debug = iframe.dataset.debug === "true";
 
@@ -112,32 +126,39 @@
 							flashes.style.opacity = '0';
 							setTimeout(function() {
 								flashes.style.display = 'none';
-							}, 500);
+							}, 800);
 						}
-					}, 1800);
+					}, 2500);
 				});
 			</script>
 		  {% endif %}
 		{% endwith %}
 		{% if all['body_content_editable'] %}
 		<div class="form_to_add_card" id="add_form_card" >{% include 'Forms/Form_to_add_form.html' %}</div>
+		<div class="form_to_add_card" id="add_table_card">{% include 'Forms/Form_to_add_table.html' %}</div>
+		<div  class="form_to_add_card" id="add_blog_card" >{% include 'Forms/Form_to_add_blog.html'%}</div>
 		<div class="editer_tool_wrapper">
 			<div class="tools">
 				<label for="" data-name="Form" onclick="show_form('add_form_card')"><i class="fas fa-file-text" aria-hidden="true" title="Add Form" ></i><i class="fa-solid fa-circle-plus"></i></label>
-				<label for="" onclick="show_form()"><i class="fa fa-table" aria-hidden="true" title="Add tabel"></i><i class="fa-solid fa-circle-plus"></i> </label>
-				<label for="Blogg" onclick="show_form()"><i class="fa-brands fa-blogger-b"></i><i class="fa-solid fa-circle-plus"></i></label>
+				<label for="" onclick="show_form('add_table_card')"><i class="fa fa-table" aria-hidden="true" title="Add tabel"></i><i class="fa-solid fa-circle-plus"></i> </label>
+				<label for="Blogg" onclick="show_form('add_blog_card')"><i class="fa-brands fa-blogger-b"></i><i class="fa-solid fa-circle-plus"></i></label>
 				<label for=""  onclick="show_form()"><i class="fa-solid fa-list"></i><i class="fa-solid fa-circle-plus"></i></label>
 				<label for=""><i class="fa-regular fa-file-code"></i><i class="fa-solid fa-circle-plus"></i></label>
+				<label for="grid" title="Add grids"><i class="fas fa-grip"></i><i class="fa-solid fa-circle-plus"></i></label>
 				
 			</div>
 			<button type="button" id="saveEditedButton"  onclick="saveBlock('{{web.previewPage}}', '{{web.previewPage}}', '{{web.previewPage}}')" >Save the edited</button>
+			
 			<script>
 				function show_form(id){
-					const form = document.getElementById(id)
-					form.style.display = 'flex'
-					if(form.style.display == 'none')
-					{
-						form.style.display = 'flex'
+					const form = document.getElementById(id);
+					if (!form) return;
+					
+					// Toggle the display
+					if (form.style.display === 'none' || form.style.display === '') {
+						form.style.display = 'flex';
+					} else {
+						form.style.display = 'none';
 					}
 				}
 				function remove_form(id){
@@ -178,17 +199,25 @@
 					</details>
 				</li>
 				<li>
-					<form action="/Debug-mode" method="POST" id="debugModeForm">
-						{% if web.previewPage != '/' %}
-							{% if web.debugMode %}
-							<input type="checkbox" name="debugMode" id="debugging" onchange="this.form.submit()" checked />
-							{%else%}
-							<input type="checkbox" name="debugMode" id="debugging"  onchange="this.form.submit()" />
-							{%endif%}
-						{% else %}
-							<input type="checkbox" name="debugMode" id="debugging" disabled >
+					<form action="/Debug-mode" method="POST" id="debugModeForm" >
+						{% if web.debugMode %}
+						<input type="checkbox" name="debugMode" id="debugging" onchange="this.form.submit()" checked />
+						{%else%}
+						<input type="checkbox" name="debugMode" id="debugging"  onchange="this.form.submit()" />
 						{%endif%}
+	
 						<label for="debugging">Debug Mode</label>
+						<script>
+							function debugPage(page, out){
+								alert(page)
+								fetch(page)
+									.then(response => response.text())
+									.then(data => {
+										alert(data); // HTML as string
+										document.getElementById(out).innerHTML = data; // inject into page
+									});
+							}
+						</script>
 					</form>
 				</li>
 			</ul>
@@ -265,6 +294,7 @@
 				</div>
 			</div>
 			<div id="preview_container">
+
 				<h1>Your Website</h1>
 				<form
 					action="/frameSizeChange"
@@ -279,11 +309,21 @@
 					<button type="submit"><i class="fas fa-add"></i></button >
 				</form>
 				<div id="frameContainer">
+					{% if web.debugMode %}
+					<form action="">
+						<textarea name="changedCode" id="debugTextareaCode" row="150" colum>
+							{% for line in web.previewPageHtml %}
+								{{line}}
+							{%endfor%}
+						</textarea>
+						<button>Apply</button>
+					</form>
+	
+					{%else%}{%endif%}
 					<iframe
 						src="{{ all['previewPage']}}"
 						width="{{ all['size'] }}"
 						height="100%"
-						data-debug="{{'true' if web.debugMode else 'false'}}"
 						style="display: block; margin: auto; border: none;"
 						id="Iframe"
 					></iframe>
@@ -301,7 +341,10 @@
 					>
 						<input type="text" name="fileName" id="filName" placeholder="Page name"/>
 						<input type="text" name="title" id="fileTitle" placeholder="Page title" />
-						<input type="file" name="ownHtml" id="htmlfile" accept=".html, .htm, .py" placeholder="Put you File">
+						<div class="form-groups">
+							<label for=" htmlfile">Put your own logic or template</label>
+							<input type="file" name="ownHtml" id="htmlfile" accept=".html, .htm, .py" placeholder="Put you File">
+						</div>
 						<div id="addPageButtons">
 						<button type="reset">reset</button>
 						<button type="submit">Add</button>
@@ -309,7 +352,7 @@
 					</form>
 				</div>
 				<div class="features">
-					<h3><i class="fas fa-star" title="Add Logo / Favicon"></i>Add Favicon/Logo</h3>
+					<h3><i class="fas fa-images" title="Add Logo / Favicon"></i>Add Pictures</h3>
 					<div style="max-height: 8em;overflow: auto;">
 						{% for icon in all['favicons'] %}
 						<div id="favicons_container">
@@ -345,6 +388,14 @@
 									name="change_logo"
 									value="{{icon}}"
 								/>
+								<label for="img{{icon}}" title="Set image to page"><i class="fas fa-file-image" a></i
+								></label>
+								<input
+									type="submit"
+									id="img{{icon}}"
+									name="set_to_page"
+									value="{{icon}}"
+								/>
 							</form>
 						</div>
 						{% endfor %}
@@ -376,15 +427,11 @@
 				<div  class ="features" id="EditContent">
 					<h3><i class="fas fa-pen-to-square" title="Edit Page"></i>Make Page Editable</h3>
 					<form action="/Content-editable" method="post" enctype="multipart/form-data" class="content_edit">
-						{% if web.previewPage != '/' %}
-							{% if all['body_content_editable']==False %}
-							<input type="checkbox" name="contentEditable" id="Content_editable" onchange="this.form.submit()" />
-							{% else %}
-							<input type="checkbox" name="contentEditable" id="Content_editable" onchange="this.form.submit()" checked/>
-							{% endif %}
-						{%else%}
-							<input type="checkbox" name="contentEditable" id="Content_editable" disabled />
-						{%endif%}
+						{% if all['body_content_editable']==False %}
+						<input type="checkbox" name="contentEditable" id="Content_editable" onchange="this.form.submit()" />
+						{% else %}
+						<input type="checkbox" name="contentEditable" id="Content_editable" onchange="this.form.submit()" checked/>
+						{% endif %}
 						<label for="Content_editable">Content Editable</label>
 					</form>
 					{% if all['body_content_editable'] %} 

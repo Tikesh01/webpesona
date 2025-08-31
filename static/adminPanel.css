@@ -157,6 +157,12 @@ nav h1 i {
     height: 100%;
     max-width: 100%;
     overflow: auto;
+    #debugTextareaCode{
+        width: 98%;
+        height: 90vh;
+        line-height: 6px;
+        padding: 1em;
+    }
 }
 
 #preview_container input {
@@ -235,7 +241,7 @@ nav h1 i {
     align-items: center;
 
     /* background-color: #3498db; */
-    gap: 0.8em;
+    gap: 0.5em;
 
     img {
         max-height: 100%;
@@ -243,7 +249,7 @@ nav h1 i {
     }
 
     p {
-        width: 42%;
+        width: 40%;
         max-width: 40%;
         overflow: hidden;
     }
@@ -260,7 +266,7 @@ nav h1 i {
         color: #3498db;
         transition: color 0.2s;
         float: right;
-        margin: 0 0.5em;
+        margin: 0 0.34em;
     }
 
     label:hover {

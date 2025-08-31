@@ -1,159 +1,712 @@
 <style>
-    #form_to_add_stuffs{
-        padding: 2em;
-        border-radius: 10px;
+    #form_to_add_stuffs {
+        padding: 2.5em;
+        border-radius: 15px;
         display: flex;
-        gap: 2em;
+        gap: 1em;
         flex-direction: column;
-        color: #3498db;
+        color: #2c3e50;
         background: white;
         position: relative;
-        #close{
-            position: absolute;
-            right: 5%;
-            font-size: x-large;
-            border-radius: 50%;
-            padding: 0.5em;
-        }
-        #close:hover{
-            scale: 1.2;
-        }
-        #Title{
-            text-align: center;
-        }
-        .form-group{
-            width:100%;
-            display: flex;
-            flex-direction: column;
-            gap: 0.1em;
-            label{
-                color: cadetblue;
-            }
-            input,select{
-                padding: 0.4em 1em;
-                border-radius: 20px;
-                border: 1px solid cadetblue;
-                background: transparent;
-            }
-            select{
-                width: 100%;
-            }
-        }
-        .buttons-group{
-            width: 90%;
-            margin: auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            button{
-                padding: 0.5em 1em;
-                border-radius: 5px;
-                background: #3498db;
-                color: white;
-            }
-        }
-        #N{
-            margin-bottom: -1em;
-        }
-        #allDetails{
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2em;
-        }
-        .numbers{
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1em;
-            input{
-                width: 50%;
-            }
-        }
-        .detail{
-            display: none;
-        }   
+        max-width: 90%;
+        max-height: 95%;
+        overflow: auto;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        margin: 0 auto;
     }
-   
+
+    #form_to_add_stuffs::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #form_to_add_stuffs::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    #form_to_add_stuffs::-webkit-scrollbar-thumb {
+        background: #3498db;
+        border-radius: 10px;
+    }
+
+    #close {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        font-size: 1.2em;
+        border-radius: 50%;
+        padding: 0.5em;
+        cursor: pointer;
+        color: #e74c3c;
+        transition: all 0.2s ease;
+    }
+
+    #close:hover {
+        transform: scale(1.2) rotate(90deg);
+        color: #c0392b;
+    }
+
+    #Title {
+        text-align: center;
+        color: #2c3e50;
+        font-size: 1.8em;
+        margin-bottom: 1em;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 0.5em;
+    }
+
+    .form-group {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        margin: 0.5em 0;
+        position: relative;
+    }
+
+    .form-group label {
+        color: #34495e;
+        font-size: 0.9em;
+        margin-bottom: 0.3em;
+        font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.7em 1em;
+        border-radius: 8px;
+        border: 2px solid #bdc3c7;
+        background: white;
+        transition: all 0.3s ease;
+        font-size: 0.95em;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        outline: none;
+    }
+
+    .form-group input[type="number"] {
+        width: 100px;
+    }
+
+    .fieldset-container {
+        background: #f8f9fa;
+        padding: 1.5em;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        margin-top: 1.5em;
+        position: relative;
+        max-height: 90vh;
+        overflow: auto;
+    }
+
+    .fieldset-header {
+        position: absolute;
+        top: -0.3em;
+        left: 0.3em;
+        background: #3498db;
+        color: white;
+        padding: 0.3em 0.8em;
+        border-radius: 5px;
+        font-size: 0.9em;
+        z-index: 99;
+    }
+
+    .numbers {
+        display: flex;
+        gap: 1em;
+        padding: 1em;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        position: relative;
+        margin-bottom: 1em;
+    }
+
+    .allDetails {
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 1.5em;
+        margin-top: 1.5em;
+    }
+
+    .detail {
+        display: none;
+        background: white;
+        padding: 0.5em 1em;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        border: 1px solid #e9ecef;
+    }
+
+    .detail .form-group {
+        margin: 0.2em 0;
+    }
+
+    .detail .form-group input,
+    .detail .form-group select,
+    .detail .form-group textarea {
+        padding: 0.5em 0.9em;
+        font-size: 0.8em;
+    }
+
+    .detail h4 {
+        color: #3498db;
+        margin-bottom: 1em;
+        padding-bottom: 0.5em;
+        border-bottom: 1px solid #eee;
+    }
+
+    .buttons-group {
+        width: 100%;
+        margin-top: 1em;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 1em;
+    }
+
+    .buttons-group button {
+        padding: 0.8em 2em;
+        border-radius: 8px;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .buttons-group button[type="reset"] {
+        background: #e74c3c;
+        color: white;
+    }
+
+    .buttons-group button[type="submit"] {
+        background: #3498db;
+        color: white;
+    }
+
+    .buttons-group button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .buttons-group button:active {
+        transform: translateY(0);
+    }
+
+    .preview-container {
+        margin-top: 2em;
+        padding: 1.5em;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+    }
+
+    .preview-container h3 {
+        color: #2c3e50;
+        margin-bottom: 1em;
+        padding-bottom: 0.5em;
+        border-bottom: 1px solid #3498db;
+    }
+
+    .form-preview {
+        background: white;
+        padding: 1.5em;
+        border-radius: 8px;
+        max-height: 90vh;
+        overflow: auto;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #form_to_add_stuffs {
+            padding: 1.5em;
+            max-width: 95%;
+        }
+
+        .numbers {
+            grid-template-columns: 1fr;
+        }
+
+        .allDetails {
+            grid-template-columns: 1fr;
+        }
+
+        .buttons-group {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .buttons-group button {
+            width: 100%;
+        }
+    }
 </style>
 <form action="" method="post" id="form_to_add_stuffs">
     <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
     <h2 id="Title">Add Form Card</h2>
+    
     <div class="form-group">
         <label for="T1">Heading</label>
-        <input type="text" name="headingOfForm" id="T1" min="1">
+        <input type="text" name="headingOfForm" id="T1" placeholder="Enter form heading (e.g., Contact Form)" required>
     </div>
-    <h3 id="N">Number Of</h3>
-    <div class="numbers">
-        <div class="form-group">
-            <label for="T2">Inputs </label>
-            <input type="number" name="numOfInp" id="T2" oninput="showMultContainers('T2','detailsOfInp', 'allDetails','Input')">
-        </div>
-        <div class="form-group">
-            <label for="T6">Select tags </label>
-            <input type="number" name="numOfSO" id="T6">
-        </div>
-        <div class="form-group">
-            <label for="T7">Radios </label>
-            <input type="number" name="numOfRadio" id="T7">
-        </div>
-        <div class="form-group">
-            <label for="T8">Checkboxes </label>
-            <input type="number" name="numOfCheckbox" id="T8">
+    
+    <div class="form-group">
+        <label for="T11">Enter the Block names ( Fieldsets-legends )</label>
+        <input type="text" name="headingsOfFieldsetForm" id="T11" min="0" placeholder="( , ) separated Eg. Home Address, Work Address" oninput="generateFieldsets(this.value,'fieldsetsContainerForm')">
+    </div>
+    
+    <div id="fieldsetsContainerForm">
+    </div>
+    
+    <div class="preview-container">
+        <h3>Form Preview</h3>
+        <div id="formPreview" class="form-preview">
+            <p>Your form preview will appear here</p>
         </div>
     </div>
-    <!-- This will be shown according to number of inputs  other details can be added if needed -->
-    <div id="allDetails">
-        <div id="detailsOfInp" class="detail">
-            <div class="form-group">
-                <label for="T5">Type</label>
-                <select name="typeOfInp" id="T5">
-                    {% for t in ['Text', 'Email', 'Password','File','Number','Color','Date','Datetime','Month','Week','Time','Url','Tel'] %}
-                    <option value="{{t}}">{{t}}</option>
-                    {%endfor%}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="T3">Label</label>
-                <input type="text" name="labelOfInp" id="T3">
-            </div>
-            <div class="form-group">
-                <label for="T4">Placeholder</label>
-                <input type="text" name="typeOfInp" id="T4">
-            </div>
-            <div class="form-group">
-                <label for="T9">Logical name</label>
-                <input type="text" name="nameOfInp" id="T9">
-            </div>
-    </div>
-        <!-- This will be shown according to number of select and so on   -->
-    <div id="detailsOfSelect" class="detail">
-
-    </div>
-    <div id="detailsOfRadio" class="detail">
-
-    </div>
-    <div id="detailsOfCheckbox" class="detail">
-    </div>
-    </div>
+    
     <div class="buttons-group">
-            <button type="reset">Reset</button>
-            <button type="submit">Done</button>
+        <button type="button" onclick="resetForm()">Reset</button>
+        <button type="button" onclick="generateFormCode()">Generate Form Code</button>
     </div>
 </form>
+
+<div id="templates" style="display: none;">
+    <!-- Input template -->
+    <div class="detail" id="inputTemplate">
+        <h4>Input</h4>
+        <div class="form-group">
+            <label>Type</label>
+            <select name="inputType">
+                <option value="text">Text</option>
+                <option value="email">Email</option>
+                <option value="password">Password</option>
+                <option value="file">File</option>
+                <option value="number">Number</option>
+                <option value="color">Color</option>
+                <option value="date">Date</option>
+                <option value="datetime">Datetime</option>
+                <option value="month">Month</option>
+                <option value="week">Week</option>
+                <option value="time">Time</option>
+                <option value="url">Url</option>
+                <option value="tel">Tel</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Placeholder</label>
+            <input type="text" name="inputPlaceholder" placeholder="Enter placeholder text">
+        </div>
+        <div class="form-group">
+            <label>Logical name</label>
+            <input type="text" name="inputName" required placeholder="Enter name attribute for input">
+        </div>
+        <div class="form-group">
+            <label>Label Text</label>
+            <input type="text" name="inputLabel" placeholder="Enter label for input">
+        </div>
+    </div>
+
+    <!-- Textarea template -->
+    <div class="detail" id="textareaTemplate">
+        <h4>Textarea</h4>
+        <div class="form-group">
+            <label>Placeholder</label>
+            <input type="text" name="textareaPlaceholder" placeholder="Enter placeholder text">
+        </div>
+        <div class="form-group">
+            <label>Logical name</label>
+            <input type="text" name="textareaName" required placeholder="Enter name attribute for textarea">
+        </div>
+        <div class="form-group">
+            <label>Label Text</label>
+            <input type="text" name="textareaLabel" placeholder="Enter label for textarea">
+        </div>
+        <div class="form-group">
+            <label>Rows</label>
+            <input type="number" name="textareaRows" value="4" min="1" placeholder="Number of rows">
+        </div>
+        <div class="form-group">
+            <label>Columns</label>
+            <input type="number" name="textareaCols" value="50" min="1" placeholder="Number of columns">
+        </div>
+    </div>
+
+    <!-- Select template -->
+    <div class="detail" id="selectTemplate">
+        <h4>Select Tag</h4>
+        <div class="form-group">
+            <label>Options separated by comma( , )</label>
+            <textarea name="selectOptions" placeholder="e.g., Small, Medium, Large" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Logical name</label>
+            <input type="text" name="selectName" required placeholder="Enter name attribute for select">
+        </div>
+        <div class="form-group">
+            <label>Label Text</label>
+            <input type="text" name="selectLabel" placeholder="Enter label for select">
+        </div>
+    </div>
+
+    <!-- Radio template -->
+    <div class="detail" id="radioTemplate">
+        <h4>Radio Button</h4>
+        <div class="form-group">
+            <label>Options separated by comma( , )</label>
+            <textarea name="radioOptions" placeholder="e.g., Male, Female, Other" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Logical name</label>
+            <input type="text" name="radioName" required placeholder="Enter name attribute for radio group">
+        </div>
+        <div class="form-group">
+            <label>Label Text</label>
+            <input type="text" name="radioLabel" placeholder="Enter label for radio group">
+        </div>
+    </div>
+
+    <!-- Checkbox template -->
+    <div class="detail" id="checkboxTemplate">
+        <h4>Checkbox</h4>
+        <div class="form-group">
+            <label>Options separated by comma( , )</label>
+            <textarea name="checkboxOptions" placeholder="e.g., Swimming, Reading, Gaming" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Logical name</label>
+            <input type="text" name="checkboxName" required placeholder="Enter name attribute for checkbox group">
+        </div>
+        <div class="form-group">
+            <label>Label Text</label>
+            <input type="text" name="checkboxLabel" placeholder="Enter label for checkbox group">
+        </div>
+    </div>
+
+    <!-- Button template -->
+    <div class="detail" id="buttonTemplate">
+        <h4>Button</h4>
+        <div class="form-group">
+            <label>Type</label>
+            <select name="buttonType">
+                <option value="button">Button</option>
+                <option value="submit">Submit</option>
+                <option value="reset">Reset</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Text</label>
+            <input type="text" name="buttonText" required placeholder="Enter button text (e.g., Submit, Save)">
+        </div>
+    </div>
+</div>
+
 <script>
-    function showMultContainers(id, cont, mainCont, head){
-        let num = document.getElementById(id).value;
-        const largeContainer = document.getElementById(mainCont)
-        const container = document.getElementById(cont)
+    let legends;
+    function generateFieldsets(legend,container) {
+        const fieldsetsContainer = document.getElementById(container);
+        fieldsetsContainer.innerHTML = '';
+        const legendList = legend.trim().split(',')
+        legends = legendList
+        
 
-        largeContainer.innerHTML = "";
+        for (let i = 1; i <= legends.length; i++) {
+            const fieldsetDiv = document.createElement('div');
+            fieldsetDiv.className = 'fieldset-container';
+            if(container === 'fieldsetsContainerTab'){
+                fieldsetDiv.id = `Table-${i}`;
+                fieldsetDiv.innerHTML = `
+                    <div class="fieldset-header">${legends[i-1]}</div>
+                     <div class="form-group">
+                        <select name="typeOfTable${i}" id="typeOfTab${i}" oninput='updatePreviewTab('tablePreview')'>
+                            <option value="hAtTop">Header(s) at the Top</option>
+                            <option value="hAtLeft">Header(s) at The Left</option>
+                            <option value="hBoth">Header(s) at AT The Left and Top </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="F3${i}">Headers of table ( , ) separated</label>
+                        <textarea name="headersOfTab${i}" id="F3${i}" oninput="updatePreviewTab('tablePreview')" placeholder="Top"></textarea>
+                        
+                    </div>
+                
+                    <div class="form-group">
+                        <label for="F4${i}">Number Of data Rows</label>
+                        <input type="number" name="numOfRows${i}" id="F4${i}" oninput="generateTbody(this.value, ${i})"/>
+                    </div>
+                    <div class="justContainer" style="display:flex; flex-direction:column;">
+                        <div id="dataContainers${i}" style="overflow: auto;"></div>
+                    </div>
 
+                    <div class="form-group">
+                        <label for="F5${i}">Footers of table ( , ) separated</label>
+                        <textarea name="footersOfTab${i}" id="F5${i}" oninput="updatePreviewTab('tablePreview')"></textarea>
+                    </div>`
+                fieldsetsContainer.appendChild(fieldsetDiv);
+            }
+            else if(container==='fieldsetsContainerForm'){
+                fieldsetDiv.id = `fieldset-${i}`;
+                fieldsetDiv.innerHTML = `
+                    <div class="fieldset-header">${legends[i-1]}</div>
+                    <div class="numbers">
+                        <div class="form-group">
+                            <label>Inputs</label>
+                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'input', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Textareas</label>
+                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'textarea', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Select tags</label>
+                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'select', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Radios</label>
+                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'radio', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Checkboxes</label>
+                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'checkbox', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Buttons</label>
+                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'button', this.value)">
+                        </div>
+                    </div>
+                    <div id="elements-container-${i}" class="allDetails"></div>
+                `;
+                fieldsetsContainer.appendChild(fieldsetDiv)
+                updatePreview('formPreview')
 
-        for(let i=1; i<= num; i++){
-            let clone = container.cloneNode(true);
-            clone.style.display = "block";
-          
-            clone.id="";
-            largeContainer.appendChild(clone);
+            }
+        
         }
     }
+
+    function generateElements(fieldsetId, elementType, count) {
+        const container = document.getElementById(`elements-container-${fieldsetId}`);
+        if (!container) return;
+        
+        // Remove existing elements of this type
+        const existingElements = container.querySelectorAll(`[data-type="${elementType}"]`);
+        existingElements.forEach(el => el.remove());
+        
+        count = parseInt(count) || 0;
+        if (count <= 0) return;
+        
+        const template = document.getElementById(`${elementType}Template`);
+        if (!template) return;
+        
+        for (let i = 1; i <= count; i++) {
+            const clone = template.cloneNode(true);
+            clone.id = `${elementType}-${fieldsetId}-${i}`;
+            clone.style.display = 'grid';
+            clone.setAttribute('data-type', elementType);
+            
+            // Update the heading to include the index
+            const heading = clone.querySelector('h4');
+            if (heading) {
+                heading.textContent = `${heading.textContent} ${i}`;
+            }
+            
+            // Add unique names to all inputs to avoid conflicts
+            const allInputs = clone.querySelectorAll('input, select, textarea');
+            allInputs.forEach(input => {
+                const originalName = input.getAttribute('name');
+                if (originalName) {
+                    input.setAttribute('name', `fieldset-${fieldsetId}-${elementType}-${i}-${originalName}`);
+                }
+            });
+            
+            container.appendChild(clone);
+        }
+        
+        updatePreview('formPreview');
+    }
+    
+    function updatePreview(id) {
+        const preview = document.getElementById(id);
+        if (!preview) return;
+        
+        const formHeading = document.getElementById('T1').value || 'Form Title';
+        
+        let previewHTML = `<h3>${formHeading}</h3>`;
+    
+        for (let i = 1; i <= legends.length; i++) {
+            const fieldset = document.getElementById(`fieldset-${i}`);
+            if (!fieldset) continue;
+            
+            previewHTML += `<fieldset><legend>${legends[i-1]}</legend>`;
+            
+            const elementsContainer = document.getElementById(`elements-container-${i}`);
+            if (elementsContainer) {
+                const elements = elementsContainer.querySelectorAll('.detail');
+                elements.forEach(el => {
+                    const type = el.getAttribute('data-type');
+                    previewHTML += generatePreviewElement(el, type);
+                });
+            }
+            
+            previewHTML += `</fieldset>`;
+        }
+        
+        preview.innerHTML = previewHTML;
+    }
+    
+    function generatePreviewElement(element, type) {
+        let html = '';
+        
+        switch(type) {
+            case 'input':
+                const inputName = element.querySelector('input[name$="inputName"]')?.value || 'input';
+                const inputLabel = element.querySelector('input[name$="inputLabel"]')?.value || 'Input Field';
+                const inputType = element.querySelector('select[name$="inputType"]')?.value || 'text';
+                const inputPlaceholder = element.querySelector('input[name$="inputPlaceholder"]')?.value || '';
+                
+                html = `
+                    <div class="form-group">
+                        <label>${inputLabel}</label>
+                        <input type="${inputType}" name="${inputName}" placeholder="${inputPlaceholder}">
+                    </div>
+                `;
+                break;
+                
+            case 'textarea':
+                const textareaName = element.querySelector('input[name$="textareaName"]')?.value || 'textarea';
+                const textareaLabel = element.querySelector('input[name$="textareaLabel"]')?.value || 'Textarea';
+                const textareaPlaceholder = element.querySelector('input[name$="textareaPlaceholder"]')?.value || '';
+                const textareaRows = element.querySelector('input[name$="textareaRows"]')?.value || '4';
+                const textareaCols = element.querySelector('input[name$="textareaCols"]')?.value || '50';
+                
+                html = `
+                    <div class="form-group">
+                        <label>${textareaLabel}</label>
+                        <textarea name="${textareaName}" placeholder="${textareaPlaceholder}" rows="${textareaRows}" cols="${textareaCols}"></textarea>
+                    </div>
+                `;
+                break;
+                
+            case 'select':
+                const selectName = element.querySelector('input[name$="selectName"]')?.value || 'select';
+                const selectLabel = element.querySelector('input[name$="selectLabel"]')?.value || 'Select Option';
+                const selectOptions = element.querySelector('textarea[name$="selectOptions"]')?.value || '';
+                const options = selectOptions.split(',').map(opt => opt.trim()).filter(opt => opt);
+                
+                html = `
+                    <div class="form-group">
+                        <label>${selectLabel}</label>
+                        <select name="${selectName}">
+                            ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
+                break;
+                
+            case 'radio':
+                const radioName = element.querySelector('input[name$="radioName"]')?.value || 'radio';
+                const radioLabel = element.querySelector('input[name$="radioLabel"]')?.value || 'Radio Options';
+                const radioOptions = element.querySelector('textarea[name$="radioOptions"]')?.value || '';
+                const radioOptionsList = radioOptions.split(',').map(opt => opt.trim()).filter(opt => opt);
+                
+                html = `
+                    <div class="form-group">
+                        <label>${radioLabel}</label>
+                        ${radioOptionsList.map(opt => `
+                            <div>
+                                <input type="radio" name="${radioName}" value="${opt}" id="${radioName}-${opt}">
+                                <label for="${radioName}-${opt}">${opt}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                break;
+                
+            case 'checkbox':
+                const checkboxName = element.querySelector('input[name$="checkboxName"]')?.value || 'checkbox';
+                const checkboxLabel = element.querySelector('input[name$="checkboxLabel"]')?.value || 'Checkbox Options';
+                const checkboxOptions = element.querySelector('textarea[name$="checkboxOptions"]')?.value || '';
+                const checkboxOptionsList = checkboxOptions.split(',').map(opt => opt.trim()).filter(opt => opt);
+                
+                html = `
+                    <div class="form-group">
+                        <label>${checkboxLabel}</label>
+                        ${checkboxOptionsList.map(opt => `
+                            <div>
+                                <input type="checkbox" name="${checkboxName}[]" value="${opt}" id="${checkboxName}-${opt}">
+                                <label for="${checkboxName}-${opt}">${opt}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                break;
+                
+            case 'button':
+                const buttonType = element.querySelector('select[name$="buttonType"]')?.value || 'button';
+                const buttonText = element.querySelector('input[name$="buttonText"]')?.value || 'Button';
+                
+                html = `
+                    <div class="form-group">
+                        <button type="${buttonType}">${buttonText}</button>
+                    </div>
+                `;
+                break;
+        }
+        
+        return html;
+    }
+    
+    function generateFormCode() {
+        const formHeading = document.getElementById('T1').value || 'Form Title';
+        
+        let formHTML = `<form action="#" method="post">\n  <h2>${formHeading}</h2>\n`;
+        
+        // Loop through all fieldsets
+        for (let i = 1; i <= legends.length; i++) {
+            const fieldset = document.getElementById(`fieldset-${i}`);
+            if (!fieldset) continue;
+            
+            formHTML += `  <fieldset>\n    <legend>${legends[i-1]}</legend>\n`;
+            
+            // Get all elements in this fieldset
+            const elementsContainer = document.getElementById(`elements-container-${i}`);
+            if (elementsContainer) {
+                const elements = elementsContainer.querySelectorAll('.detail');
+                elements.forEach(el => {
+                    const type = el.getAttribute('data-type');
+                    formHTML += '    ' + generatePreviewElement(el, type).replace(/\n/g, '\n    ') + '\n';
+                });
+            }
+            
+            formHTML += `  </fieldset>\n`;
+        }
+        
+        formHTML += `</form>`;
+        
+        // Show the code in a prompt (in a real application, you might show this in a modal)
+        alert('Form HTML Code:\n\n' + formHTML);
+        
+        document.getElementById('formPreview').innerHTML = `
+            <div class='form-group'>
+                <label for="MainFormCode">Generated Form Code</label>
+                <textarea style="width: 100%; height: 200px; font-family: monospace;", id="MainFormCode" name="mainFormCode">${formHTML}</textarea>
+            </div>
+        `;
+    }
+    
+    function resetForm(container) {
+        if (confirm('Are you sure you want to reset the form? All your inputs will be lost.')) {
+            document.getElementById('form_to_add_stuffs').reset();
+            document.getElementById(container).innerHTML = '';
+            document.getElementById('formPreview').innerHTML = '<p>Preview will appear here</p>';
+            fieldsetCount = 0;
+        }
+    }
+    
 </script>

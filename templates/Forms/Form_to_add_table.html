@@ -1,0 +1,249 @@
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.2em;
+        font-family: sans-serif;
+        font-size: 0.95em;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 0.6em 0.8em;
+        text-align: left;
+    }
+
+    th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+
+    tr:hover {
+        background: #f1f1f1;
+    }
+    #fieldsetsContainerTab{
+        display: grid; 
+        grid-template-columns:repeat(2,1fr); 
+        gap: 1em;
+    }
+</style>
+<form id="form_to_add_stuffs">
+    <div class="form_card_header">
+        <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
+        <h2 id="Title">Add Table Card</h2>
+    </div>
+    <div class="form-group">
+        <label for="F1">Heading</label>
+        <input type="text" name="headingOfTab" id="F1" placeholder="Enter table heading (e.g., Student Details)" oninput="updatePreviewTab('tablePreview')"/>
+    </div>
+    <div class="form-group">
+        <label for="F2">File to Table ( Excel or CSV files )</label>
+        <input type="file" accept=".xslx, .csv, .xls" name="fileToTab" id="F2" placeholder="Select a file" oninput="updatePreviewTab('tablePreview', 'F2')">
+    </div>
+
+    <div class="form-group">
+        <label for="F9">Enter the Block names ( Fieldsets-legends )</label>
+        <input type="text" name="headingsOfFieldsetTab" id="F9" placeholder="( , ) separated Eg. School-Student, College-Student" oninput="generateFieldsets(this.value,'fieldsetsContainerTab')">
+    </div>
+    
+    <div id="fieldsetsContainerTab">
+
+    </div>
+    <div class="preview-container">
+        <h3>Table Preview</h3>
+        <div id="tablePreview" class="form-preview">
+            <p>Your Table preview will appear here</p>
+        </div>
+    </div>
+
+    <div class="buttons-group">
+        <button type="button" onclick="resetForm('fieldsetsContainerTab')">Reset</button>
+        <button type="button" onclick='generateTabCode()'>Generate Code</button>
+        
+    </div>
+</form>
+<script >
+    let fieldsetsCount =0;
+    function generateTbody(values, n) {
+        if (values < 0) {
+            alert('Number of rows cannot be negative');
+            return;
+        }
+
+        const cont = document.getElementById('dataContainers'+n);
+        const head = document.getElementById('F3'+n);
+        const headers = head.value.trim().split(',').filter(h => h); 
+    
+        if (!cont || !head || headers.length === 0) {
+            alert('Please enter headers first!');
+            
+            return;
+        }
+
+        cont.innerHTML = '';
+        for (let i = 1; i <= values; i++) {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'data-row';
+            rowDiv.style.display = 'flex';
+            rowDiv.style.gap = '0.8em';
+
+            headers.forEach((header, index) => {
+                const formGroup = document.createElement('div');
+                formGroup.className = 'form-group';
+                formGroup.gap = "0.1em"
+                
+                const label = document.createElement('label');
+                label.htmlFor = `table${n}_header${index}_row${i}`;
+                label.textContent = `${header.trim()}-${i}`;
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = `table${n}_headerData${index}_row${i}`;
+                input.id = `table${n}_header${index}_row${i}`;
+                input.style.padding = `0.5em 1em`;
+                input.placeholder = `Enter ${header.trim()} value`;
+                input.oninput = function() {
+                    updatePreviewTab('tablePreview');
+                };
+                
+                formGroup.appendChild(label);
+                formGroup.appendChild(input);
+                rowDiv.appendChild(formGroup);
+            });
+
+            cont.appendChild(rowDiv);
+        }
+        fieldsetsCount = values;
+        
+    }
+   
+    function updatePreviewTab(pContainer, fileInp=null){
+        const previewCont = document.getElementById(pContainer)
+        const fieldsets = document.getElementById('F9').value.trim().split(',')
+        const tableTitle = document.getElementById('F1').value || 'Title'
+        previewCont.innerHTML = ""
+
+        let previewHtml = `<h3>${tableTitle}</h3>`
+        
+        if (fileInp != null) {
+            const inputEl = document.getElementById(fileInp);
+            inputEl.onchange = function(e) {  
+                const file = e.target.files[0];
+                if (!file) {
+                    alert("Please select a CSV file!");
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const text = event.target.result;
+                    const rows = text.trim().split("\n").map(row => row.split(","));
+                    
+                    let table = "<table border='1'>";
+                    rows.forEach(r => {
+                        table += "<tr>";
+                        r.forEach(cell => {
+                            table += `<td>${cell.trim()}</td>`;
+                        });
+                        table += "</tr>";
+                    });
+                    table += "</table>";
+
+                    previewHtml += table;
+                    previewCont.innerHTML += previewHtml 
+                };
+                reader.readAsText(file);
+            };
+        }
+
+        else if(fileInp==null){
+            for(let i= 1; i<=fieldsets.length;i++){
+                const headers = document.getElementById(`F3${i}`).value.trim().split(',')
+                const rows = document.getElementById(`F4${i}`).value
+                const footers = document.getElementById(`F5${i}`).value.trim().split(',')
+                const tableType = document.getElementById(`typeOfTab${i}`).value
+                previewHtml += `
+                    <fieldset >
+                        <legend>${fieldsets[i-1]}</legend>
+                        <table>`
+                if(headers.length >0){
+                    if(tableType === 'hAtTop'){
+                        previewHtml += `
+                            <thead>
+                                <tr>`
+                        let a=0
+                        while(headers[a]){
+                            previewHtml += `\n    <th>${headers[a]} </th>`
+                            a+=1    
+                        }
+                        previewHtml += `
+                                </tr>
+                            </thead>\n`
+                    }
+                }
+                if(rows){
+                    if(tableType === 'hAtTop'){
+                        previewHtml += `<tbody>`
+                        for(let j=1;j<=rows; j++){
+                            previewHtml += `<tr>`
+                            for(let k=0; k<headers.length; k++){
+                                previewHtml += `    \n<td>${document.getElementById(`table${i}_header${k}_row${j}`).value || 'None'}</td>`
+                            }
+                        previewHtml += '\n</tr>'
+                        }
+                        previewHtml += `</tbody>\n`
+                    }
+                    if(tableType === 'hAtLeft'){
+                
+                        for(let k=0; k<headers.length; k++){
+                            previewHtml += `    \n<tr>
+                                <th>${headers[k]}</th>`
+
+                            for(let j=1;j<=rows; j++){
+                                previewHtml += `<td>${document.getElementById(`table${i}_header${k}_row${j}`).value || 'None'}</td>\n`
+                            }
+                            previewHtml += `    </tr>\n`
+                        }
+                    }
+                }
+                if(footers.length > 0){
+                    previewHtml += `
+                    <tfoot>
+                        <tr>`
+                    let h=0
+                    while(footers[h]){
+                        previewHtml += `    \n<td>${footers[h]}</td>`
+                        h+=1
+                    }
+                    previewHtml += `
+                        </tr>
+                    </tfoot>\n`
+                }
+                previewHtml +=`
+                    </table>
+                </fieldset>`
+            }
+            previewCont.innerHTML += previewHtml 
+        }
+          
+    }
+    function generateTabCode(file=null){
+        
+        const previewCont = document.getElementById('tablePreview')
+        const code = previewCont.innerHTML
+
+        previewCont.innerHTML = ""
+        previewCont.innerHTML = `
+        <div class='form-group'>
+            <label for='MainCode'>Code to implement Table</label>
+            <textarea name='mainCode' id='MainCode' row='50'>${code}</textarea>
+        </div>`
+    
+    }
+    
+</script>

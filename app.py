@@ -20,7 +20,7 @@ class website:
         self.admin = "templates/adminPanel.html"
         self.folder = "templates/"
         self.extantion = ".html"
-        self.pages = (page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) )
+        self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) ]
         self.unremovablePages = ['Home.html','login.html','register.html']
         self.unviewPages = ['adminPanel.html','skeleton.html','Base.html']
         self.folders =  [page for page in os.listdir('templates/') if os.path.isdir('templates/'+page) and page!='Forms' ]
@@ -34,7 +34,7 @@ class website:
         self.len_of_theme_block = int()
         self.body_content_editable = False
         self.debugMode = False
-        self.previewPageHtml = self.readSourceCode()
+        self.previewPageHtml = self.readSourceCode(self.previewPage)
         self.isLogedin = False
         self.isRegistered = False
 
@@ -42,8 +42,7 @@ class website:
         file = open("static/root.css", "r")
         return file.readlines()
             
-    def readSourceCode(self):
-        page = self.previewPage
+    def readSourceCode(self,page):
         if page == '/':
             return ["Select a Page!"]
         if page in self.folderDict['partials']:
@@ -185,6 +184,20 @@ class website:
         self.logo = os.listdir("static/logo/")
         self.favicons = os.listdir("static/favicons")
     
+    def write_code_to_page(self,page,content,type, position=None):
+        with open(page,'r') as file:
+            lines = file.readlines()
+        with open(page, "w") as f:
+            if type=='img':
+                c = "\n<img src='" + content+"' alt='Image...'/>\n"
+                lines.insert(len(lines)-4,c)
+                f.writelines(lines)
+        
+    
+    def setImgInPage(self,imgPath, page,position=None):
+        self.write_code_to_page(page, imgPath, 'img')
+        
+        
     def edit_content(self, file, block_id, html):
         while html[0] == '' or html[0] == "<!--start-->\n":
             html.pop(0)
@@ -314,6 +327,7 @@ class website:
         
         with open('app.py','a') as file:
             file.writelines(newLogic+suffix)
+        
             
 w =website()
 
@@ -396,6 +410,7 @@ def operation_with_img_files():
     pathToDelPage = request.form.get('delete_page')
     pathForPreview = request.form.get('preview_page')
     pathTochangeLogo = request.form.get('change_logo')
+    pathToSetinPage = request.form.get('set_to_page')
    
     if pathToDelete:
         try:
@@ -416,9 +431,10 @@ def operation_with_img_files():
         except Exception as e:
             flash(f"Error deleting page: {e}", "danger")
     if pathForPreview:
-        print('last : ', w.previewPage)
+        print('last : ', w.previewPage) 
         w.previewPage = pathForPreview
         print('current : ', w.previewPage)
+        w.previewPageHtml = w.readSourceCode(w.previewPage)
         flash(f"Preview page set to {pathForPreview}", "info")
     if pathTochangeLogo:
         try:
@@ -426,6 +442,14 @@ def operation_with_img_files():
             flash("Logo changed successfully!", "success")
         except Exception as e:
             flash(f"Error changing logo: {e}", "danger")
+    
+    if pathToSetinPage:
+        try:
+            w.setImgInPage(page="templates/"+w.previewPage,imgPath="static/favicons/"+pathToSetinPage)
+            flash("Image set successfully!", "success")
+        except Exception as e:
+            flash(f"Error stting image: {e}", "danger")
+            
     return redirect(url_for('admin'))
 
 @app.route('/theme-rotate', methods=['POST'])
@@ -444,6 +468,8 @@ def rotate_theme():
 @app.route("/Content-editable", methods=["POST"])
 def contetn_editable():
     result = w.make_content_editabele()
+    if w.previewPage == '/':
+        w.previewPage = 'Home.html'
     if result == 'On':
         flash('Content edit mode On.', 'success')
     elif result == 'Off':
@@ -455,6 +481,9 @@ def contetn_editable():
 
 @app.route('/Debug-mode', methods=['POST'])
 def debug_mode_change():
+    if w.previewPage == '/':
+        w.previewPage = 'Home.html'
+        
     w.debugMode = not w.debugMode
     flash('Debug mode toggled.', 'info')
     return redirect(url_for('admin'))
