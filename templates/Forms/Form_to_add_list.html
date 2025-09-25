@@ -1,0 +1,153 @@
+<form action="#" method="post" id="form_to_add_stuffs">
+    <div class="form_card_header">
+        <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
+        <h2 id="Title">Add List Card</h2>
+    </div>
+    <div class="form-group">
+        <label for="L2">Type of the List</label>
+        <select name="typeOfList" id="L2" onchange="updatePreviewList()">
+            <option value="ol">Ordered List</option>
+            <option value="ul">Unordered List</option>
+            <option value="dl">Description List</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="L1">Heading</label>
+        <input type="text" name="headingOfTab" id="L1" placeholder="e.g., My favourite places" oninput="updatePreviewList()" />
+    </div>
+    <div id="fieldsetsContainerList" class="biggerContainer">
+        <div id="olCreaterForm" class="listCreators">
+            <div class="form-group">
+                <label for="L3">Create Ordered list using Enter key</label>
+                <textarea name="olListItems" rows="3" id="L3" oninput="updatePreviewList()"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="L4">Type of Ordered List</label>
+                <select name="typeOfOlList" id="L4" onchange="updatePreviewList()">
+                    <option value="1">1</option>
+                    <option value="A">A</option>
+                    <option value="a">a</option>
+                    <option value="I">I</option>
+                    <option value="i">i</option>
+                </select>
+            </div>
+        </div>
+        <div id="ulCreaterForm" class="listCreators">
+            <div class="form-group">
+                <label for="L5">Create Unordered list using Enter key</label>
+                <textarea name="ulListItems" rows="3" id="L5" oninput="updatePreviewList()"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="L6">Type of Unordered List</label>
+                <select name="typeOfUlList" id="L6" onchange="updatePreviewList()">
+                    <option value="disc">Disc</option>
+                    <option value="circle">Circle</option>
+                    <option value="square">Square</option>
+                    <option value="none">None</option>
+                </select>
+            </div>
+        </div>
+        <div id="dlCreaterForm" class="listCreators">
+            <h4>Create Description List</h4>
+            <div class="form-group">
+                <label for="L7">Enter the terms (,) separated</label>
+                <textarea name="dlDterms" rows="3" id="L7" oninput="updatePreviewList()" ></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="preview-container">
+        <h3>List Preview</h3>
+        <div id="listPreview" class="form-preview">
+            <p>Your list preview will appear here</p>
+        </div>
+    </div>
+    <div class="buttons-group">
+        <button type="button" onclick="resetForm('fieldsetsContainerList')">Reset</button>
+        <button type="button" onclick="generateCode('listPreview', 'List')">Generate Code</button>
+    </div>
+</form>
+<style>
+    .listCreators{
+        display: none;
+    }   
+</style>
+<script>
+    function updatePreviewList(){
+        const listHeading = document.getElementById('L1').value;
+        const typeOfList = document.getElementById('L2').value;
+        const listPreviewCon = document.getElementById('listPreview');
+        const listCreatorsForms = document.getElementsByClassName('listCreaters')
+        for(let i=0; i<listCreatorsForms.length; i++){
+            listCreatorsForms[i].style.display = 'none';
+        }
+
+        let listHtml = `<h2>${listHeading}</h2>\n`; 
+
+        if(typeOfList === 'ol'){
+            listHtml += createOl();
+        }   
+        else if(typeOfList === "ul"){
+            listHtml += createUl();
+        }
+        else if(typeOfList === "dl"){
+            listHtml += createDl();
+        }
+
+        listPreviewCon.innerHTML = listHtml;
+    }
+
+    function createOl(){
+        const olCreater = document.getElementById('olCreaterForm');
+        olCreater.style.display = 'block';
+
+        const listItems = document.getElementById('L3').value.trim().split("\n"); 
+        const typeOfOl = document.getElementById('L4').value;
+
+        let olList = ""; 
+
+        if(typeOfOl === "1") olList += `<ol type='1'>`;
+        else if(typeOfOl === "A") olList += `<ol type='A'>`;
+        else if(typeOfOl === "a") olList += `<ol type='a'>`;
+        else if(typeOfOl === "I") olList += `<ol type='I'>`;
+        else if(typeOfOl === "i") olList += `<ol type='i'>`;
+        olList+="\n"
+        for(let i=0; i<listItems.length; i++){
+            olList += `\t<li>${listItems[i]}</li>\n`;
+        }
+
+        olList += "</ol>";
+        return olList;
+    }
+    function createUl(){
+        const ulCreater = document.getElementById('ulCreaterForm');
+        ulCreater.style.display = 'block';
+
+        const listItems = document.getElementById('L5').value.trim().split("\n"); 
+        const typeOfUl = document.getElementById('L6').value;
+        let ulList = ""; 
+
+        if(typeOfUl === "disc") ulList += `<ul type='disc'>`;
+        else if(typeOfUl === "circle") ulList += `<ul type='circle'>`;
+        else if(typeOfUl === "square") ulList += `<ul type='square'>`;
+        else if(typeOfUl === "none") ulList += `<ul type='none'>`;
+        ulList+="\n"
+        for(let i=0; i<listItems.length; i++){
+            ulList += `\t<li>${listItems[i]}</li>\n`;
+        }
+
+        ulList += "</ul>";
+        return ulList;
+    }
+    function createDl(){
+        const dlCreater = document.getElementById('dlCreaterForm');
+        dlCreater.style.display = 'block';
+        const dterms = document.getElementById('L7').value.trim().split(",");
+        let dlList = "<dl>\n"; 
+        for(let i=0; i<dterms.length; i++){
+            dlList += `\t<dt>${dterms[i]}</dt>\n\t<dd>Description of ${dterms[i]}</dd>\n\n`
+        }
+        dlList += "</dl>"
+        return dlList;
+    }
+
+</script>

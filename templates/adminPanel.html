@@ -16,19 +16,6 @@
 		<link rel="stylesheet" href="../static/flash-messages.css">
 		<title>WebPersona-Admin Pannel</title>
 		<script>
-			const inputs = document.getElementsByTagName('input');
-
-			for (let input of inputs) {
-				if (input.required) {
-					alert(input.name);  // 👈 shows the input's name
-					const name = input.getAttribute('name');
-					const label = document.querySelector(`label[for='${name}']`);
-					if (label) {
-						label.innerHTML += ` <span style="color: red;">*</span>`;
-					}
-				}
-			}
-
 			function showMessage(message, type) {
 				const flashContainer = document.createElement('div');
 				flashContainer.className = `alert alert-${type}`;
@@ -68,26 +55,24 @@
 				});
 			}
 
-		</script>
+		</script>	
 		<script>
 			document.addEventListener("DOMContentLoaded", function () {
 				const iframe = document.getElementById("Iframe");
-				
-				iframe.onload = function () {
+
+				if (iframe) {  
+					iframe.onload = function () {
 					const debug = iframe.dataset.debug === "true";
 
 					if (debug) {
 						try {
-						// Read the HTML of the iframe page
 						const doc = iframe.contentDocument || iframe.contentWindow.document;
 						const html = doc.documentElement.outerHTML;
-							
-						// Escape characters to show as source
+
 						const escaped = html
 							.replace(/</g, "&lt;")
 							.replace(/>/g, "&gt;");
 
-						// Clear and insert <pre> block with escaped HTML
 						doc.body.innerHTML = `<pre style="
 							white-space: pre-wrap;
 							font-family: monospace;
@@ -97,14 +82,17 @@
 							font-size: 0.8rem;
 							line-height: 1.2;
 							overflow: auto;
-							">${escaped}</pre>`;
+						">${escaped}</pre>`;
 						} catch (err) {
 						console.error("Debug Mode failed to read iframe source:", err);
 						}
 					}
-				};
+					};
+				} else {
+					console.warn('⚠️ No element with id="Iframe" found.');
+				}
 			});
-		</script>
+		</script> 
 	</head>
 	<body>
 		{% with messages = get_flashed_messages(with_categories=true) %}
@@ -137,12 +125,13 @@
 		<div class="form_to_add_card" id="add_form_card" >{% include 'Forms/Form_to_add_form.html' %}</div>
 		<div class="form_to_add_card" id="add_table_card">{% include 'Forms/Form_to_add_table.html' %}</div>
 		<div  class="form_to_add_card" id="add_blog_card" >{% include 'Forms/Form_to_add_blog.html'%}</div>
+		<div class="form_to_add_card" id="add_list_card" >{% include 'Forms/Form_to_add_list.html' %}</div>
 		<div class="editer_tool_wrapper">
 			<div class="tools">
 				<label for="" data-name="Form" onclick="show_form('add_form_card')"><i class="fas fa-file-text" aria-hidden="true" title="Add Form" ></i><i class="fa-solid fa-circle-plus"></i></label>
 				<label for="" onclick="show_form('add_table_card')"><i class="fa fa-table" aria-hidden="true" title="Add tabel"></i><i class="fa-solid fa-circle-plus"></i> </label>
 				<label for="Blogg" onclick="show_form('add_blog_card')"><i class="fa-brands fa-blogger-b"></i><i class="fa-solid fa-circle-plus"></i></label>
-				<label for=""  onclick="show_form()"><i class="fa-solid fa-list"></i><i class="fa-solid fa-circle-plus"></i></label>
+				<label for=""  onclick="show_form('add_list_card')"><i class="fa-solid fa-list"></i><i class="fa-solid fa-circle-plus"></i></label>
 				<label for=""><i class="fa-regular fa-file-code"></i><i class="fa-solid fa-circle-plus"></i></label>
 				<label for="grid" title="Add grids"><i class="fas fa-grip"></i><i class="fa-solid fa-circle-plus"></i></label>
 				
@@ -294,7 +283,6 @@
 				</div>
 			</div>
 			<div id="preview_container">
-
 				<h1>Your Website</h1>
 				<form
 					action="/frameSizeChange"
@@ -316,17 +304,12 @@
 								{{line}}
 							{%endfor%}
 						</textarea>
-						<button>Apply</button>
+						<button type='submit'>Apply</button>
 					</form>
 	
 					{%else%}{%endif%}
-					<iframe
-						src="{{ all['previewPage']}}"
-						width="{{ all['size'] }}"
-						height="100%"
-						style="display: block; margin: auto; border: none;"
-						id="Iframe"
-					></iframe>
+					<iframe src="{{ all['previewPage']}}" width="{{ all['size'] }}" height="100%" 
+					style="display: block; margin: auto; border: none;" id="Iframe" ></iframe>
 				</div>
 			</div>
 			<div id="feature_list">

@@ -1,10 +1,116 @@
-<form id="form_to_add_stuffs">
+<form id="form_to_add_stuffs" action="#">
     <div class="form_card_header">
         <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
         <h2 id="Title">Add Blog Card</h2>
     </div>
     <div class="form-group">
-        <label for="B1">The heading of the paragraph</label>
-        <input type="text" name="heading of the" id="B1">
+        <label for="B1">The heading(s) of Content ( , ) separated</label>
+        <textarea  name="headingsOfBlog" id="B1" oninput="generateHeadings(this.value, 'fieldsetsContainerBlog')" placeholder="e.g., Essay on India"></textarea>   
     </div>
+
+    <div id="fieldsetsContainerBlog">
+
+    </div>
+    <div class="preview-container">
+        <h3>Content Preview</h3>
+        <div id="blogPreview" class="form-preview">
+            <p>Your content preview will appear here</p>
+        </div>
+    </div>
+    <div class="buttons-group">
+        <button type="button" onclick="resetForm('fieldsetsContainerBlog')">Reset</button>
+        <button type="button" onclick="generateCode('blogPreview', 'Content')">Generate Content Code</button>
+    </div> 
 </form>
+<script>
+    function generateHeadings(headings, container){
+        const headingList = headings.trim().split(',')
+        if(headingList){
+            const contentContainer = document.getElementById(container)
+            contentContainer.innerHTML = ""
+            
+            for(let i=1; i<= headingList.length; i++){
+                headingList[i-1] = headingList[i-1].replace(/ /gi,"_")
+                html = `
+                    <div class='fieldset-container' id='contentTemplate-${i}'>
+                        <div class="form-group smallButtons">
+                            <label for="${headingList[i-1]}_noSubHead">No Sub headings</label>
+                            <input type="checkbox" name="${headingList[i-1]}_noSubHeading" id="${headingList[i-1]}_noSubHead" onchange="checkNoSubHeadings('${headingList[i-1]}_noSubHead', '${headingList[i-1]}_subHeadingsGroup','${headingList[i-1]}_contentGroup')" checked />
+                        </div>
+                        <div class="fieldset-header">${headingList[i-1].replace(/_/gi," ")}</div>
+                        <div class="form-group" id="${headingList[i-1]}_contentGroup">
+                            <label for="${headingList[i-1]}_contents">Content of ${headingList[i-1]}</label>
+                            <textarea  name="${headingList[i-1]}_content" id="${headingList[i-1]}_contents" oninput="updatePreviewBlog('blogPreview')" rows='5' ></textarea>   
+                        </div>   
+                        <div class="form-group" style='display: none;' id='${headingList[i-1]}_subHeadingsGroup'>
+                            <label for="${headingList[i-1]}_subheadings">Sub-heading(s) of ${headingList[i-1]}</label>
+                            <textarea  name="${headingList[i-1]}_subheadings" id="${headingList[i-1]}_subheadings"  placeholder="e.g., Introduction, Culture, History, ..." oninput="generateHeadings(this.value,'${headingList[i-1]}_sub-subheadingContainer'),updatePreviewBlog('blogPreview')"></textarea>   
+                        </div>
+                        <div id='${headingList[i-1]}_sub-subheadingContainer' class='biggerContainer'></div>
+                    </div>`
+
+                contentContainer.innerHTML += html;
+               
+            }
+            updatePreviewBlog('blogPreview')
+        }
+    }   
+    function checkNoSubHeadings(buttonId, visible_cont=null, hide_cont=null){
+        const radioB = document.getElementById(buttonId)
+        const visible_container = document.getElementById(visible_cont)
+        const hide_container = document.getElementById(hide_cont)
+        const checked = radioB.checked
+        if(!checked){
+            visible_container.style.display = 'flex'
+            hide_container.style.display = 'none'
+        }
+        else{
+            visible_container.style.display = 'none'
+            hide_container.style.display = 'flex'
+        }
+    }
+    
+    function updatePreviewBlog(pContainer){
+        const headings = document.getElementById('B1').value
+        const headingList = headings.trim().split(',')
+        const preview = document.getElementById(pContainer)
+        preview.innerHTML =""
+        for(let i=1; i<=headingList.length; i++){
+            headingList[i-1] = headingList[i-1].replace(/ /gi, "_")
+            preview.innerHTML += `
+                <div class="card" id='${headingList[i-1]}'>
+                    <h1>${headingList[i - 1].replace(/_/gi," ")}</h1>
+                `;
+
+            const contentOrSubhead = document.getElementById(`${headingList[i - 1]}_noSubHead`).checked;
+
+            if (contentOrSubhead) {
+                const content = document.getElementById(`${headingList[i - 1]}_contents`)?.value || "Your dynamic content goes here";
+
+                preview.innerHTML += `
+                    <div id="${headingList[i - 1]}-Content">
+                    ${content}
+                    </div>
+                `;
+            } 
+            else if(!contentOrSubhead){
+                const subheadingList = document.getElementById(`${headingList[i - 1]}_subheadings`).value.trim().split(",");
+
+                for (let j = 1; j <= subheadingList.length; j++) {
+                    subheadingList[i-1] = subheadingList[i-1].replace(/ /gi, "_")
+                    preview.innerHTML += `
+                    <div class="subcard">
+                        <h2>${subheadingList[j - 1].replace(/_/gi, " ")}</h2>
+                        <div id="${headingList[i - 1]}_${subheadingList[j - 1]}">
+                        Content
+                        </div>
+                    </div>
+                `;
+                }
+            }
+
+             preview.innerHTML += `</div>`;
+        }
+    }
+    
+</script>

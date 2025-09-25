@@ -26,7 +26,7 @@
     tr:hover {
         background: #f1f1f1;
     }
-    #fieldsetsContainerTab{
+    #fieldsetsContainerTab,#fieldsetsContainerBlog{
         display: grid; 
         grid-template-columns:repeat(2,1fr); 
         gap: 1em;
@@ -43,15 +43,15 @@
     </div>
     <div class="form-group">
         <label for="F2">File to Table ( Excel or CSV files )</label>
-        <input type="file" accept=".xslx, .csv, .xls" name="fileToTab" id="F2" placeholder="Select a file" oninput="updatePreviewTab('tablePreview', 'F2')">
+        <input type="file" accept=".xslx, .csv, .xls" name="fileToTab" id="F2" placeholder="Select a file" oninput="updatePreviewTab('tablePreview', 'F2')" />
     </div>
 
     <div class="form-group">
         <label for="F9">Enter the Block names ( Fieldsets-legends )</label>
-        <input type="text" name="headingsOfFieldsetTab" id="F9" placeholder="( , ) separated Eg. School-Student, College-Student" oninput="generateFieldsets(this.value,'fieldsetsContainerTab')">
+        <input type="text" name="headingsOfFieldsetTab" id="F9" placeholder="( , ) separated Eg. School-Student, College-Student" oninput="generateFieldsets(this.value,'fieldsetsContainerTab')" />
     </div>
     
-    <div id="fieldsetsContainerTab">
+    <div id="fieldsetsContainerTab" class="biggerContainer">
 
     </div>
     <div class="preview-container">
@@ -63,8 +63,7 @@
 
     <div class="buttons-group">
         <button type="button" onclick="resetForm('fieldsetsContainerTab')">Reset</button>
-        <button type="button" onclick='generateTabCode()'>Generate Code</button>
-        
+        <button type="button" onclick="generateCode('tablePreview', 'Table')">Generate Code</button>
     </div>
 </form>
 <script >
@@ -81,7 +80,6 @@
     
         if (!cont || !head || headers.length === 0) {
             alert('Please enter headers first!');
-            
             return;
         }
 
@@ -129,7 +127,7 @@
         previewCont.innerHTML = ""
 
         let previewHtml = `<h3>${tableTitle}</h3>`
-        
+        previewCont.innerHTML = previewHtml;
         if (fileInp != null) {
             const inputEl = document.getElementById(fileInp);
             inputEl.onchange = function(e) {  
@@ -154,8 +152,7 @@
                     });
                     table += "</table>";
 
-                    previewHtml += table;
-                    previewCont.innerHTML += previewHtml 
+                    previewCont.innerHTML += table;
                 };
                 reader.readAsText(file);
             };
@@ -167,83 +164,90 @@
                 const rows = document.getElementById(`F4${i}`).value
                 const footers = document.getElementById(`F5${i}`).value.trim().split(',')
                 const tableType = document.getElementById(`typeOfTab${i}`).value
-                previewHtml += `
-                    <fieldset >
-                        <legend>${fieldsets[i-1]}</legend>
-                        <table>`
-                if(headers.length >0){
-                    if(tableType === 'hAtTop'){
-                        previewHtml += `
-                            <thead>
-                                <tr>`
-                        let a=0
-                        while(headers[a]){
-                            previewHtml += `\n    <th>${headers[a]} </th>`
-                            a+=1    
-                        }
-                        previewHtml += `
-                                </tr>
-                            </thead>\n`
-                    }
-                }
-                if(rows){
-                    if(tableType === 'hAtTop'){
-                        previewHtml += `<tbody>`
-                        for(let j=1;j<=rows; j++){
-                            previewHtml += `<tr>`
-                            for(let k=0; k<headers.length; k++){
-                                previewHtml += `    \n<td>${document.getElementById(`table${i}_header${k}_row${j}`).value || 'None'}</td>`
-                            }
-                        previewHtml += '\n</tr>'
-                        }
-                        previewHtml += `</tbody>\n`
-                    }
-                    if(tableType === 'hAtLeft'){
-                
-                        for(let k=0; k<headers.length; k++){
-                            previewHtml += `    \n<tr>
-                                <th>${headers[k]}</th>`
+                let tableHtml = `
+                <fieldset>
+                    <legend>${fieldsets[i-1]}</legend>
+                    <table>`;
 
-                            for(let j=1;j<=rows; j++){
-                                previewHtml += `<td>${document.getElementById(`table${i}_header${k}_row${j}`).value || 'None'}</td>\n`
+                if (headers.length > 0) {
+                    if (tableType === 'hAtTop') {
+                        tableHtml += `
+                        <thead>
+                            <tr>`;
+                        for (let a = 0; a < headers.length; a++) {
+                            tableHtml += `        <th>${headers[a]}</th>`;
+                        }
+                        tableHtml += `
+                            </tr>
+                        </thead>\n`;
+                    }
+                }
+
+                if (rows) {
+                    if (tableType === 'hAtTop') {
+                        tableHtml += `    <tbody>\n`;
+                        for (let j = 1; j <= rows; j++) {
+                            tableHtml += `      <tr>\n`;
+                            for (let k = 0; k < headers.length; k++) {
+                                tableHtml += `        <td>${document.getElementById(`table${i}_header${k}_row${j}`).value || 'None'}</td>\n`;
                             }
-                            previewHtml += `    </tr>\n`
+                            tableHtml += `      </tr>\n`;
+                        }
+                        tableHtml += `    </tbody>\n`;
+                    }
+
+                    if (tableType === 'hAtLeft') {
+                        for (let k = 0; k < headers.length; k++) {
+                            tableHtml += `      <tr>\n`;
+                            tableHtml += `        <th>${headers[k]}</th>\n`;
+                            for (let j = 1; j <= rows; j++) {
+                                tableHtml += `        <td>${document.getElementById(`table${i}_header${k}_row${j}`).value || 'None'}</td>\n`;
+                            }
+                            tableHtml += `      </tr>\n`;
                         }
                     }
                 }
-                if(footers.length > 0){
-                    previewHtml += `
+
+                if (footers.length > 0 && footers) {
+                    tableHtml += `
                     <tfoot>
-                        <tr>`
-                    let h=0
-                    while(footers[h]){
-                        previewHtml += `    \n<td>${footers[h]}</td>`
-                        h+=1
+                        <tr>`;
+                    for (let h = 0; h < footers.length; h++) {
+                        tableHtml += `        <td>${footers[h]}</td>`;
                     }
-                    previewHtml += `
+                    tableHtml += `
                         </tr>
-                    </tfoot>\n`
+                    </tfoot>`;
                 }
-                previewHtml +=`
-                    </table>
-                </fieldset>`
-            }
-            previewCont.innerHTML += previewHtml 
-        }
-          
-    }
-    function generateTabCode(file=null){
-        
-        const previewCont = document.getElementById('tablePreview')
-        const code = previewCont.innerHTML
 
-        previewCont.innerHTML = ""
-        previewCont.innerHTML = `
-        <div class='form-group'>
-            <label for='MainCode'>Code to implement Table</label>
-            <textarea name='mainCode' id='MainCode' row='50'>${code}</textarea>
-        </div>`
-    
+                tableHtml += `  
+                    </table>
+                </fieldset>\n`;
+
+                previewCont.innerHTML += tableHtml;
+            }
+        }
     }
-    
+    function generateCode(pCont, element, file=null){
+        
+        const previewCont = document.getElementById(pCont);
+        const code = previewCont.innerHTML;
+
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = code;
+
+        const formattedCode = tempDiv.innerHTML;
+
+        previewCont.innerHTML = "";
+        previewCont.innerHTML = `
+        <form action='#' method='post'>
+            <div class='form-group'>
+                <label for='MainCode'>Code to implement ${element}</label>
+                <textarea name='mainCode' id='MainCode' rows='10' style="white-space: pre; overflow-wrap: normal; overflow-x: scroll;">${formattedCode.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+            </div>
+            <div class='buttons-group'>
+                <button type='submit'>Implement</button>
+            </div>
+        </form>`;
+    }
 </script>

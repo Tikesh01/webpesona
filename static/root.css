@@ -1,60 +1,3 @@
-/* Sunrise */
-:root {
-  --navbar: linear-gradient(135deg, #2c003e, #6a0572);
-  --navbarText: #fef9ff;
-  --brandname: linear-gradient(135deg, #ff6ec4, #7873f5);
-  --buttons: linear-gradient(135deg, #f953c6, #b91d73);
-  --button-hover: linear-gradient(135deg, #fc466b, #3f5efb);
-  --main-bg: linear-gradient(135deg, #1a1a2e, #16213e);
-  --main-heading: linear-gradient(135deg, #ff9a8b, #ff6a88, #ff99ac);
-  --main-subheading: linear-gradient(135deg, #fbc2eb, #a6c1ee);
-  --main-text: #e0e0e0;
-  --childDivs-bg: linear-gradient(135deg, #2e1f47, #3a2a5e);
-  --footer-bg: linear-gradient(135deg, #12002f, #3c1053);
-  --highlight: linear-gradient(135deg, #ff6ec4, #7873f5);
-  --primary: #f953c6;
-  --secondary: #b91d73;
-  --dark: #2c003e;
-  --light: #fef9ff;
-}
-/* Classy-Clean */
-:root {
-  --navbar: #1e1e2f;
-  --navbarText: #ffffff;
-  --brandname: #00bcd4;
-  --buttons: #6200ea;
-  --button-hover: #3700b3;
-  --main-bg: #f5f5f5;
-  --main-heading: #212121;
-  --main-subheading: #424242;
-  --main-text: #616161;
-  --childDivs-bg: #eeeeee;
-  --footer-bg: #121212;
-  --highlight: #ff5722;
-  --primary: #6200ea;
-  --secondary: #00bcd4;
-  --dark: #1e1e2f;
-  --light: #ffffff;
-}
-/* Favourite */
-:root {
-  --navbar: linear-gradient(135deg, #141e30, #243b55);
-  --navbarText: #fdfdfd;
-  --brandname: linear-gradient(135deg, #c471f5, #fa71cd);
-  --buttons: linear-gradient(135deg, #667eea, #764ba2);
-  --button-hover: linear-gradient(135deg, #6a11cb, #2575fc);
-  --main-bg: linear-gradient(135deg, #ece9e6, #ffffff);
-  --main-heading: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
-  --main-subheading: linear-gradient(135deg, #ffecd2, #fcb69f);
-  --main-text: #2c3e50;
-  --childDivs-bg: linear-gradient(135deg, #dfe9f3, #ffffff);
-  --footer-bg: linear-gradient(135deg, #2c3e50, #4ca1af);
-  --highlight: linear-gradient(135deg, #fa709a, #fee140);
-  --primary: #667eea;
-  --secondary: #764ba2;
-  --dark: #141e30;
-  --light: #fdfdfd;
-}
 /* Simple */
 :root {
   --navbar: #0f172a;
@@ -111,4 +54,61 @@
   --secondary: #4b0082;
   --dark: #1a1a2e;
   --light: #f3f3f3;
+}
+/* Sunrise */
+:root {
+  --navbar: linear-gradient(135deg, #2c003e, #6a0572);
+  --navbarText: #fef9ff;
+  --brandname: linear-gradient(135deg, #ff6ec4, #7873f5);
+  --buttons: linear-gradient(135deg, #f953c6, #b91d73);
+  --button-hover: linear-gradient(135deg, #fc466b, #3f5efb);
+  --main-bg: linear-gradient(135deg, #1a1a2e, #16213e);
+  --main-heading: linear-gradient(135deg, #ff9a8b, #ff6a88, #ff99ac);
+  --main-subheading: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+  --main-text: #e0e0e0;
+  --childDivs-bg: linear-gradient(135deg, #2e1f47, #3a2a5e);
+  --footer-bg: linear-gradient(135deg, #12002f, #3c1053);
+  --highlight: linear-gradient(135deg, #ff6ec4, #7873f5);
+  --primary: #f953c6;
+  --secondary: #b91d73;
+  --dark: #2c003e;
+  --light: #fef9ff;
+}
+/* Classy-Clean */
+:root {
+  --navbar: #1e1e2f;
+  --navbarText: #ffffff;
+  --brandname: #00bcd4;
+  --buttons: #6200ea;
+  --button-hover: #3700b3;
+  --main-bg: #f5f5f5;
+  --main-heading: #212121;
+  --main-subheading: #424242;
+  --main-text: #616161;
+  --childDivs-bg: #eeeeee;
+  --footer-bg: #121212;
+  --highlight: #ff5722;
+  --primary: #6200ea;
+  --secondary: #00bcd4;
+  --dark: #1e1e2f;
+  --light: #ffffff;
+}
+/* Favourite */
+:root {
+  --navbar: linear-gradient(135deg, #141e30, #243b55);
+  --navbarText: #fdfdfd;
+  --brandname: linear-gradient(135deg, #c471f5, #fa71cd);
+  --buttons: linear-gradient(135deg, #667eea, #764ba2);
+  --button-hover: linear-gradient(135deg, #6a11cb, #2575fc);
+  --main-bg: linear-gradient(135deg, #ece9e6, #ffffff);
+  --main-heading: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
+  --main-subheading: linear-gradient(135deg, #ffecd2, #fcb69f);
+  --main-text: #2c3e50;
+  --childDivs-bg: linear-gradient(135deg, #dfe9f3, #ffffff);
+  --footer-bg: linear-gradient(135deg, #2c3e50, #4ca1af);
+  --highlight: linear-gradient(135deg, #fa709a, #fee140);
+  --primary: #667eea;
+  --secondary: #764ba2;
+  --dark: #141e30;
+  --light: #fdfdfd;
 }

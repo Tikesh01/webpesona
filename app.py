@@ -3,13 +3,13 @@ import re, os, shutil
 from models import db, User
 
 app = Flask(__name__)
-app.secret_key = 'happy_happy_happy'  # Use a long, random string in production!
+app.secret_key = 'happy_happy_happy' 
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///webpersona.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-# Initialize the database (create tables if not exist)
+
 with app.app_context():
     db.create_all()
  
@@ -189,7 +189,7 @@ class website:
             lines = file.readlines()
         with open(page, "w") as f:
             if type=='img':
-                c = "\n<img src='" + content+"' alt='Image...'/>\n"
+                c = "\t\t\t<img src='" + content+"' alt='Image...'/>\n"
                 lines.insert(len(lines)-4,c)
                 f.writelines(lines)
         
@@ -410,7 +410,7 @@ def operation_with_img_files():
     pathToDelPage = request.form.get('delete_page')
     pathForPreview = request.form.get('preview_page')
     pathTochangeLogo = request.form.get('change_logo')
-    pathToSetinPage = request.form.get('set_to_page')
+    pathToSetInPage = request.form.get('set_to_page')
    
     if pathToDelete:
         try:
@@ -443,12 +443,12 @@ def operation_with_img_files():
         except Exception as e:
             flash(f"Error changing logo: {e}", "danger")
     
-    if pathToSetinPage:
+    if pathToSetInPage:
         try:
-            w.setImgInPage(page="templates/"+w.previewPage,imgPath="static/favicons/"+pathToSetinPage)
+            w.setImgInPage(page="templates/"+w.previewPage,imgPath="static/favicons/"+pathToSetInPage)
             flash("Image set successfully!", "success")
         except Exception as e:
-            flash(f"Error stting image: {e}", "danger")
+            flash(f"Error setting image: {e}", "danger")
             
     return redirect(url_for('admin'))
 

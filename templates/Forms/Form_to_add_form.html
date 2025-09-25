@@ -63,7 +63,10 @@
         margin: 0.5em 0;
         position: relative;
     }
-
+    .smallButtons{
+        flex-direction: row;
+        gap: 1em;
+    }
     .form-group label {
         color: #34495e;
         font-size: 0.9em;
@@ -258,7 +261,7 @@
     
     <div class="form-group">
         <label for="T11">Enter the Block names ( Fieldsets-legends )</label>
-        <input type="text" name="headingsOfFieldsetForm" id="T11" min="0" placeholder="( , ) separated Eg. Home Address, Work Address" oninput="generateFieldsets(this.value,'fieldsetsContainerForm')">
+        <input type="text" name="headingsOfFieldsetForm" id="T11" min="0" placeholder="( , ) separated e.g., Home Address, Work Address" oninput="generateFieldsets(this.value,'fieldsetsContainerForm')">
     </div>
     
     <div id="fieldsetsContainerForm">
@@ -272,7 +275,7 @@
     </div>
     
     <div class="buttons-group">
-        <button type="button" onclick="resetForm()">Reset</button>
+        <button type="button" onclick="resetForm('fieldsetsContainerForm')">Reset</button>
         <button type="button" onclick="generateFormCode()">Generate Form Code</button>
     </div>
 </form>
@@ -304,10 +307,14 @@
             <input type="text" name="inputPlaceholder" placeholder="Enter placeholder text">
         </div>
         <div class="form-group">
-            <label>Logical name</label>
-            <input type="text" name="inputName" required placeholder="Enter name attribute for input">
+            <label for='logicalNameInp'>Logical name</label>
+            <input type="text" name="inputName" id="logicalNameInp" required placeholder="Enter name attribute for input">
         </div>
-        <div class="form-group">
+        <div class="form-group smallButtons">
+            <label for="reqOrNOt">Required</label>
+            <input type="checkbox" name="requiredInp" id="reqForInp" value="inpReqTrue" >
+        </div>
+         <div class="form-group">
             <label>Label Text</label>
             <input type="text" name="inputLabel" placeholder="Enter label for input">
         </div>
@@ -321,20 +328,20 @@
             <input type="text" name="textareaPlaceholder" placeholder="Enter placeholder text">
         </div>
         <div class="form-group">
-            <label>Logical name</label>
-            <input type="text" name="textareaName" required placeholder="Enter name attribute for textarea">
-        </div>
-        <div class="form-group">
-            <label>Label Text</label>
-            <input type="text" name="textareaLabel" placeholder="Enter label for textarea">
+            <label for="logicalNameTextarea">Logical name</label>
+            <input type="text" name="textareaName" id="logicalNameTextarea" required placeholder="Enter name attribute for textarea">
         </div>
         <div class="form-group">
             <label>Rows</label>
             <input type="number" name="textareaRows" value="4" min="1" placeholder="Number of rows">
         </div>
+        <div class="form-group smallButtons">
+            <label for="reqForTextarea">Required</label>
+            <input type="checkbox" id="reqForTextarea" name="requiredTextarea" value="textaReqTrue">
+        </div>
         <div class="form-group">
-            <label>Columns</label>
-            <input type="number" name="textareaCols" value="50" min="1" placeholder="Number of columns">
+            <label>Label Text</label>
+            <input type="text" name="textareaLabel" placeholder="Enter label for textarea">
         </div>
     </div>
 
@@ -346,12 +353,16 @@
             <textarea name="selectOptions" placeholder="e.g., Small, Medium, Large" required></textarea>
         </div>
         <div class="form-group">
-            <label>Logical name</label>
-            <input type="text" name="selectName" required placeholder="Enter name attribute for select">
+            <label id="logicalNameSelect">Logical name</label>
+            <input type="text" name="selectName" id="logicalNameSelect" required placeholder="Enter name attribute for select">
+        </div>
+        <div class="form-group smallButtons">
+            <label for="reqForSelect">Required</label>
+            <input type="checkbox" id="reqForSelect" name="requiredSelect" value="selectReqTrue">
         </div>
         <div class="form-group">
             <label>Label Text</label>
-            <input type="text" name="selectLabel" placeholder="Enter label for select">
+            <input type="text" name="selectLabel"   placeholder="Enter label for select">
         </div>
     </div>
 
@@ -363,8 +374,12 @@
             <textarea name="radioOptions" placeholder="e.g., Male, Female, Other" required></textarea>
         </div>
         <div class="form-group">
-            <label>Logical name</label>
-            <input type="text" name="radioName" required placeholder="Enter name attribute for radio group">
+            <label  for="logicalNameRadio" >Logical name</label>
+            <input type="text" name="radioName" id="logicalNameRadio" required placeholder="Enter name attribute for radio group">
+        </div>
+        <div class="form-group smallButtons">
+            <label for="reqForRadio">Required</label>
+            <input type="checkbox" id="reqForRadio" name="requiredRadio" value="radioRwqTrue">
         </div>
         <div class="form-group">
             <label>Label Text</label>
@@ -380,8 +395,8 @@
             <textarea name="checkboxOptions" placeholder="e.g., Swimming, Reading, Gaming" required></textarea>
         </div>
         <div class="form-group">
-            <label>Logical name</label>
-            <input type="text" name="checkboxName" required placeholder="Enter name attribute for checkbox group">
+            <label for="logicalNamecheckbox">Logical name</label>
+            <input type="text" name="checkboxName" id= "logicalNamecheckbox" required placeholder="Enter name attribute for checkbox group">
         </div>
         <div class="form-group">
             <label>Label Text</label>
@@ -408,6 +423,18 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.getElementsByTagName('input');
+        for (let input of inputs) {
+            if (input && input.required) {
+                const id = input.getAttribute('id');
+                const label = document.querySelector(`label[for='${id}']`);
+                if (label) {
+                    label.innerHTML += ` <span style="color: red;">*</span>`;
+                }
+            }
+        }
+	});
     let legends;
     function generateFieldsets(legend,container) {
         const fieldsetsContainer = document.getElementById(container);
@@ -432,10 +459,8 @@
                     </div>
                     <div class="form-group">
                         <label for="F3${i}">Headers of table ( , ) separated</label>
-                        <textarea name="headersOfTab${i}" id="F3${i}" oninput="updatePreviewTab('tablePreview')" placeholder="Top"></textarea>
-                        
-                    </div>
-                
+                        <textarea name="headersOfTab${i}" id="F3${i}" oninput="updatePreviewTab('tablePreview')" ></textarea>
+                    </div>                
                     <div class="form-group">
                         <label for="F4${i}">Number Of data Rows</label>
                         <input type="number" name="numOfRows${i}" id="F4${i}" oninput="generateTbody(this.value, ${i})"/>
@@ -494,7 +519,7 @@
         const container = document.getElementById(`elements-container-${fieldsetId}`);
         if (!container) return;
         
-        // Remove existing elements of this type
+    
         const existingElements = container.querySelectorAll(`[data-type="${elementType}"]`);
         existingElements.forEach(el => el.remove());
         
@@ -523,7 +548,7 @@
                 if (originalName) {
                     input.setAttribute('name', `fieldset-${fieldsetId}-${elementType}-${i}-${originalName}`);
                 }
-            });
+            }); 
             
             container.appendChild(clone);
         }
@@ -569,13 +594,18 @@
                 const inputLabel = element.querySelector('input[name$="inputLabel"]')?.value || 'Input Field';
                 const inputType = element.querySelector('select[name$="inputType"]')?.value || 'text';
                 const inputPlaceholder = element.querySelector('input[name$="inputPlaceholder"]')?.value || '';
+                const inputRequired = element.querySelector('input[type="checkbox"][name$="requiredInp"]')?.checked;
                 
-                html = `
-                    <div class="form-group">
-                        <label>${inputLabel}</label>
-                        <input type="${inputType}" name="${inputName}" placeholder="${inputPlaceholder}">
-                    </div>
-                `;
+                html = `<div class="form-group">
+                            <label>${inputLabel}</label>
+                    `;
+                if(inputRequired){
+                    html += `   <input type="${inputType}" name="${inputName}" placeholder="${inputPlaceholder}" required />`
+                }
+                else{
+                    html += `   <input type="${inputType}" name="${inputName}" placeholder="${inputPlaceholder}" />`
+                }
+                html+= '\n</div>'
                 break;
                 
             case 'textarea':
@@ -583,30 +613,43 @@
                 const textareaLabel = element.querySelector('input[name$="textareaLabel"]')?.value || 'Textarea';
                 const textareaPlaceholder = element.querySelector('input[name$="textareaPlaceholder"]')?.value || '';
                 const textareaRows = element.querySelector('input[name$="textareaRows"]')?.value || '4';
-                const textareaCols = element.querySelector('input[name$="textareaCols"]')?.value || '50';
+                const textareaRequired = element.querySelector('input[type="checkbox"][name$="requiredTextarea"]')?.checked;
                 
                 html = `
                     <div class="form-group">
                         <label>${textareaLabel}</label>
-                        <textarea name="${textareaName}" placeholder="${textareaPlaceholder}" rows="${textareaRows}" cols="${textareaCols}"></textarea>
-                    </div>
-                `;
+                    `;
+                if(textareaRequired){
+                    html += `    <textarea name="${textareaName}" placeholder="${textareaPlaceholder}" rows="${textareaRows}" required ></textarea>`
+                }
+                else{
+                    html += `    <textarea name="${textareaName}" placeholder="${textareaPlaceholder}" rows="${textareaRows}"></textarea>`
+                }
+                html += '\n</div>'
                 break;
+
                 
             case 'select':
                 const selectName = element.querySelector('input[name$="selectName"]')?.value || 'select';
                 const selectLabel = element.querySelector('input[name$="selectLabel"]')?.value || 'Select Option';
                 const selectOptions = element.querySelector('textarea[name$="selectOptions"]')?.value || '';
                 const options = selectOptions.split(',').map(opt => opt.trim()).filter(opt => opt);
+                const selectRequired = element.querySelector('input[type="checkbox"][name$="requiredSelect"]')?.checked;
                 
                 html = `
                     <div class="form-group">
                         <label>${selectLabel}</label>
-                        <select name="${selectName}">
-                            ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
-                        </select>
-                    </div>
                 `;
+                if(selectRequired){
+                    html += `<select name="${selectName}" required>`
+                }
+                else{
+                    html += `<select name="${selectName}">`
+                }
+
+                html += `   ${options.map(opt => `<option value="${opt}">${opt}</option>\n`).join('')}
+                        </select>
+                    </div>`
                 break;
                 
             case 'radio':
@@ -614,18 +657,31 @@
                 const radioLabel = element.querySelector('input[name$="radioLabel"]')?.value || 'Radio Options';
                 const radioOptions = element.querySelector('textarea[name$="radioOptions"]')?.value || '';
                 const radioOptionsList = radioOptions.split(',').map(opt => opt.trim()).filter(opt => opt);
+                const radioRequired = element.querySelector('input[type="checkbox"][name$="requiredRadio"]')?.checked;
                 
                 html = `
                     <div class="form-group">
                         <label>${radioLabel}</label>
-                        ${radioOptionsList.map(opt => `
-                            <div>
-                                <input type="radio" name="${radioName}" value="${opt}" id="${radioName}-${opt}">
-                                <label for="${radioName}-${opt}">${opt}</label>
-                            </div>
-                        `).join('')}
-                    </div>
                 `;
+                if(radioRequired){
+                    html += `   ${radioOptionsList.map(opt => `
+                                <div>
+                                    <input type="radio" name="${radioName}" value="${opt}" id="${radioName}-${opt}" required>
+                                    <label for="${radioName}-${opt}">${opt}</label>
+                                </div>
+                            `).join('')}    
+                        `
+                }
+                else{
+                    html += `   ${radioOptionsList.map(opt => `
+                                <div>
+                                    <input type="radio" name="${radioName}" value="${opt}" id="${radioName}-${opt}">
+                                    <label for="${radioName}-${opt}">${opt}</label>
+                                </div>
+                            `).join('')}
+                            `
+                }
+                html += '</div>'
                 break;
                 
             case 'checkbox':
@@ -689,15 +745,21 @@
         
         formHTML += `</form>`;
         
-        // Show the code in a prompt (in a real application, you might show this in a modal)
+
         alert('Form HTML Code:\n\n' + formHTML);
         
         document.getElementById('formPreview').innerHTML = `
+        <form action="#" method='post'>
             <div class='form-group'>
                 <label for="MainFormCode">Generated Form Code</label>
-                <textarea style="width: 100%; height: 200px; font-family: monospace;", id="MainFormCode" name="mainFormCode">${formHTML}</textarea>
+                <textarea style="width: 100%; height: 200px; font-family: monospace;", id="MainFormCode" name="mainFormCode"></textarea>
             </div>
+            <div class='buttons-group'>
+                <button type='submit'>Implement</button>
+            </div>
+        </form>
         `;
+        document.getElementById('MainFormCode').value = formHTML;
     }
     
     function resetForm(container) {
