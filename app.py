@@ -192,6 +192,9 @@ class website:
                 c = "\t\t\t<img src='" + content+"' alt='Image...'/>\n"
                 lines.insert(len(lines)-4,c)
                 f.writelines(lines)
+            if 'element':
+                f.write(content)
+                pass
         
     
     def setImgInPage(self,imgPath, page,position=None):
@@ -427,6 +430,7 @@ def operation_with_img_files():
     if pathToDelPage:
         try:
             w.deleteFile("templates/" + pathToDelPage)
+            w.previewPage = 'Home.html'
             flash("Page deleted successfully!", "success")
         except Exception as e:
             flash(f"Error deleting page: {e}", "danger")
@@ -553,13 +557,19 @@ def login():
     w.currentPage = 'login.html'
     return render_template('login.html', all=w.__dict__, web=w)
 
-# Logout route
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     flash('Logged out successfully.', 'info')
     w.isLogedin = False
     return redirect(url_for('login'))
+
+@app.route('/implement', methods=['GET'])
+def implement_code():
+    code = request.args.get('mainCode')
+    w.write_code_to_page("templates/"+w.previewPage,code,'element')
+    flash('The Code implemented to the '+w.previewPage+' page', 'success')
+    return redirect('admin')
 
 #New Logic
 @app.route('/<name>')

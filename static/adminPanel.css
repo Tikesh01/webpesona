@@ -347,7 +347,7 @@ nav h1 i {
 #EditContent label:hover {
     color: #3498db;
 }
-.form_to_add_card{
+.form_to_add_card, #implementCodeForm{
     display: none;
     position: fixed;
     height: 100%;
@@ -355,6 +355,16 @@ nav h1 i {
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(2px);
+}
+#implementCodeForm{
+    padding: 2em 0;
+    form{
+        width: 70%;
+        height: 80%;
+        textarea{
+            font-family: monospace;
+        }
+    }
 }
 .editer_tool_wrapper{
     position: fixed;

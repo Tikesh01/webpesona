@@ -4,7 +4,7 @@
         <h2 id="Title">Add Blog Card</h2>
     </div>
     <div class="form-group">
-        <label for="B1">The heading(s) of Content ( , ) separated</label>
+        <label for="B1">The heading(s) of Content using Enter (↩) key</label>
         <textarea  name="headingsOfBlog" id="B1" oninput="generateHeadings(this.value, 'fieldsetsContainerBlog')" placeholder="e.g., Essay on India"></textarea>   
     </div>
 
@@ -24,7 +24,7 @@
 </form>
 <script>
     function generateHeadings(headings, container){
-        const headingList = headings.trim().split(',')
+        const headingList = headings.trim().split('\n')
         if(headingList){
             const contentContainer = document.getElementById(container)
             contentContainer.innerHTML = ""

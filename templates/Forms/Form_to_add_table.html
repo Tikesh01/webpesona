@@ -47,8 +47,9 @@
     </div>
 
     <div class="form-group">
-        <label for="F9">Enter the Block names ( Fieldsets-legends )</label>
-        <input type="text" name="headingsOfFieldsetTab" id="F9" placeholder="( , ) separated Eg. School-Student, College-Student" oninput="generateFieldsets(this.value,'fieldsetsContainerTab')" />
+        <label for="F9">Enter the Block names ( Fieldsets-legends ) using Enter (↩) key</label>
+        <textarea name="headingsOfFieldsetTab" id="F9" rows="3" placeholder="e.g., School-Student
+        College-Student" oninput="generateFieldsets(this.value,'fieldsetsContainerTab')" ></textarea>
     </div>
     
     <div id="fieldsetsContainerTab" class="biggerContainer">
@@ -63,7 +64,7 @@
 
     <div class="buttons-group">
         <button type="button" onclick="resetForm('fieldsetsContainerTab')">Reset</button>
-        <button type="button" onclick="generateCode('tablePreview', 'Table')">Generate Code</button>
+        <button type="button" onclick="generateCode('tablePreview', 'Table')">Generate table Code</button>
     </div>
 </form>
 <script >
@@ -126,7 +127,7 @@
         const tableTitle = document.getElementById('F1').value || 'Title'
         previewCont.innerHTML = ""
 
-        let previewHtml = `<h3>${tableTitle}</h3>`
+        let previewHtml = `<h3>${tableTitle}</h3>\n`
         previewCont.innerHTML = previewHtml;
         if (fileInp != null) {
             const inputEl = document.getElementById(fileInp);
@@ -164,72 +165,64 @@
                 const rows = document.getElementById(`F4${i}`).value
                 const footers = document.getElementById(`F5${i}`).value.trim().split(',')
                 const tableType = document.getElementById(`typeOfTab${i}`).value
-                let tableHtml = `
-                <fieldset>
-                    <legend>${fieldsets[i-1]}</legend>
-                    <table>`;
+                let tableHtml="";
+
+                if(fieldsets.length>1) tableHtml += `<fieldset>\n\t<legend>${fieldsets[i-1]}</legend>\n\t`
+                    
+                tableHtml += `<table>\n`;
 
                 if (headers.length > 0) {
                     if (tableType === 'hAtTop') {
-                        tableHtml += `
-                        <thead>
-                            <tr>`;
+                        tableHtml += `\t\t<thead>\n\t\t\t<tr>\n`;
                         for (let a = 0; a < headers.length; a++) {
-                            tableHtml += `        <th>${headers[a]}</th>`;
+                            tableHtml += `\t\t\t\t<th>${headers[a]}</th>\n`;
                         }
-                        tableHtml += `
-                            </tr>
-                        </thead>\n`;
+                        tableHtml += `\t\t\t</tr>\n\t\t</thead>\n`;
                     }
                 }
 
                 if (rows) {
                     if (tableType === 'hAtTop') {
-                        tableHtml += `    <tbody>\n`;
+                        tableHtml += `\t\t<tbody>\n`;
                         for (let j = 1; j <= rows; j++) {
-                            tableHtml += `      <tr>\n`;
+                            tableHtml += `\t\t\t<tr>\n`;
                             for (let k = 0; k < headers.length; k++) {
-                                tableHtml += `        <td>${document.getElementById(`table${i}_header${k}_row${j}`).value || 'None'}</td>\n`;
+                                tableHtml += `\t\t\t\t<td>${document.getElementById(`table${i}_header${k}_row${j}`).value || 'None'}</td>\n`;
                             }
-                            tableHtml += `      </tr>\n`;
+                            tableHtml += `\t\t\t</tr>\n`;
                         }
-                        tableHtml += `    </tbody>\n`;
+                        tableHtml += `\t\t</tbody>\n`;
                     }
 
                     if (tableType === 'hAtLeft') {
                         for (let k = 0; k < headers.length; k++) {
-                            tableHtml += `      <tr>\n`;
-                            tableHtml += `        <th>${headers[k]}</th>\n`;
+                            tableHtml += `\t\t\t<tr>\n`;
+                            tableHtml += `\t\t\t\t<th>${headers[k]}</th>\n`;
                             for (let j = 1; j <= rows; j++) {
-                                tableHtml += `        <td>${document.getElementById(`table${i}_header${k}_row${j}`).value || 'None'}</td>\n`;
+                                tableHtml += `\t\t\t\t<td>${document.getElementById(`table${i}_header${k}_row${j}`).value || 'None'}</td>\n`;
                             }
-                            tableHtml += `      </tr>\n`;
+                            tableHtml += `\t\t\t</tr>\n`;
                         }
                     }
                 }
 
                 if (footers.length > 0 && footers) {
-                    tableHtml += `
-                    <tfoot>
-                        <tr>`;
+                    tableHtml += `\t\t<tfoot>\n\t\t\t<tr>\n`;
                     for (let h = 0; h < footers.length; h++) {
-                        tableHtml += `        <td>${footers[h]}</td>`;
+                        tableHtml += `\t\t\t\t<td>${footers[h]}</td>\n`;
                     }
-                    tableHtml += `
-                        </tr>
-                    </tfoot>`;
+                    tableHtml += `\t\t\t</tr>\n\t\t</tfoot>\n`;
                 }
 
-                tableHtml += `  
-                    </table>
-                </fieldset>\n`;
+                tableHtml += "\t</table>"
+                if(fieldsets.length>1) tableHtml += `\n</fieldset>\n`;
 
                 previewCont.innerHTML += tableHtml;
             }
         }
     }
     function generateCode(pCont, element, file=null){
-        
+        remove_form('form_to_add_card')
         const previewCont = document.getElementById(pCont);
         const code = previewCont.innerHTML;
 
@@ -239,15 +232,10 @@
         const formattedCode = tempDiv.innerHTML;
 
         previewCont.innerHTML = "";
-        previewCont.innerHTML = `
-        <form action='#' method='post'>
-            <div class='form-group'>
-                <label for='MainCode'>Code to implement ${element}</label>
-                <textarea name='mainCode' id='MainCode' rows='10' style="white-space: pre; overflow-wrap: normal; overflow-x: scroll;">${formattedCode.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
-            </div>
-            <div class='buttons-group'>
-                <button type='submit'>Implement</button>
-            </div>
-        </form>`;
+        const form = document.getElementById('implementCodeForm')
+        const texta = document.getElementById("MainCode")
+        form.style.display = 'flex'
+        texta.value = formattedCode;
+
     }
 </script>

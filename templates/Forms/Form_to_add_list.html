@@ -50,7 +50,7 @@
         <div id="dlCreaterForm" class="listCreators">
             <h4>Create Description List</h4>
             <div class="form-group">
-                <label for="L7">Enter the terms (,) separated</label>
+                <label for="L7">Enter the terms using Enter (↩) key</label>
                 <textarea name="dlDterms" rows="3" id="L7" oninput="updatePreviewList()" ></textarea>
             </div>
         </div>
@@ -63,7 +63,7 @@
     </div>
     <div class="buttons-group">
         <button type="button" onclick="resetForm('fieldsetsContainerList')">Reset</button>
-        <button type="button" onclick="generateCode('listPreview', 'List')">Generate Code</button>
+        <button type="button" onclick="generateCode('listPreview', 'List')">Generate list Code</button>
     </div>
 </form>
 <style>
@@ -141,7 +141,7 @@
     function createDl(){
         const dlCreater = document.getElementById('dlCreaterForm');
         dlCreater.style.display = 'block';
-        const dterms = document.getElementById('L7').value.trim().split(",");
+        const dterms = document.getElementById('L7').value.trim().split("\n");
         let dlList = "<dl>\n"; 
         for(let i=0; i<dterms.length; i++){
             dlList += `\t<dt>${dterms[i]}</dt>\n\t<dd>Description of ${dterms[i]}</dd>\n\n`

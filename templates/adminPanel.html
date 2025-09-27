@@ -121,10 +121,22 @@
 			</script>
 		  {% endif %}
 		{% endwith %}
+		<div id="implementCodeForm" class="implementCodeCont">
+			<form action='/implement' method='GET'>
+				<div class='form-group'>
+					<label for='MainCode'>Code to implement element </label>
+					<textarea name='mainCode' id='MainCode' cols="50" rows='20'></textarea>
+				</div>
+				<div class='buttons-group'>
+					<button type="button" onclick="remove_form('implementCodeCont')">Cancel</button>
+					<button type='submit'>Implement</button>
+				</div>
+			</form>
+		</div>
 		{% if all['body_content_editable'] %}
 		<div class="form_to_add_card" id="add_form_card" >{% include 'Forms/Form_to_add_form.html' %}</div>
 		<div class="form_to_add_card" id="add_table_card">{% include 'Forms/Form_to_add_table.html' %}</div>
-		<div  class="form_to_add_card" id="add_blog_card" >{% include 'Forms/Form_to_add_blog.html'%}</div>
+		<div class="form_to_add_card" id="add_blog_card" >{% include 'Forms/Form_to_add_blog.html'%}</div>
 		<div class="form_to_add_card" id="add_list_card" >{% include 'Forms/Form_to_add_list.html' %}</div>
 		<div class="editer_tool_wrapper">
 			<div class="tools">

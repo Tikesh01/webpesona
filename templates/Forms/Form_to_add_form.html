@@ -258,10 +258,22 @@
         <label for="T1">Heading</label>
         <input type="text" name="headingOfForm" id="T1" placeholder="Enter form heading (e.g., Contact Form)" required>
     </div>
+    <div >
+        <label for="formMethod">Select a method:</label>
+        <div class="form-group smallButtons">
+            <input type="radio" name="formMethod" id="GETMethod" value="GET" checked>
+            <label for="GETMethod">GET (Fast)</label>
+        </div>
+        <div class="form-group smallButtons">
+            <input type="radio" name="formMethod" id="POSTMethod" value="POST">
+            <label for="POSTMethod">POST (Secure)</label>
+        </div>
+    </div>
     
     <div class="form-group">
-        <label for="T11">Enter the Block names ( Fieldsets-legends )</label>
-        <input type="text" name="headingsOfFieldsetForm" id="T11" min="0" placeholder="( , ) separated e.g., Home Address, Work Address" oninput="generateFieldsets(this.value,'fieldsetsContainerForm')">
+        <label for="F9">Enter the Block names ( Fieldsets-legends ) using Enter (↩) key</label>
+        <textarea name="headingsOfFieldsetForm" id="T11" min="0" placeholder="e.g., Home Address
+        Work Address" oninput="generateFieldsets(this.value,'fieldsetsContainerForm')"></textarea>
     </div>
     
     <div id="fieldsetsContainerForm">
@@ -292,6 +304,8 @@
                 <option value="password">Password</option>
                 <option value="file">File</option>
                 <option value="number">Number</option>
+                <option value="search">Search</option>
+                <option value="hidden">Hidden</option>
                 <option value="color">Color</option>
                 <option value="date">Date</option>
                 <option value="datetime">Datetime</option>
@@ -308,7 +322,7 @@
         </div>
         <div class="form-group">
             <label for='logicalNameInp'>Logical name</label>
-            <input type="text" name="inputName" id="logicalNameInp" required placeholder="Enter name attribute for input">
+            <input type="text" name="inputName" id="logicalNameInp" required placeholder="Enter name attribute for input" oninput="replaceValue('logicalNameInp',' ','_')">
         </div>
         <div class="form-group smallButtons">
             <label for="reqOrNOt">Required</label>
@@ -329,7 +343,7 @@
         </div>
         <div class="form-group">
             <label for="logicalNameTextarea">Logical name</label>
-            <input type="text" name="textareaName" id="logicalNameTextarea" required placeholder="Enter name attribute for textarea">
+            <input type="text" name="textareaName" id="logicalNameTextarea" required placeholder="Enter name attribute for textarea" oninput="replaceValue('logicalNameTextarea',' ','_')">
         </div>
         <div class="form-group">
             <label>Rows</label>
@@ -354,7 +368,7 @@
         </div>
         <div class="form-group">
             <label id="logicalNameSelect">Logical name</label>
-            <input type="text" name="selectName" id="logicalNameSelect" required placeholder="Enter name attribute for select">
+            <input type="text" name="selectName" id="logicalNameSelect" required placeholder="Enter name attribute for select" oninput="replaceValue('logicalNameSelect',' ','_')">
         </div>
         <div class="form-group smallButtons">
             <label for="reqForSelect">Required</label>
@@ -375,7 +389,7 @@
         </div>
         <div class="form-group">
             <label  for="logicalNameRadio" >Logical name</label>
-            <input type="text" name="radioName" id="logicalNameRadio" required placeholder="Enter name attribute for radio group">
+            <input type="text" name="radioName" id="logicalNameRadio" required placeholder="Enter name attribute for radio group" oninput="replaceValue('logicalNameRadio',' ','_')">
         </div>
         <div class="form-group smallButtons">
             <label for="reqForRadio">Required</label>
@@ -396,7 +410,7 @@
         </div>
         <div class="form-group">
             <label for="logicalNamecheckbox">Logical name</label>
-            <input type="text" name="checkboxName" id= "logicalNamecheckbox" required placeholder="Enter name attribute for checkbox group">
+            <input type="text" name="checkboxName" id= "logicalNamecheckbox" required placeholder="Enter name attribute for checkbox group" oninput="replaceValue('logicalNamecheckbox',' ','_')">
         </div>
         <div class="form-group">
             <label>Label Text</label>
@@ -408,21 +422,31 @@
     <div class="detail" id="buttonTemplate">
         <h4>Button</h4>
         <div class="form-group">
+            but
             <label>Type</label>
             <select name="buttonType">
                 <option value="button">Button</option>
                 <option value="submit">Submit</option>
                 <option value="reset">Reset</option>
+                <option value="disabled">disabled</option>
             </select>
         </div>
         <div class="form-group">
             <label>Text</label>
-            <input type="text" name="buttonText" required placeholder="Enter button text (e.g., Submit, Save)">
+            <input type="text" name="buttonText" required placeholder="Enter button text (e.g., Submit, Save)" />
         </div>
     </div>
 </div>
 
 <script>
+    function replaceValue(inputId, old, New){
+        const input = document.getElementById(inputId);
+        input.value = input.value.replace(old, New)
+        input.value = input.value.replace(/[^a-zA-Z0-9_]/g, '');
+        if (/^[0-9]/.test(input.value)) {
+            input.value = input.value.replace(/^[0-9]+/, ''); 
+        }
+    }
     document.addEventListener('DOMContentLoaded', function() {
         const inputs = document.getElementsByTagName('input');
         for (let input of inputs) {
@@ -439,9 +463,8 @@
     function generateFieldsets(legend,container) {
         const fieldsetsContainer = document.getElementById(container);
         fieldsetsContainer.innerHTML = '';
-        const legendList = legend.trim().split(',')
+        const legendList = legend.trim().split('\n')
         legends = legendList
-        
 
         for (let i = 1; i <= legends.length; i++) {
             const fieldsetDiv = document.createElement('div');
@@ -463,7 +486,7 @@
                     </div>                
                     <div class="form-group">
                         <label for="F4${i}">Number Of data Rows</label>
-                        <input type="number" name="numOfRows${i}" id="F4${i}" oninput="generateTbody(this.value, ${i})"/>
+                        <input type="number" name="numOfRows${i}" id="F4${i}" min="0" oninput="generateTbody(this.value, ${i})"/>
                     </div>
                     <div class="justContainer" style="display:flex; flex-direction:column;">
                         <div id="dataContainers${i}" style="overflow: auto;"></div>
@@ -471,7 +494,7 @@
 
                     <div class="form-group">
                         <label for="F5${i}">Footers of table ( , ) separated</label>
-                        <textarea name="footersOfTab${i}" id="F5${i}" oninput="updatePreviewTab('tablePreview')"></textarea>
+                        <textarea name="footersOfTab${i}" id="F5${i}" oninput="updatePreviewTab('tablePreview')" value='none'></textarea>
                     </div>`
                 fieldsetsContainer.appendChild(fieldsetDiv);
             }
@@ -568,7 +591,7 @@
             const fieldset = document.getElementById(`fieldset-${i}`);
             if (!fieldset) continue;
             
-            previewHTML += `<fieldset><legend>${legends[i-1]}</legend>`;
+            if(legends.length>1) previewHTML += `<fieldset><legend>${legends[i-1]}</legend>`;
             
             const elementsContainer = document.getElementById(`elements-container-${i}`);
             if (elementsContainer) {
@@ -579,12 +602,12 @@
                 });
             }
             
-            previewHTML += `</fieldset>`;
+            if(legends.length>1) previewHTML += `</fieldset>`;
         }
         
         preview.innerHTML = previewHTML;
     }
-    
+
     function generatePreviewElement(element, type) {
         let html = '';
         
@@ -597,13 +620,13 @@
                 const inputRequired = element.querySelector('input[type="checkbox"][name$="requiredInp"]')?.checked;
                 
                 html = `<div class="form-group">
-                            <label>${inputLabel}</label>
+                            <label for="${inputName}">${inputLabel}</label>
                     `;
                 if(inputRequired){
-                    html += `   <input type="${inputType}" name="${inputName}" placeholder="${inputPlaceholder}" required />`
+                    html += `   <input type="${inputType}" name="${inputName}" id="${inputName}" required placeholder="${inputPlaceholder}" />`
                 }
                 else{
-                    html += `   <input type="${inputType}" name="${inputName}" placeholder="${inputPlaceholder}" />`
+                    html += `   <input type="${inputType}" name="${inputName}" id="${inputName}" placeholder="${inputPlaceholder}" />`
                 }
                 html+= '\n</div>'
                 break;
@@ -617,13 +640,13 @@
                 
                 html = `
                     <div class="form-group">
-                        <label>${textareaLabel}</label>
+                        <label for="${textareaName}">${textareaLabel}</label>
                     `;
                 if(textareaRequired){
-                    html += `    <textarea name="${textareaName}" placeholder="${textareaPlaceholder}" rows="${textareaRows}" required ></textarea>`
+                    html += `    <textarea name="${textareaName}" placeholder="${textareaPlaceholder}" id="${textareaName}" required rows="${textareaRows}" ></textarea>`
                 }
                 else{
-                    html += `    <textarea name="${textareaName}" placeholder="${textareaPlaceholder}" rows="${textareaRows}"></textarea>`
+                    html += `    <textarea name="${textareaName}" placeholder="${textareaPlaceholder}" id="${textareaName}" rows="${textareaRows}"></textarea>`
                 }
                 html += '\n</div>'
                 break;
@@ -638,13 +661,13 @@
                 
                 html = `
                     <div class="form-group">
-                        <label>${selectLabel}</label>
+                        <label for="${textareaName}">${selectLabel}</label>
                 `;
                 if(selectRequired){
-                    html += `<select name="${selectName}" required>`
+                    html += `<select name="${selectName}" id="${selectName}" required>`
                 }
                 else{
-                    html += `<select name="${selectName}">`
+                    html += `<select name="${selectName}" id="${selectName}">`
                 }
 
                 html += `   ${options.map(opt => `<option value="${opt}">${opt}</option>\n`).join('')}
@@ -666,7 +689,7 @@
                 if(radioRequired){
                     html += `   ${radioOptionsList.map(opt => `
                                 <div>
-                                    <input type="radio" name="${radioName}" value="${opt}" id="${radioName}-${opt}" required>
+                                    <input type="radio" name="${radioName}" value="${opt}" required id="${radioName}-${opt}" >
                                     <label for="${radioName}-${opt}">${opt}</label>
                                 </div>
                             `).join('')}    
@@ -695,7 +718,7 @@
                         <label>${checkboxLabel}</label>
                         ${checkboxOptionsList.map(opt => `
                             <div>
-                                <input type="checkbox" name="${checkboxName}[]" value="${opt}" id="${checkboxName}-${opt}">
+                                <input type="checkbox" name="${checkboxName}" value="${opt}" id="${checkboxName}-${opt}">
                                 <label for="${checkboxName}-${opt}">${opt}</label>
                             </div>
                         `).join('')}
@@ -720,17 +743,22 @@
     
     function generateFormCode() {
         const formHeading = document.getElementById('T1').value || 'Form Title';
+        const methodRadio = document.getElementsByName('formMethod')
+        let method = "GET"
+        for(const rad of methodRadio){
+            if(rad.checked){
+                method = rad.value;
+            }
+        }
         
-        let formHTML = `<form action="#" method="post">\n  <h2>${formHeading}</h2>\n`;
-        
-        // Loop through all fieldsets
+        let formHTML = `<form action="#" method="${method}" id="${formHeading.replace(/ /gi,"_")}">\n\t<h2>${formHeading}</h2>\n`;
+         
         for (let i = 1; i <= legends.length; i++) {
             const fieldset = document.getElementById(`fieldset-${i}`);
             if (!fieldset) continue;
             
-            formHTML += `  <fieldset>\n    <legend>${legends[i-1]}</legend>\n`;
+            if(legends.length>1) formHTML += `\t<fieldset>\n\t<legend>${legends[i-1]}</legend>\n`;
             
-            // Get all elements in this fieldset
             const elementsContainer = document.getElementById(`elements-container-${i}`);
             if (elementsContainer) {
                 const elements = elementsContainer.querySelectorAll('.detail');
@@ -740,26 +768,16 @@
                 });
             }
             
-            formHTML += `  </fieldset>\n`;
+            if(legends.length>1) formHTML += `\t</fieldset>\n`;
         }
         
         formHTML += `</form>`;
-        
 
-        alert('Form HTML Code:\n\n' + formHTML);
-        
-        document.getElementById('formPreview').innerHTML = `
-        <form action="#" method='post'>
-            <div class='form-group'>
-                <label for="MainFormCode">Generated Form Code</label>
-                <textarea style="width: 100%; height: 200px; font-family: monospace;", id="MainFormCode" name="mainFormCode"></textarea>
-            </div>
-            <div class='buttons-group'>
-                <button type='submit'>Implement</button>
-            </div>
-        </form>
-        `;
-        document.getElementById('MainFormCode').value = formHTML;
+        const form = document.getElementById('implementCodeForm')
+        const texta = document.getElementById("MainCode")
+        form.style.display = 'flex'
+        texta.value = formHTML;
+        remove_form('form_to_add_card')
     }
     
     function resetForm(container) {
@@ -770,5 +788,5 @@
             fieldsetCount = 0;
         }
     }
-    
+
 </script>
