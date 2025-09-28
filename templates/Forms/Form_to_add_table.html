@@ -118,12 +118,34 @@
             cont.appendChild(rowDiv);
         }
         fieldsetsCount = values;
+        updatePreviewTab('tablePreview')
         
     }
-   
+    function createDoubleheadedTable(toph, lefth) {
+        let tableHtml = "\t<tr>\n\t\t<th></th>";
+        for (let i = 0; i < toph.length; i++) {
+            tableHtml += `<th>${toph[i]}</th>`;
+        }
+        tableHtml += "\n\n\t</tr>\n";
+        for (let j = 0; j < lefth.length; j++) {
+            tableHtml += "\t<tr>\n";
+            tableHtml += `\t\t<th>${lefth[j]}</th>`;
+            for (let k = 0; k < toph.length; k++) {
+                let cellId = `table1_header${k}_row${j+1}`;
+                let cellValue = "None";
+                let cellInput = document.getElementById(cellId);
+                if (cellInput) {
+                    cellValue = cellInput.value || 'None';
+                }
+                tableHtml += `<td>${cellValue}</td>`;
+            }
+            tableHtml += "\n\t</tr>\n";
+        }
+        return tableHtml;
+    }
     function updatePreviewTab(pContainer, fileInp=null){
         const previewCont = document.getElementById(pContainer)
-        const fieldsets = document.getElementById('F9').value.trim().split(',')
+        const fieldsets = document.getElementById('F9').value.trim().split('\n')
         const tableTitle = document.getElementById('F1').value || 'Title'
         previewCont.innerHTML = ""
 
@@ -161,15 +183,31 @@
 
         else if(fileInp==null){
             for(let i= 1; i<=fieldsets.length;i++){
+                const tableType = document.getElementById(`typeOfTab${i}`).value
                 const headers = document.getElementById(`F3${i}`).value.trim().split(',')
                 const rows = document.getElementById(`F4${i}`).value
                 const footers = document.getElementById(`F5${i}`).value.trim().split(',')
-                const tableType = document.getElementById(`typeOfTab${i}`).value
                 let tableHtml="";
 
                 if(fieldsets.length>1) tableHtml += `<fieldset>\n\t<legend>${fieldsets[i-1]}</legend>\n\t`
                     
                 tableHtml += `<table>\n`;
+                
+                if(tableType==='hBoth'){
+                    const normalHeaders = document.getElementById(`normal_headers${i}`)
+                    const numOfRows = document.getElementById(`numberOfRows${i}`)
+                    normalHeaders.style.display = 'none'
+                    numOfRows.style.display = 'none'
+
+                    const topHeaders = document.getElementById(`top_headers${i}`)
+                    const leftHeaders = document.getElementById(`left_headers${i}`)
+                    topHeaders.style.display = 'flex'
+                    leftHeaders.style.display = 'flex'
+                    const top = document.getElementById(`top${i}`).value.trim().split('\n')
+                    const left = document.getElementById(`left${i}`).value.trim().split('\n')
+
+                    tableHtml += createDoubleheadedTable(top, left)
+                }
 
                 if (headers.length > 0) {
                     if (tableType === 'hAtTop') {
@@ -207,7 +245,7 @@
                 }
 
                 if (footers.length > 0 && footers) {
-                    tableHtml += `\t\t<tfoot>\n\t\t\t<tr>\n`;
+                    tableHtml += `\n\t\t<tfoot>\n\t\t\t<tr>\n`;
                     for (let h = 0; h < footers.length; h++) {
                         tableHtml += `\t\t\t\t<td>${footers[h]}</td>\n`;
                     }
@@ -232,7 +270,7 @@
         const formattedCode = tempDiv.innerHTML;
 
         previewCont.innerHTML = "";
-        const form = document.getElementById('implementCodeForm')
+        const form = document.getElementById('implementCodeFormCont')
         const texta = document.getElementById("MainCode")
         form.style.display = 'flex'
         texta.value = formattedCode;

@@ -72,7 +72,7 @@
     
     function updatePreviewBlog(pContainer){
         const headings = document.getElementById('B1').value
-        const headingList = headings.trim().split(',')
+        const headingList = headings.trim().split('\n')
         const preview = document.getElementById(pContainer)
         preview.innerHTML =""
         for(let i=1; i<=headingList.length; i++){
@@ -94,7 +94,7 @@
                 `;
             } 
             else if(!contentOrSubhead){
-                const subheadingList = document.getElementById(`${headingList[i - 1]}_subheadings`).value.trim().split(",");
+                const subheadingList = document.getElementById(`${headingList[i - 1]}_subheadings`).value.trim().split("\n");
 
                 for (let j = 1; j <= subheadingList.length; j++) {
                     subheadingList[i-1] = subheadingList[i-1].replace(/ /gi, "_")

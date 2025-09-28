@@ -114,14 +114,15 @@ class website:
     def addPage(self, name, title,HTML):  
         # Create the page file if it doesn't exist
         if '.' in name:
-            name = name[:name.find('name')]
-        if '" "' in name:
+            name = os.path.splitext(name)[0]
+        if " " in name:
             for i,d in enumerate(name):
-                if d== "' '":
-                    name[i] = name[i].replace(old='" "',new="_")
+                if d== " ":
+                    name[i] = name[i].replace(old=" ",new="_")
                     
         file_path = self.folder + name + self.extantion
-        if not os.path.exists(file_path):
+        partials = self.folder+'partials/'+name+self.extantion
+        if not os.path.exists(file_path) and not  os.path.exists(partials):
             with open("templates/Base.html", "r") as base:
                 baseF = base.readlines()
                 for i,line in enumerate(baseF):
@@ -193,8 +194,9 @@ class website:
                 lines.insert(len(lines)-4,c)
                 f.writelines(lines)
             if 'element':
-                f.write(content)
-                pass
+                cleaned = "\n".join(line for line in content.splitlines() if line.strip() != "")
+                lines.insert(len(lines)-4, cleaned + "\n")
+                f.writelines(lines)
         
     
     def setImgInPage(self,imgPath, page,position=None):
@@ -376,7 +378,7 @@ def page_addition():
     elif name and title:
         result = w.addPage(name, title, HTML)
         if isinstance(result, Exception):
-            flash(str(result), 'danger')
+            flash(str(result) +"already exist", 'danger')
         else:
             flash('Page added successfully!', 'success')
     elif (not name or not title):

@@ -21,11 +21,9 @@
 				flashContainer.className = `alert alert-${type}`;
 				flashContainer.textContent = message;
 				
-				// Add to the messages container if it exists, otherwise add to body
 				const messagesContainer = document.querySelector('.messages') || document.body;
 				messagesContainer.appendChild(flashContainer);
 				
-				// Remove the message after 5 seconds
 				setTimeout(() => {
 					flashContainer.remove();
 				}, 5000);
@@ -54,9 +52,16 @@
 					showMessage('Error saving content: ' + error.message, 'danger');
 				});
 			}
-
 		</script>	
 		<script>
+			function toVarName(inputId, old, New){
+				const input = document.getElementById(inputId);
+				input.value = input.value.replace(old, New)
+				input.value = input.value.replace(/[^a-zA-Z0-9_]/g, '');
+				if (/^[0-9]/.test(input.value)) {
+					input.value = input.value.replace(/^[0-9]+/, ''); 
+				}
+    		}
 			document.addEventListener("DOMContentLoaded", function () {
 				const iframe = document.getElementById("Iframe");
 
@@ -121,17 +126,20 @@
 			</script>
 		  {% endif %}
 		{% endwith %}
-		<div id="implementCodeForm" class="implementCodeCont">
-			<form action='/implement' method='GET'>
-				<div class='form-group'>
-					<label for='MainCode'>Code to implement element </label>
-					<textarea name='mainCode' id='MainCode' cols="50" rows='20'></textarea>
-				</div>
-				<div class='buttons-group'>
-					<button type="button" onclick="remove_form('implementCodeCont')">Cancel</button>
-					<button type='submit'>Implement</button>
-				</div>
-			</form>
+		<div id="implementCodeFormCont" class="implementCodeCont">
+			<div id="implementCodeForm" >
+				<h2 id="Title">Code Implementation</h2>
+				<form action='/implement' method='GET'>
+					<div class='form-group'>
+						<label for='MainCode'>Code to implement element </label>
+						<textarea name='mainCode' id='MainCode' cols="50" rows='20'></textarea>
+					</div>
+					<div class='buttons-group'>
+						<button type="button" onclick="remove_form('implementCodeCont')">Cancel</button>
+						<button type='submit'>Implement</button>
+					</div>
+				</form>
+			</div>
 		</div>
 		{% if all['body_content_editable'] %}
 		<div class="form_to_add_card" id="add_form_card" >{% include 'Forms/Form_to_add_form.html' %}</div>
@@ -224,7 +232,7 @@
 			</ul>
 		</nav>
 		<section id="the_web">
-			<div id="web_containers">
+			<div id="page_containers" >
 				<h1>Pages</h1>
 				<div id="containers_list">
 					{% for page in all['pages'] %}
@@ -295,19 +303,22 @@
 				</div>
 			</div>
 			<div id="preview_container">
-				<h1>Your Website</h1>
-				<form
-					action="/frameSizeChange"
-					method="post"
-					enctype="multipart/form-data"
-				>	
-					{% for size in all['sizes'] %}
-					<input type="submit" value="{{ size}}" name="frame_size">
-					{% endfor %}
-					
-					<input type="number" name="frame_size" id="new_frame_size" style="background: #2c3e5020; width: 50px;" placeholder="912" />
-					<button type="submit"><i class="fas fa-add"></i></button >
-				</form>
+				<div id="previewContainerHeader" class="container_headers">
+					<h1>Your Website</h1>
+					<form action="/frameSizeChange" method="post" enctype="multipart/form-data" id="frameSizeForm">
+						<details id="resolutions">
+							<summary>Resolutions</summary>
+							<ul type="none" id="resolutionList">
+							{% for size in all['sizes'] %}
+								<li><input type="submit" value="{{ size}}" name="frame_size"></li>
+							{% endfor %}
+							
+								<li><input type="number" name="frame_size" id="new_frame_size" style="background: #2c3e5020; width: 70px;" placeholder="912" />
+								<button type="submit"><i class="fas fa-add"></i></button ></li>
+							</ul>
+						</details>
+					</form>
+				</div>
 				<div id="frameContainer">
 					{% if web.debugMode %}
 					<form action="">
@@ -326,6 +337,9 @@
 			</div>
 			<div id="feature_list">
 				<h1>Features</h1>
+				{% if web.previewPage == 'header.html' %}
+				Navbar Details 
+				{% endif %}
 				<div class="features" id="addPage">
 					<h3><i class="fas fa-file-alt" title="Add New Page"></i>Add New page</h3>
 					<form
@@ -334,7 +348,7 @@
 						enctype="multipart/form-data"
 						style="margin-top: 1em"
 					>
-						<input type="text" name="fileName" id="filName" placeholder="Page name"/>
+						<input type="text" name="fileName" id="filName" placeholder="Page name" oninput="toVarName(this.id, ' ', '_')"/>
 						<input type="text" name="title" id="fileTitle" placeholder="Page title" />
 						<div class="form-groups">
 							<label for=" htmlfile">Put your own logic or template</label>
@@ -405,20 +419,6 @@
 						<button type="submit">Add</button>
 					</form>
 				</div>
-				<div class="features" id="color">
-					<h3><i class="fas fa-palette" title="Choose Theme"></i>Choose Theme</h3>
-					<form action="/theme-rotate" method="post" enctype="multipart/form-data">
-						<button type="submit" name="change_theme" value="left" class="theme-btn">
-							<i class="fa fa-angle-left"></i>
-						</button>
-
-						<h4>{{ all['themes'][-19:][0].removesuffix('*/\n').removeprefix('/*') }}</h4>
-
-						<button type="submit" name="change_theme" value="right" class="theme-btn">
-							<i class="fas fa-angle-right"></i>
-						</button>
-					</form>
-				</div>
 				<div  class ="features" id="EditContent">
 					<h3><i class="fas fa-pen-to-square" title="Edit Page"></i>Make Page Editable</h3>
 					<form action="/Content-editable" method="post" enctype="multipart/form-data" class="content_edit">
@@ -433,6 +433,21 @@
 					<span style="font-size: xx-small; float: inline-end; color:rgba(255, 0, 0, 0.71)"><i class="fas fa-info-circle"></i> Off Before Leaving!</span>
 					{% else %} {% endif %}
 				</div>
+				<div class="features" id="color">
+					<h3><i class="fas fa-palette" title="Choose Theme"></i>Choose Theme</h3>
+					<form action="/theme-rotate" method="post" enctype="multipart/form-data">
+						<button type="submit" name="change_theme" value="left" class="theme-btn">
+							<i class="fa fa-angle-left"></i>
+						</button>
+
+						<h4>{{ all['themes'][-19:][0].removesuffix('*/\n').removeprefix('/*') }}</h4>
+
+						<button type="submit" name="change_theme" value="right" class="theme-btn">
+							<i class="fas fa-angle-right"></i>
+						</button>
+					</form>
+				</div>
+				
 			</div>
 		</section>
 	</body>

@@ -80,16 +80,18 @@ nav h1 i {
     display: flex;
 }
 
-#web_containers,
+#page_containers,
 #preview_container,
 #feature_list {
     background: white;
     border-radius: 8px;
     padding: 10px;
     box-shadow: 0 2px 10px #0000000d;
+    scroll-behavior: smooth;
+    scrollbar-width:thin;
+    scrollbar-color: #3498db #f1f1f1;
 }
-
-#web_containers {
+#page_containers {
     height: 100vh;
     width: 250px;
     overflow: auto;
@@ -146,10 +148,56 @@ nav h1 i {
     max-width: calc(100% - 520px);
     padding: 0 1px;
 }
-
+#previewContainerHeader{
+    position: relative;
+    width: 100%;
+    text-align: center;
+    z-index: 0;
+}
 #preview_container h1 {
     color: #2c3e50;
     font-size: 1.8rem;
+}
+
+#preview_container #frameSizeForm{
+    position: absolute;
+    right: 1%;
+    top: 50%;
+    transform: translateY(-50%);
+    #resolutions {
+        border: 1px solid #3498db33;
+        padding: 0.2em 0.8em;
+        border-radius: 24px;
+        background: #f8fafd;
+        box-shadow: 0 1px 4px #3498db11;
+        margin-left: 0.5em;
+        ul {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            li {
+                padding: 0.1em ;
+                border-radius: 16px;
+                background: transparent;
+                transition: background 0.2s, color 0.2s;
+                cursor: pointer;
+            }
+            li:hover,
+            li:active {
+                background: #3498db22;
+                color: #3498db;
+            }
+        }
+    }
+    #resolutions:open{
+        position: absolute;
+        background: #eaf6fd;
+        border-color: #354a58;
+        box-shadow: 0 2px 8px #3498db22;
+    }
+
 }
 
 #preview_container #frameContainer {
@@ -178,7 +226,7 @@ nav h1 i {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    width: 250px;
+    width: 255px;
     height: 100vh;
     overflow: auto;
 }
@@ -347,39 +395,31 @@ nav h1 i {
 #EditContent label:hover {
     color: #3498db;
 }
-.form_to_add_card, #implementCodeForm{
+.form_to_add_card, #implementCodeFormCont{
     display: none;
     position: fixed;
     height: 100%;
     width: 100%;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     backdrop-filter: blur(2px);
-}
-#implementCodeForm{
-    padding: 2em 0;
-    form{
-        width: 70%;
-        height: 80%;
-        textarea{
-            font-family: monospace;
-        }
-    }
+    z-index: 1000;
 }
 .editer_tool_wrapper{
     position: fixed;
-    top: 92%;
-    right: 1%;
+    bottom: 0.2%;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
     gap: 2em;
-    background-color: #2c3e50;
+    background:transparent;
     border-radius: 10px;
-    padding: 0.5em;
+    padding: 0.2em 0.5em;
 }
 .tools {
     display: flex;
-    color: #3498db;
+    color: rgb(195, 255, 0);
     font-size: larger;
     label{
         position: relative;
@@ -387,7 +427,7 @@ nav h1 i {
         .fa-circle-plus{
             position: absolute;
             font-size: small;
-            color: rgb(195, 255, 0);
+            color: rgb(21, 182, 241);
         }
     }
     label:hover{
@@ -407,7 +447,7 @@ nav h1 i {
     cursor: pointer;
 }
 #saveEditedButton:hover{
-    scale: 1.1 ;
+    scale: 1.05 ;
 }
 @media (max-width: 1024px) {
     main {

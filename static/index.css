@@ -37,8 +37,12 @@ button,a {
 .content-wrapper {
     max-width: 1200px;
     margin: 0 auto;
-    gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2em;
     padding: 1rem;
+    /* background: #000; */
 }
 
 .card {
@@ -49,6 +53,7 @@ button,a {
     backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.18);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
     img{
         max-width: 100%;
         height: auto;
@@ -158,6 +163,61 @@ button,a {
     background: linear-gradient(90deg, #3498db, #2ecc71);
     border-radius: 3px;
 }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background: var(--childDivs-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(31, 38, 135, 0.1);
+}
+
+th {
+    background: var(--navbar);
+    color: var(--navbarText);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(203, 213, 225, 0.15);
+    color: var(--main-text);
+    font-size: 0.95rem;
+}
+
+tr:hover {
+    background: rgba(31, 38, 135, 0.05);
+    backdrop-filter: blur(4px);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Table caption if needed */
+caption {
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: var(--main-heading);
+    text-align: left;
+    font-size: 1.1rem;
+    background: var(--main-heading);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Table within card specific styles */
+.card table {
+    box-shadow: none;
+    background: rgba(31, 38, 135, 0.05);
+}
 @media (min-width: 1537px){
     .content{
         font-size: larger;
@@ -175,6 +235,15 @@ button,a {
     }    
     h1 {
         font-size: 2rem;
+    }
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    th, td {
+        padding: 0.8rem 1.2rem;
     }
 }
 @media (max-width: 600px){

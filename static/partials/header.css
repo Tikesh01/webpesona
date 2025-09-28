@@ -60,6 +60,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    max-width: 1300px;
     padding: 0 2rem;
     transition: all 0.3s ease;
     position: relative;

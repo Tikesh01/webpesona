@@ -1,5 +1,5 @@
 <style>
-    #form_to_add_stuffs {
+    #form_to_add_stuffs,#implementCodeForm {
         padding: 2.5em;
         border-radius: 15px;
         display: flex;
@@ -9,11 +9,12 @@
         background: white;
         position: relative;
         max-width: 90%;
-        max-height: 95%;
+        max-height: 90%;
         overflow: auto;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
         margin: 0 auto;
+        z-index: 100;
     }
 
     #form_to_add_stuffs::-webkit-scrollbar {
@@ -343,7 +344,7 @@
         </div>
         <div class="form-group">
             <label for="logicalNameTextarea">Logical name</label>
-            <input type="text" name="textareaName" id="logicalNameTextarea" required placeholder="Enter name attribute for textarea" oninput="replaceValue('logicalNameTextarea',' ','_')">
+            <input type="text" name="textareaName" id="logicalNameTextarea" required placeholder="Enter name attribute for textarea" oninput="toVarName(this.id,' ','_')">
         </div>
         <div class="form-group">
             <label>Rows</label>
@@ -439,14 +440,6 @@
 </div>
 
 <script>
-    function replaceValue(inputId, old, New){
-        const input = document.getElementById(inputId);
-        input.value = input.value.replace(old, New)
-        input.value = input.value.replace(/[^a-zA-Z0-9_]/g, '');
-        if (/^[0-9]/.test(input.value)) {
-            input.value = input.value.replace(/^[0-9]+/, ''); 
-        }
-    }
     document.addEventListener('DOMContentLoaded', function() {
         const inputs = document.getElementsByTagName('input');
         for (let input of inputs) {
@@ -480,21 +473,29 @@
                             <option value="hBoth">Header(s) at AT The Left and Top </option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="normal_headers${i}" >
                         <label for="F3${i}">Headers of table ( , ) separated</label>
                         <textarea name="headersOfTab${i}" id="F3${i}" oninput="updatePreviewTab('tablePreview')" ></textarea>
                     </div>                
-                    <div class="form-group">
+                    <div class="form-group" id="numberOfRows${i}">
                         <label for="F4${i}">Number Of data Rows</label>
                         <input type="number" name="numOfRows${i}" id="F4${i}" min="0" oninput="generateTbody(this.value, ${i})"/>
                     </div>
+                    <div class="form-group" id="top_headers${i}" style="display:none;">
+                        <label for="top${i}">Top Headers of table (↩) separated</label>
+                        <textarea name="topHeadersOfTab${i}" id="top${i}" oninput="updatePreviewTab('tablePreview')" ></textarea>
+                    </div>  
+                    <div class="form-group" id="left_headers${i}" style="display:none;" >
+                        <label for="left${i}">Left Headers of table (↩) separated</label>
+                        <textarea name="lefthHeadersOfTab${i}" id="left${i}" oninput="updatePreviewTab('tablePreview')" ></textarea>
+                    </div>  
                     <div class="justContainer" style="display:flex; flex-direction:column;">
                         <div id="dataContainers${i}" style="overflow: auto;"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="F5${i}">Footers of table ( , ) separated</label>
-                        <textarea name="footersOfTab${i}" id="F5${i}" oninput="updatePreviewTab('tablePreview')" value='none'></textarea>
+                        <textarea name="footersOfTab${i}" id="F5${i}" oninput="updatePreviewTab('tablePreview')" value=''></textarea>
                     </div>`
                 fieldsetsContainer.appendChild(fieldsetDiv);
             }
@@ -509,15 +510,15 @@
                         </div>
                         <div class="form-group">
                             <label>Textareas</label>
-                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'textarea', this.value)">
+                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'textarea', this.value)" />
                         </div>
                         <div class="form-group">
                             <label>Select tags</label>
-                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'select', this.value)">
+                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'select', this.value)" />
                         </div>
                         <div class="form-group">
                             <label>Radios</label>
-                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'radio', this.value)">
+                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'radio', this.value)" />
                         </div>
                         <div class="form-group">
                             <label>Checkboxes</label>
