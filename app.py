@@ -21,7 +21,7 @@ class website:
         self.folder = "templates/"
         self.extantion = ".html"
         self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) ]
-        self.unremovablePages = ['Home.html','login.html','register.html']
+        self.unremovablePages = ['home.html','login.html','register.html']
         self.unviewPages = ['adminPanel.html','skeleton.html','Base.html']
         self.folders =  [folder for folder in os.listdir('templates/') if os.path.isdir('templates/'+folder) and folder!='Forms' ]
         self.folderDict = {folder : os.listdir("templates/"+folder) for folder in self.folders}
@@ -347,8 +347,9 @@ w =website()
 
 @app.route('/')
 def Home():
-    w.currentPage = "Home.html"
-    return render_template('Home' + w.extantion, all=w.__dict__ ,web=w)
+    
+    w.currentPage = "home.html"
+    return render_template('home.html', all=w.__dict__ ,web=w)
 
 @app.route('/admin')
 def admin():
