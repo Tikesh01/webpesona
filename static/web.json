@@ -1,7 +1,21 @@
 {
     "size": "100%",
-    "sizes": ["100%", "320px", "360px", "390px", "414px", "480px", "768px", "820px", "1024px", "1280px", "1440px", "1536px", "2560px"],
-    "previewPage": "Home.html",
+    "sizes": [
+        "100%",
+        "320px",
+        "360px",
+        "390px",
+        "414px",
+        "480px",
+        "768px",
+        "820px",
+        "1024px",
+        "1280px",
+        "1440px",
+        "1536px",
+        "2560px"
+    ],
+    "previewPage": "home.html",
     "currentPage": "",
     "body_content_editable": false,
     "debugMode": false,
