@@ -26,7 +26,7 @@ class website:
         self.folders =  [folder for folder in os.listdir('templates/') if os.path.isdir('templates/'+folder) and folder!='Forms' ]
         self.folderDict = {folder : os.listdir("templates/"+folder) for folder in self.folders}
         self.favicons = os.listdir("static/favicons/")
-        self.favicon = os.listdir("static/favicon/")
+        self.favicon = os.listdir("static/fav_icon/")
         self.previewPage = "/"
         self.logo = os.listdir("static/logo/")
         self.currentPage= str()
@@ -153,13 +153,13 @@ class website:
         
     def addFavicon(self,icon_path):
         if len(self.favicon) < 1:
-            shutil.copy(icon_path,"static/favicon/")
+            shutil.copy(icon_path,"static/fav_icon/")
         else:
             if os.path.exists("static/favicons/"+self.favicon[0]):
                 os.remove("static/favicons/"+self.favicon[0])
-            shutil.move("static/favicon/"+self.favicon[0], "static/favicons/")
-            shutil.copy(icon_path,"static/favicon/")
-        self.favicon = os.listdir("static/favicon/")
+            shutil.move("static/fav_icon/"+self.favicon[0], "static/favicons/")
+            shutil.copy(icon_path,"static/fav_icon/")
+        self.favicon = os.listdir("static/fav_icon/")
         self.favicons = os.listdir("static/favicons")
         print(self.favicon)
         print(self.favicons)
