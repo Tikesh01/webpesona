@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request,redirect, url_for, flash, session
+from flask import Flask, render_template, request,redirect, url_for, flash, session, send_from_directory
 import re, os, shutil, json
 from models import db, User
 
@@ -26,7 +26,7 @@ class website:
         self.folders =  [folder for folder in os.listdir('templates/') if os.path.isdir('templates/'+folder) and folder!='Forms' ]
         self.folderDict = {folder : os.listdir("templates/"+folder) for folder in self.folders}
         self.favicons = os.listdir("static/favicons/")
-        self.favicon = os.listdir("static/fav_icon/")
+        self.favicon = os.listdir("static/favicon/")
         self.previewPage = "/"
         self.logo = os.listdir("static/logo/")
         self.currentPage= str()
@@ -153,13 +153,13 @@ class website:
         
     def addFavicon(self,icon_path):
         if len(self.favicon) < 1:
-            shutil.copy(icon_path,"static/fav_icon/")
+            shutil.copy(icon_path,"static/favicon/")
         else:
             if os.path.exists("static/favicons/"+self.favicon[0]):
                 os.remove("static/favicons/"+self.favicon[0])
-            shutil.move("static/fav_icon/"+self.favicon[0], "static/favicons/")
-            shutil.copy(icon_path,"static/fav_icon/")
-        self.favicon = os.listdir("static/fav_icon/")
+            shutil.move("static/favicon/"+self.favicon[0], "static/favicons/")
+            shutil.copy(icon_path,"static/favicon/")
+        self.favicon = os.listdir("static/favicon/")
         self.favicons = os.listdir("static/favicons")
         print(self.favicon)
         print(self.favicons)
@@ -630,9 +630,16 @@ def implement_code():
     flash('The Code implemented to the '+w.previewPage+' page', 'success')
     return redirect('admin')
 
+@app.route('/favicon.ico')
+def faviconn():
+    return send_from_directory('static/favicon', 'logo.png')
+
 #New Logic
 @app.route('/<name>')
 def render_page(name):
+    if name == 'favicon.ico':
+        return send_from_directory('static/favicon', 'logo.png')
+        
     if name not in ["Home.html", "adminPanel.html"]:
         w.currentPage = name
         try:
