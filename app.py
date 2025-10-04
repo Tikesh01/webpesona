@@ -109,12 +109,12 @@ class website:
         self.themes = self.theme()
         return len_of_theme_block
     
-    def make_content_editabele(self):
-        if self.body_content_editable == False:
-            self.body_content_editable = True
+    def make_content_editable(self):
+        if self.body_content_editable == True:
+            self.body_content_editable = False
             return 'On'
         else:
-            self.body_content_editable = False
+            self.body_content_editable = True
             return 'Off'
             
 
