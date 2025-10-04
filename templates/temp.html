@@ -3,98 +3,39 @@
 Temporary page 
 {%endblock%} 
 {% block page %}
-<section id="Temp.html" class="content" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}"><!--start-->
+<section id="temp.html" class="content" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}"><!--start-->
 	<div class="content-wrapper">
 		<div class="card">
-			<h1>Welcome to WebPersona</h1>
-<h3>Kya name h tera</h3>
-<table>
-		<thead>
-			<tr>
-				<th>sdfa</th>
-				<th>sf</th>
-				<th>a</th>
-				<th>sf</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>None</td>
-				<td>None</td>
-				<td>None</td>
-				<td>None</td>
-			</tr>
-			<tr>
-				<td>None</td>
-				<td>None</td>
-				<td>None</td>
-				<td>None</td>
-			</tr>
-			<tr>
-				<td>None</td>
-				<td>None</td>
-				<td>None</td>
-				<td>None</td>
-			</tr>
-			<tr>
-				<td>None</td>
-				<td>None</td>
-				<td>None</td>
-				<td>None</td>
-			</tr>
-			<tr>
-				<td>None</td>
-				<td>None</td>
-				<td>None</td>
-				<td>None</td>
-			</tr>
-		</tbody>
-		<tfoot>
-			<tr>
-				<td></td>
-			</tr>
-		</tfoot>
-	</table>
-			<h3>Student Details</h3>
-			<table>
-				<tbody>
-					<tr>
-						<th></th><th>name</th><th>sdf</th><th>sdf</th><th>sdf</th>
-					</tr>
-					<tr>
-						<th>name</th><td>None</td><td>None</td><td>None</td><td>None</td>
-					</tr>
-					<tr>
-						<th>dfa</th><td>None</td><td>None</td><td>None</td><td>None</td>
-					</tr>
-					<tr>
-						<th>df</th><td>None</td><td>None</td><td>None</td><td>None</td>
-					</tr>
-					<tr>
-						<th>gf</th><td>None</td><td>None</td><td>None</td><td>None</td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td></td>
-					</tr>
-				</tfoot>
-			</table>
-		</div>
-		<div class="card" id="Essay_on_India">
-			<h1>Essay on India</h1>
-			<div class="subcard">
-				<h2>Introduction,</h2>
-				<div id="Essay_on_India_Introduction,">
-				Content
+			<form action="#" method="GET" id="Contact_Form">
+				<h1>Contact Form</h1>
+				<div class="form-group">
+					<label for="Contact_form_name">Enter your name</label>
+					<input type="text" name="Contact_form_name" id="Contact_form_name" required="" placeholder="Enter your name here......">
 				</div>
-			</div>
-		</div>
-		<div class="card" id="Bharat_ka_Naksha">
-			<h1>Bharat ka Naksha</h1>
-			<div id="Bharat_ka_Naksha-Content">
-			Tumhara rajya ab hamara h aur tuhara sona bhi
-			</div>
+				<div class="form-group">
+					<label for="Contact_Form_Address">Enter Your Full Address</label>
+					<textarea name="Contact_Form_Address" placeholder="e.g., Shakti Nagar, Raipur, 493441" id="Contact_Form_Address" required="" rows="4"></textarea>
+				</div>
+				<div class="form-group smallButtons">
+					<label><h4>Select Your Gender</h4></label>
+					<div>
+						<label for="contact_form_gender-Male"><input type="radio" name="contact_form_gender" value="Male" id="contact_form_gender-Male">Male</label>
+					</div>
+					<div>
+						
+						<label for="contact_form_gender-Female"><input type="radio" name="contact_form_gender" value="Female" id="contact_form_gender-Female">Female</label>
+					</div>
+					<div>
+						<label for="contact_form_gender-Others"><input type="radio" name="contact_form_gender" value="Others" id="contact_form_gender-Others">Others</label>
+					</div>
+				</div>
+				<div id="buttons-field">
+					<button disabled="disabled">School</button>
+					<button type="submit">Submit</button>
+				</div>
+			</form>
+			<dl>
+			</dl>
 		</div>
 	</div>
 </section><!--Close-->

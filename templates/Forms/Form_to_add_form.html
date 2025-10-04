@@ -252,9 +252,10 @@
     }
 </style>
 <form action="" method="post" id="form_to_add_stuffs">
-    <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
-    <h2 id="Title">Add Form Card</h2>
-    
+    <div class="form_card_header">
+        <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
+        <h2 id="Title">Add Form Card</h2>
+    </div>    
     <div class="form-group">
         <label for="T1">Heading</label>
         <input type="text" name="headingOfForm" id="T1" placeholder="Enter form heading (e.g., Contact Form)" required>
@@ -268,7 +269,7 @@
         <div class="form-group smallButtons">
             <input type="radio" name="formMethod" id="POSTMethod" value="POST">
             <label for="POSTMethod">POST (Secure)</label>
-        </div>
+        </div>  
     </div>
     
     <div class="form-group">
@@ -294,7 +295,6 @@
 </form>
 
 <div id="templates" style="display: none;">
-    <!-- Input template -->
     <div class="detail" id="inputTemplate">
         <h4>Input</h4>
         <div class="form-group">
@@ -323,7 +323,7 @@
         </div>
         <div class="form-group">
             <label for='logicalNameInp'>Logical name</label>
-            <input type="text" name="inputName" id="logicalNameInp" required placeholder="Enter name attribute for input" oninput="replaceValue('logicalNameInp',' ','_')">
+            <input type="text" name="inputName" id="logicalNameInp" class="lnInp" required placeholder="Enter name attribute for input" oninput="toVarName(this.className,' ','_')">
         </div>
         <div class="form-group smallButtons">
             <label for="reqOrNOt">Required</label>
@@ -335,7 +335,6 @@
         </div>
     </div>
 
-    <!-- Textarea template -->
     <div class="detail" id="textareaTemplate">
         <h4>Textarea</h4>
         <div class="form-group">
@@ -344,7 +343,7 @@
         </div>
         <div class="form-group">
             <label for="logicalNameTextarea">Logical name</label>
-            <input type="text" name="textareaName" id="logicalNameTextarea" required placeholder="Enter name attribute for textarea" oninput="toVarName(this.id,' ','_')">
+            <input type="text" name="textareaName" id="logicalNameTextarea" class="lnTexta" required placeholder="Enter name attribute for textarea" oninput="toVarName(this.className,' ','_')">
         </div>
         <div class="form-group">
             <label>Rows</label>
@@ -360,7 +359,6 @@
         </div>
     </div>
 
-    <!-- Select template -->
     <div class="detail" id="selectTemplate">
         <h4>Select Tag</h4>
         <div class="form-group">
@@ -369,7 +367,7 @@
         </div>
         <div class="form-group">
             <label id="logicalNameSelect">Logical name</label>
-            <input type="text" name="selectName" id="logicalNameSelect" required placeholder="Enter name attribute for select" oninput="replaceValue('logicalNameSelect',' ','_')">
+            <input type="text" name="selectName" id="logicalNameSelect" class="lnSel" required placeholder="Enter name attribute for select" oninput="toVarName(this.className,' ','_')">
         </div>
         <div class="form-group smallButtons">
             <label for="reqForSelect">Required</label>
@@ -381,7 +379,6 @@
         </div>
     </div>
 
-    <!-- Radio template -->
     <div class="detail" id="radioTemplate">
         <h4>Radio Button</h4>
         <div class="form-group">
@@ -390,7 +387,7 @@
         </div>
         <div class="form-group">
             <label  for="logicalNameRadio" >Logical name</label>
-            <input type="text" name="radioName" id="logicalNameRadio" required placeholder="Enter name attribute for radio group" oninput="replaceValue('logicalNameRadio',' ','_')">
+            <input type="text" name="radioName" id="logicalNameRadio" class="lnRad" required placeholder="Enter name attribute for radio group" oninput="toVarName(this.className,' ','_')">
         </div>
         <div class="form-group smallButtons">
             <label for="reqForRadio">Required</label>
@@ -402,7 +399,6 @@
         </div>
     </div>
 
-    <!-- Checkbox template -->
     <div class="detail" id="checkboxTemplate">
         <h4>Checkbox</h4>
         <div class="form-group">
@@ -411,7 +407,7 @@
         </div>
         <div class="form-group">
             <label for="logicalNamecheckbox">Logical name</label>
-            <input type="text" name="checkboxName" id= "logicalNamecheckbox" required placeholder="Enter name attribute for checkbox group" oninput="replaceValue('logicalNamecheckbox',' ','_')">
+            <input type="text" name="checkboxName" id="logicalNamecheckbox" class="lnCheck" required placeholder="Enter name attribute for checkbox group" oninput="toVarName(this.className,' ','_')">
         </div>
         <div class="form-group">
             <label>Label Text</label>
@@ -419,11 +415,9 @@
         </div>
     </div>
 
-    <!-- Button template -->
     <div class="detail" id="buttonTemplate">
         <h4>Button</h4>
         <div class="form-group">
-            but
             <label>Type</label>
             <select name="buttonType">
                 <option value="button">Button</option>
@@ -535,7 +529,6 @@
                 updatePreview('formPreview')
 
             }
-        
         }
     }
 
@@ -543,7 +536,6 @@
         const container = document.getElementById(`elements-container-${fieldsetId}`);
         if (!container) return;
         
-    
         const existingElements = container.querySelectorAll(`[data-type="${elementType}"]`);
         existingElements.forEach(el => el.remove());
         
@@ -684,14 +676,13 @@
                 const radioRequired = element.querySelector('input[type="checkbox"][name$="requiredRadio"]')?.checked;
                 
                 html = `
-                    <div class="form-group">
-                        <label>${radioLabel}</label>
+                    <div class="form-group smallButtons">
+                        <label><h4>${radioLabel}</h4></label>
                 `;
                 if(radioRequired){
                     html += `   ${radioOptionsList.map(opt => `
                                 <div>
-                                    <input type="radio" name="${radioName}" value="${opt}" required id="${radioName}-${opt}" >
-                                    <label for="${radioName}-${opt}">${opt}</label>
+                                    <label for="${radioName}-${opt}"><input type="radio" name="${radioName}" value="${opt}" required id="${radioName}-${opt}" >${opt}</label>
                                 </div>
                             `).join('')}    
                         `
@@ -699,8 +690,7 @@
                 else{
                     html += `   ${radioOptionsList.map(opt => `
                                 <div>
-                                    <input type="radio" name="${radioName}" value="${opt}" id="${radioName}-${opt}">
-                                    <label for="${radioName}-${opt}">${opt}</label>
+                                    <label for="${radioName}-${opt}"><input type="radio" name="${radioName}" value="${opt}" id="${radioName}-${opt}"> ${opt}</label>
                                 </div>
                             `).join('')}
                             `
@@ -732,7 +722,7 @@
                 const buttonText = element.querySelector('input[name$="buttonText"]')?.value || 'Button';
                 
                 html = `
-                    <div class="form-group">
+                    <div class="form-group buttons-field">
                         <button type="${buttonType}">${buttonText}</button>
                     </div>
                 `;
@@ -752,7 +742,7 @@
             }
         }
         
-        let formHTML = `<form action="#" method="${method}" id="${formHeading.replace(/ /gi,"_")}">\n\t<h2>${formHeading}</h2>\n`;
+        let formHTML = `<form action="#" method="${method}" id="${formHeading.replace(/ /gi,"_")}">\n\t<h1>${formHeading}</h1>\n`;
          
         for (let i = 1; i <= legends.length; i++) {
             const fieldset = document.getElementById(`fieldset-${i}`);
@@ -774,7 +764,7 @@
         
         formHTML += `</form>`;
 
-        const form = document.getElementById('implementCodeForm')
+        const form = document.getElementById('implementCodeFormCont')
         const texta = document.getElementById("MainCode")
         form.style.display = 'flex'
         texta.value = formHTML;

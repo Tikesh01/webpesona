@@ -60,10 +60,10 @@ button,a {
         display: block;
     }
     fieldset{
-        border: 2px solid var(--main-heading);   
+        border: 2px solid var(--main-text);   
         border-radius: 8px;          
         padding: 1em 1.5em 1.2em;    
-        margin: 1.2em 0;             
+        margin: 1em 0;             
       
 
         legend {
@@ -77,15 +77,49 @@ button,a {
         display: flex;
         flex-direction: column;
         gap: 1.2em; 
-        .form-group{
+       .form-group{
+            display: flex;
+            flex-direction: column;
+            gap: 0.5em;
+            /* background: #000; */
+        }
+        .smallButtons{
+            gap: 3em;
+            flex-direction: row;
+        }
+        .smallButtons label {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 3rem;
+            gap: 1em;
+            cursor: pointer;
+            user-select: none;
         }
-        input,select{
+        .smallButtons input[type="radio"],
+        .smallButtons input[type="checkbox"] {
+            accent-color: var(--main-heading);
+            width: 1.2em;
+            height: 1.2em;
+            margin: 0;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid var(--main-heading);
+            transition: box-shadow 0.2s;
+        }
+        .smallButtons input[type="checkbox"] {
+            border-radius: 6px;
+        }
+        .smallButtons input[type="radio"]:focus,
+        .smallButtons input[type="checkbox"]:focus {
+            outline: 2px solid var(--highlight);
+            box-shadow: 0 0 0 2px var(--highlight);
+        }
+        .smallButtons input[type="radio"]:checked,
+        .smallButtons input[type="checkbox"]:checked {
+            box-shadow: 0 0 0 2px var(--main-heading);
+        }
+        input,select, textarea{
             padding: 0.7em 1.2em;
-            width: 21em;
+            width: 100%;
             border-radius: 10px;
             background: transparent;
             border:1px solid  gray;

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request,redirect, url_for, flash, session
-import re, os, shutil
+import re, os, shutil, json
 from models import db, User
 
 app = Flask(__name__)
@@ -23,7 +23,7 @@ class website:
         self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) ]
         self.unremovablePages = ['Home.html','login.html','register.html']
         self.unviewPages = ['adminPanel.html','skeleton.html','Base.html']
-        self.folders =  [page for page in os.listdir('templates/') if os.path.isdir('templates/'+page) and page!='Forms' ]
+        self.folders =  [folder for folder in os.listdir('templates/') if os.path.isdir('templates/'+folder) and folder!='Forms' ]
         self.folderDict = {folder : os.listdir("templates/"+folder) for folder in self.folders}
         self.favicons = os.listdir("static/favicons/")
         self.favicon = os.listdir("static/favicon/")
@@ -37,6 +37,11 @@ class website:
         self.previewPageHtml = self.readSourceCode(self.previewPage)
         self.isLogedin = False
         self.isRegistered = False
+        self.header_pages = [page for page in os.listdir('templates/Header_pages/') ]
+        with open("static/navigation.json", "r") as nav_file:
+            nav_dict = json.load(nav_file)
+            self.navigation = [{"name": key, "value": value} for key, value in nav_dict.items()]
+
 
     def theme(self):
         file = open("static/root.css", "r")
@@ -47,6 +52,8 @@ class website:
             return ["Select a Page!"]
         if page in self.folderDict['partials']:
             page = 'partials/'+page
+        if page in self.folderDict['Header_pages']:
+            page = 'Header_pages/'+page
             
         page = self.folder+page
 
@@ -186,8 +193,15 @@ class website:
         self.favicons = os.listdir("static/favicons")
     
     def write_code_to_page(self,page,content,type, position=None):
+        for folder in self.folderDict.keys():
+            print(folder, self.folderDict[folder])
+            if page in self.folderDict[folder]:
+                page = f"{folder}/"+page
+                break
+        page = 'templates/'+page 
         with open(page,'r') as file:
             lines = file.readlines()
+            print(lines)
         with open(page, "w") as f:
             if type=='img':
                 c = "\t\t\t<img src='" + content+"' alt='Image...'/>\n"
@@ -215,7 +229,6 @@ class website:
             
         pattern = fr'(<[^>]+id=["\']{block_id}["\'][^>]*>)'
 
-        # 1. Find start of block 
         start_idx = None
         for i, line in enumerate(content):
             if re.match(pattern, line) or "<!--start-->" in line:
@@ -224,8 +237,7 @@ class website:
 
         if start_idx is None:
             raise ValueError("Start tag not found")
-        
-        # 2. Find end of block
+ 
         end_idx = None
         for i in range(len(content)-1,1,-1):
             if '<!--Close-->' in content[i]:
@@ -235,17 +247,14 @@ class website:
         if end_idx is None:
             raise ValueError("Closing tag not found")
 
-        # 3. Prepare prefix and suffix
         prefix = content[:start_idx + 1]
         suffix = content[end_idx:]
     
-        # 4. Extract block to replace
         oldblock = content[start_idx + 1:end_idx]
         print(oldblock)
         
-        # 5. Replace line-by-line
         new = []
-        jinja_pattern = r'{[{%#].*?[}%]}'  # Matches all Jinja tag types
+        jinja_pattern = r'{[{%#].*?[}%]}'  
 
         for a, line in enumerate(oldblock):
             if a >= len(html):
@@ -254,14 +263,14 @@ class website:
             updated_line = html[a]
             
             if "<!--NO-->" in line:
-                new.append(line)  # Preserve line
+                new.append(line) 
                 print('preserved')
                 
             elif re.search(jinja_pattern, line.strip()):
                 jinja_match = re.search(jinja_pattern, line)
                 if jinja_match:
                     preserved = jinja_match.group()
-                    # inject Jinja back into updated line 
+                    
                     rebuilt = ''
                     i = 0
                     once = True
@@ -347,43 +356,85 @@ def admin():
     return render_template("adminPanel.html",  all=w.__dict__,web=w)
         
         
-@app.route('/pageAddition', methods=['POST'])
-def page_addition():
+@app.route('/Addition', methods=['POST'])
+def addition():
     name = request.form.get("fileName")
     title = request.form.get('title')
-    HTML = request.files['ownHtml']
-    if HTML and HTML.filename:
-        if HTML.filename.endswith('.py'):
-            fpath = os.path.join('../webpersona',HTML.filename)
-            if os.path.exists(fpath):
-                M='Rename the Python File'
-                C = 'info'
+    # HTML = request.files['ownHtml']
+    navText = request.form.get('navigationText')
+    navTextPos = request.form.get('navigationTextPos')
+    navPage = request.form.get('navigationPage')
+    try:
+        if navText and navPage:
+            with open("static/navigation.json", "r") as js:
+                nav_dict = json.load(js)
+            nav_items = list(nav_dict.items())
+            new_item = (navText, navPage)
+            if navTextPos:
+                try:
+                    pos = int(navTextPos) - 1
+                    nav_items.insert(pos, new_item)
+                except Exception:
+                    nav_items.append(new_item)
             else:
-                HTML.save(fpath)
-                w.addLogic(fpath)
-                M = "Backend logic saved succesfully" 
-                C='success'
-        else:
-            fpath = os.path.join('templates',HTML.filename)
-            if not os.path.exists(fpath):
-                HTML.save(fpath) 
-                M = f'Your page {HTML.filename} added succesfully !'
-                C= 'success'
-                w.pages = [page for page in os.listdir(w.folder) if not os.path.isdir(w.folder+page)]
-            else:
-                M= f'{HTML.filename} already exist'
-                C = 'info'
-        flash(M,C)
+                nav_items.append(new_item)
+            new_nav_dict = dict(nav_items)
+            with open("static/navigation.json", "w") as Js:
+                json.dump(new_nav_dict, Js, indent=4)
+            w.navigation = [{"name": key, "value": value} for key, value in new_nav_dict.items()]
+    except Exception as e:
+        flash(f"Navigation update error: {e}", "danger")
+            
+    # if HTML and HTML.filename:
+    #     if HTML.filename.endswith('.py'):
+    #         fpath = os.path.join('../webpersona',HTML.filename)
+    #         if os.path.exists(fpath):
+    #             M='Rename the Python File'
+    #             C = 'info'
+    #         else:
+    #             HTML.save(fpath)
+    #             w.addLogic(fpath)
+    #             M = "Backend logic saved succesfully" 
+    #             C='success'
+    #     else:
+    #         fpath = os.path.join('templates',HTML.filename)
+    #         if not os.path.exists(fpath):
+    #             HTML.save(fpath) 
+    #             M = f'Your page {HTML.filename} added succesfully !'
+    #             C= 'success'
+    #             w.pages = [page for page in os.listdir(w.folder) if not os.path.isdir(w.folder+page)]
+    #         else:
+    #             M= f'{HTML.filename} already exist'
+    #             C = 'info'
+    #     flash(M,C)
         
-    elif name and title:
-        result = w.addPage(name, title, HTML)
-        if isinstance(result, Exception):
-            flash(str(result) +"already exist", 'danger')
-        else:
-            flash('Page added successfully!', 'success')
-    elif (not name or not title):
-        flash('Seems you have not typed Page Name or Title','danger')
+    # elif name and title:
+    #     result = w.addPage(name, title,HTML)
+    #     if isinstance(result, Exception):
+    #         flash(str(result) +"already exist", 'danger')
+    #     else:
+    #         flash('Page added successfully!', 'success')
+    # elif (not name or not title):
+    #     flash('Seems you have not typed Page Name or Title','danger')
     
+    return redirect(url_for('admin'))
+
+@app.route('/Deletion', methods=['POST'])
+def deletion():
+    navToDel = request.form.get('delete_navigation')
+    with open("static/navigation.json", "r") as js:
+        nav_dict = json.load(js)
+
+    print(navToDel, nav_dict.items())
+    for dict_items in nav_dict.items():
+        if navToDel in dict_items:
+            del nav_dict[navToDel]
+            with open("static/navigation.json", "w") as js:
+                json.dump(nav_dict, js, indent=4)
+            w.navigation = [{"name": key, "value": value} for key, value in nav_dict.items()]
+            flash(f"Navigation item '{navToDel}' deleted successfully!", "success")
+            break
+            
     return redirect(url_for('admin'))
     
 @app.route('/faviconAddition', methods =['POST'])
@@ -423,6 +474,7 @@ def operation_with_img_files():
             flash("Favicon deleted successfully!", "success")
         except Exception as e:
             flash(f"Error deleting favicon: {e}", "danger")
+            
     if pathToChange:
         try:
             w.addFavicon("static/favicons/" + pathToChange)
@@ -442,6 +494,7 @@ def operation_with_img_files():
         print('current : ', w.previewPage)
         w.previewPageHtml = w.readSourceCode(w.previewPage)
         flash(f"Preview page set to {pathForPreview}", "info")
+        
     if pathTochangeLogo:
         try:
             w.changeLogo("static/favicons/" + pathTochangeLogo)
@@ -496,11 +549,14 @@ def debug_mode_change():
     
 @app.route('/save-block-multi', methods=['POST'])
 def save_block_multi():
-    print('saving on')
+    print('saving on.......')
     data = request.get_json()
     file = data.get("file")
-    if data.get('file') in w.folderDict['partials']:
-        file = "partials/" + file
+    print(file)
+    for folder in w.folderDict.keys():
+        if data.get('file') in w.folderDict[folder]:
+            file = f"{folder}/" + file
+            break
 
     block_id = data.get("block")
     html = data.get("html")
@@ -516,6 +572,7 @@ def save_block_multi():
         print(e)
         
     flash(M,C)
+        
     return redirect(url_for('admin'))
 
 # Registration route
@@ -569,7 +626,7 @@ def logout():
 @app.route('/implement', methods=['GET'])
 def implement_code():
     code = request.args.get('mainCode')
-    w.write_code_to_page("templates/"+w.previewPage,code,'element')
+    w.write_code_to_page(w.previewPage,code,'element')
     flash('The Code implemented to the '+w.previewPage+' page', 'success')
     return redirect('admin')
 
@@ -580,11 +637,11 @@ def render_page(name):
         w.currentPage = name
         try:
             try:
-                return render_template(f'Mini-pages/{name}', all=w.__dict__)
+                return render_template(f'Header_pages/{name}', all=w.__dict__, web = w)
             except:
-                return render_template(f"partials/{name}", all=w.__dict__)
+                return render_template(f"partials/{name}", all=w.__dict__, web=w)
         except:
-            return render_template(f"{name}", all=w.__dict__)
+            return render_template(f"{name}", all=w.__dict__, web = w)
     else:
         print("dynamic-n")
         if name == "Home.html":

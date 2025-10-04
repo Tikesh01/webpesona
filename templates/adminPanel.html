@@ -3,15 +3,8 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link
-			rel="shortcut icon"
-			href="../static/favicon/{{all['favicon'][0]}}"
-			type="image/x-icon"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-		/>
+		<link rel="shortcut icon" href="../static/favicon/{{all['favicon'][0]}}" type="image/x-icon" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 		<link rel="stylesheet" href="../static/adminPanel.css">
 		<link rel="stylesheet" href="../static/flash-messages.css">
 		<title>WebPersona-Admin Pannel</title>
@@ -55,11 +48,13 @@
 		</script>	
 		<script>
 			function toVarName(inputId, old, New){
-				const input = document.getElementById(inputId);
-				input.value = input.value.replace(old, New)
-				input.value = input.value.replace(/[^a-zA-Z0-9_]/g, '');
-				if (/^[0-9]/.test(input.value)) {
-					input.value = input.value.replace(/^[0-9]+/, ''); 
+				const inputs = document.getElementsByClassName(inputId);
+				for(const input of inputs){
+					input.value = input.value.replace(old, New)
+					input.value = input.value.replace(/[^a-zA-Z0-9_]/g, '');
+					if (/^[0-9]/.test(input.value)) {
+						input.value = input.value.replace(/^[0-9]+/, ''); 
+					}
 				}
     		}
 			document.addEventListener("DOMContentLoaded", function () {
@@ -128,7 +123,10 @@
 		{% endwith %}
 		<div id="implementCodeFormCont" class="implementCodeCont">
 			<div id="implementCodeForm" >
-				<h2 id="Title">Code Implementation</h2>
+				<div class="form_card_header">
+					<label id="close" onclick="remove_form('implementCodeCont')"><i class="fas fa-close"></i></label>
+					<h2 id="Title">Code Implementation</h2>
+				</div>
 				<form action='/implement' method='GET'>
 					<div class='form-group'>
 						<label for='MainCode'>Code to implement element </label>
@@ -146,15 +144,20 @@
 		<div class="form_to_add_card" id="add_table_card">{% include 'Forms/Form_to_add_table.html' %}</div>
 		<div class="form_to_add_card" id="add_blog_card" >{% include 'Forms/Form_to_add_blog.html'%}</div>
 		<div class="form_to_add_card" id="add_list_card" >{% include 'Forms/Form_to_add_list.html' %}</div>
+		<div class="form_to_add_card" id="add_iframe_card" >{% include 'Forms/Form_to_add_iframe.html' %}</div>
+		<div class="form_to_add_card" id="add_grid_card" >{% include 'Forms/Form_to_add_grid.html' %}</div>
+		<div class="form_to_add_card" id="add_link_card" >{% include 'Forms/Form_to_add_link.html' %}</div>
+
+
 		<div class="editer_tool_wrapper">
 			<div class="tools">
 				<label for="" data-name="Form" onclick="show_form('add_form_card')"><i class="fas fa-file-text" aria-hidden="true" title="Add Form" ></i><i class="fa-solid fa-circle-plus"></i></label>
 				<label for="" onclick="show_form('add_table_card')"><i class="fa fa-table" aria-hidden="true" title="Add tabel"></i><i class="fa-solid fa-circle-plus"></i> </label>
 				<label for="Blogg" onclick="show_form('add_blog_card')"><i class="fa-brands fa-blogger-b"></i><i class="fa-solid fa-circle-plus"></i></label>
 				<label for=""  onclick="show_form('add_list_card')"><i class="fa-solid fa-list"></i><i class="fa-solid fa-circle-plus"></i></label>
-				<label for=""><i class="fa-regular fa-file-code"></i><i class="fa-solid fa-circle-plus"></i></label>
-				<label for="grid" title="Add grids"><i class="fas fa-grip"></i><i class="fa-solid fa-circle-plus"></i></label>
-				
+				<label for="" onclick="show_form('add_iframe_card')"><i class="fa-regular fa-file-code"></i><i class="fa-solid fa-circle-plus"></i></label>
+				<label for="grid" title="Add grids" onclick="show_form('add_grid_card')" ><i class="fas fa-grip"></i><i class="fa-solid fa-circle-plus"></i></label>
+				<label for="link" title="Add links" onclick="show_form('add_link_card')"><i class="fa-solid fa-link"></i><i class="fa-solid fa-circle-plus"></i></label>
 			</div>
 			<button type="button" id="saveEditedButton"  onclick="saveBlock('{{web.previewPage}}', '{{web.previewPage}}', '{{web.previewPage}}')" >Save the edited</button>
 			
@@ -236,64 +239,36 @@
 				<h1>Pages</h1>
 				<div id="containers_list">
 					{% for page in all['pages'] %}
-					{% if page not in all['unviewPages'] %} 
-					<details id="favicons_container" class="{{'highlight' if page==all['previewPage'] else 'none'}}">
-						<summary >
-							{{page.removesuffix('.html')}} 
-							<form action="/delete-change-Favicon-page" method="post" enctype="multipart/form-data" id="edit_favicon" >
-							{% if page not in all['unremovablePages'] %}
-								<label for="del{{page}}" title="Delete the Page"
-									><i class="fas fa-trash-alt"></i></label>
-								<input
-									type="submit"
-									id="del{{page}}"
-									name="delete_page"
-									value="{{page}}"
-								/>
-							{% else %}
-							{% endif %}
-								<label for="view{{page}}" title="Preview Page"><i class="fas fa-eye"></i></label>
-								<input
-									type="submit"
-									id="view{{page}}"
-									name="preview_page"
-									value="{{page}}"
-								/>
-							</form>
-						</summary>
-					</details>
-					{% else %}
-					{% continue %}
-					{%endif%}
+						{% if page not in all['unviewPages'] %} 
+						<details id="favicons_container" class="{{'highlight' if page==all['previewPage'] else 'none'}}">
+							<summary >
+								{{page.removesuffix('.html')}} 
+								<form action="/delete-change-Favicon-page" method="post" enctype="multipart/form-data" id="edit_favicon" >
+								{% if page not in all['unremovablePages'] %}
+									<label for="del{{page}}" title="Delete the Page"><i class="fas fa-trash-alt"></i></label>
+									<input type="submit" id="del{{page}}" name="delete_page" value="{{page}}" />
+								{% endif %}
+									<label for="view{{page}}" title="Preview Page"><i class="fas fa-eye"></i></label>
+									<input type="submit" id="view{{page}}" name="preview_page" value="{{page}}" />
+								</form>
+							</summary>
+						</details>
+						{%endif%}
 					{% endfor %} 
 					{% for folder in all['folderDict'].keys() %}
 					<details open="True">
-						<summary>{{folder}}</summary>
+						<summary>{{folder}}<i class="fa fa-angle-down"></i></summary>
 						{% for page in all['folderDict'][folder] %}
-						<details
-							style="
-								width: 90%;
-								float:inline-end;
-								border: none;
-								margin: 0;
-								padding: 0.5;
-							" class="{{'highlight' if page==all['previewPage'] else 'none'}}"
-						>
+						<details style="width: 90%; float:inline-end; border: none; margin: 0; padding: 0.5em;" class="{{'highlight' if page==all['previewPage'] else 'none'}}">
 							<summary>
 								{{page.removesuffix('.html')}}
-								<form
-									action="/delete-change-Favicon-page"
-									method="post"
-									enctype="multipart/form-data"
-									id="edit_favicon"
-								>
+								<form action="/delete-change-Favicon-page" method="post" enctype="multipart/form-data" id="edit_favicon" >
+									{% if folder == "Header_pages" %}
+										<label for="del{{page}}" title="Delete Page"><i class="fas fa-trash-alt"></i></label>
+										<input type="submit" id="del{{page}}" name="delete_page" value="{{folder}}/{{page}}" />
+									{% endif %}
 									<label for="view{{page}}" title="Preview Page"><i class="fas fa-eye"></i></label>
-									<input
-										type="submit"
-										id="view{{page}}"
-										name="preview_page"
-										value="{{page}}"
-									/>
+									<input type="submit" id="view{{page}}" name="preview_page" value="{{page}}" />
 								</form>
 							</summary>
 						</details>
@@ -309,12 +284,13 @@
 						<details id="resolutions">
 							<summary>Resolutions</summary>
 							<ul type="none" id="resolutionList">
-							{% for size in all['sizes'] %}
-								<li><input type="submit" value="{{ size}}" name="frame_size"></li>
-							{% endfor %}
-							
-								<li><input type="number" name="frame_size" id="new_frame_size" style="background: #2c3e5020; width: 70px;" placeholder="912" />
-								<button type="submit"><i class="fas fa-add"></i></button ></li>
+								{% for size in all['sizes'] %}
+									<li><input type="submit" value="{{ size}}" name="frame_size"></li>
+								{% endfor %}
+								<li>
+									<input type="number" name="frame_size" id="new_frame_size" style="background: #2c3e5020; width: 70px;" placeholder="912" />
+									<button type="submit"><i class="fas fa-add"></i></button >
+								</li>
 							</ul>
 						</details>
 					</form>
@@ -329,8 +305,7 @@
 						</textarea>
 						<button type='submit'>Apply</button>
 					</form>
-	
-					{%else%}{%endif%}
+					{%endif%}
 					<iframe src="{{ all['previewPage']}}" width="{{ all['size'] }}" height="100%" 
 					style="display: block; margin: auto; border: none;" id="Iframe" ></iframe>
 				</div>
@@ -338,25 +313,48 @@
 			<div id="feature_list">
 				<h1>Features</h1>
 				{% if web.previewPage == 'header.html' %}
-				Navbar Details 
+					<div class="features" id="addNavigation" >
+						<h3><i class="fas fa-compass" title="Add New Page"></i>Add Navigations</h3>
+						<form action="/Addition" method="POST" enctype="multipart/form-data" style="margin-top: 1em">
+							<input type="text" name="navigationText" id="navigationText" placeholder="Text" required>
+							
+							<input type="number" name="navigationTextPos" id="navigationTextPos" placeholder="Position" >
+	
+							<div class="form-groups">
+								<label for="navigationText">Select the page to navigate</label>
+								<select name="navigationPage" id="navigationPage" style="width: 100%;" onchange="this.form.submit()">
+									<option value="none">None</option>
+									{% for page in all['pages'] %}
+										{% if page not in all['unviewPages'] %} 
+										<option value='{{page}}' >{{page}}</option>
+										{% endif %}
+									{% endfor %}
+								</select>
+							</div>
+						</form>
+					</div>
+					{% for nav in all['navigation'] %}
+						<div id="favicons_container">
+							<p>{{nav['name']}}</p>
+							<form action="/Deletion" method="post" enctype="multipart/form-data" id="edit_favicon">
+								<label for="del{{nav}}" title="Remove the navigation"><i class="fas fa-trash-alt"></i></label>
+								<input type="submit" id="del{{nav}}" name="delete_navigation" value="{{nav['name']}}" />
+							</form>
+						</div>
+					{% endfor %}
 				{% endif %}
 				<div class="features" id="addPage">
 					<h3><i class="fas fa-file-alt" title="Add New Page"></i>Add New page</h3>
-					<form
-						action="/pageAddition"
-						method="post"
-						enctype="multipart/form-data"
-						style="margin-top: 1em"
-					>
-						<input type="text" name="fileName" id="filName" placeholder="Page name" oninput="toVarName(this.id, ' ', '_')"/>
+					<form action="/Addition" method="POST" enctype="multipart/form-data" style="margin-top: 1em" >
+						<input type="text" name="fileName" class="filName" placeholder="Page name" oninput="toVarName(this.className, ' ', '_')"/>
 						<input type="text" name="title" id="fileTitle" placeholder="Page title" />
 						<div class="form-groups">
-							<label for=" htmlfile">Put your own logic or template</label>
-							<input type="file" name="ownHtml" id="htmlfile" accept=".html, .htm, .py" placeholder="Put you File">
+							<label for="htmlfile">Put your own logic or template</label>
+							<input type="file" name="ownHtml" id="htmlfile" accept=".html, .htm, .py" placeholder="Put your File" />
 						</div>
 						<div id="addPageButtons">
-						<button type="reset">reset</button>
-						<button type="submit">Add</button>
+							<button type="reset">reset</button>
+							<button type="submit">Add</button>
 						</div>
 					</form>
 				</div>
@@ -367,44 +365,15 @@
 						<div id="favicons_container">
 							<img src="../static/favicons/{{icon}}" alt="icon" />
 							<p>{{icon}}</p>
-							<form
-								action="/delete-change-Favicon-page"
-								method="post"
-								enctype="multipart/form-data"
-								id="edit_favicon"
-							>
-								<label for="del{{icon}}" title="Remove the image"
-									><i class="fas fa-trash-alt"></i
-								></label>
-								<input
-									type="submit"
-									id="del{{icon}}"
-									name="delete_favicon"
-									value="{{icon}}"
-								/>
+							<form action="/delete-change-Favicon-page" method="post" enctype="multipart/form-data" id="edit_favicon">
+								<label for="del{{icon}}" title="Remove the image"><i class="fas fa-trash-alt"></i></label>
+								<input type="submit" id="del{{icon}}" name="delete_favicon" value="{{icon}}" />
 								<label for="ch{{icon}}" title="Set as Favicon"><i class="fas fa-star"></i></label>
-								<input
-									type="submit"
-									id="ch{{icon}}"
-									name="change_favicon"
-									value="{{icon}}"
-								/>
-								<label for="logo{{icon}}" title="Set as Logo"><i class="fas fa-plus-circle"></i
-								></label>
-								<input
-									type="submit"
-									id="logo{{icon}}"
-									name="change_logo"
-									value="{{icon}}"
-								/>
-								<label for="img{{icon}}" title="Set image to page"><i class="fas fa-file-image" a></i
-								></label>
-								<input
-									type="submit"
-									id="img{{icon}}"
-									name="set_to_page"
-									value="{{icon}}"
-								/>
+								<input type="submit" id="ch{{icon}}" name="change_favicon" value="{{icon}}"/>
+								<label for="logo{{icon}}" title="Set as Logo"><i class="fas fa-plus-circle"></i></label>
+								<input type="submit" id="logo{{icon}}" name="change_logo" value="{{icon}}" />
+								<label for="img{{icon}}" title="Set image to page"><i class="fas fa-file-image" a></i></label>
+								<input type="submit" id="img{{icon}}" name="set_to_page" value="{{icon}}"/>
 							</form>
 						</div>
 						{% endfor %}

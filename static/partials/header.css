@@ -60,7 +60,6 @@ nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 1300px;
     padding: 0 2rem;
     transition: all 0.3s ease;
     position: relative;
@@ -87,7 +86,7 @@ nav img:hover {
 nav ul {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1em;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -123,7 +122,7 @@ nav ul li details summary {
 nav ul li details summary::after {
     content: "🠷";
     font-size: 1em;
-    transition: transform 0.3s ease;
+    transition: transforq   gm 0.3s ease;
 }
 
 nav ul li details[open] {
@@ -137,17 +136,18 @@ nav ul li details[open] summary::after {
 nav ul li details div {
     position: absolute;
     top: 100%;
-    left: -80%;
+    left: 50%;
+    transform: translateX(-50%);
     background: var(--main-bg);
     backdrop-filter: blur(10px);
-    min-width: 300px;
-    padding: 1rem;
+    min-width: 480px; 
+    height: 300px;  
     color: var(--main-text);
     border-radius: 8px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.1);
     margin-top: 0.5rem;
-    z-index: 1000;
+    z-index: 1000;   
 }
 
 nav ul li a {

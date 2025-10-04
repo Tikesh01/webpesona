@@ -3,14 +3,26 @@
 Login-Webpersona
 {%endblock%} 
 {% block page %}
-<section id="login.html" class="content" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}"><!--start-->
-  <div  class="login-container" class="content-wrapper" >
+<style>
+   #LoginWebpersona .form-group{
+       display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 3rem;
+        input{
+            width: 21em;
+        }
+    }
+</style>
+<section id="login.html" class="content" contenteditable="{{ true if all['body_content_editable'] else false }}"><!--start-->
+  <div class="content-wrapper login-container">
     <div  class="card" >
       <h1>Login</h1>
-      <form action="/login" method="POST">
+      <form action="/login" method="POST" id="LoginWebpersona">
         <div class="form-group">
           <label for="loginEmail">Email:</label>
-          <input type="email" name="email" id="loginEmail" placeholder="example123@domain.com"  required />
+          <input type="email" name="email" id="loginEmail" placeholder="e.g., example123@domain.com" required />
         </div>
         <div class="form-group" id="password-field">
           <label for="password-input">Password:</label>

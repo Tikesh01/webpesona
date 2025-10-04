@@ -83,24 +83,24 @@
 			<span></span>
 		</button>
 		<ul type="none">
-			<li>
-				<details>
-					<summary>About</summary>
-					<div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium atque debitis sint recusandae magnam cum corporis rem accusantium voluptatibus eligendi?</div>
-				</details>
-			</li>
-			<li>
-				<details>
-					<summary>Products</summary>
-					<div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium atque debitis sint recusandae magnam cum corporis rem accusantium voluptatibus eligendi?</div>
-			</li>
-			<li>
-				<details>
-					<summary>New</summary>
-					<div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium atque debitis sint recusandae magnam cum corporis rem accusantium voluptatibus eligendi?</div>
-				</details>
-			</li>
-			<!--NO--><li contenteditable="false" class="{{'vis' if all['currentPage'] != 'Home.html' else 'non-vis' }}"><a href="{{url_for('Home')}}">Home</a></li>
+			{% for nav in all['navigation'] %}
+				<li contenteditable="false" class="nav-item">
+					<a href="{{ nav['value'] }}" class="nav-link">{{ nav['name'] }}</a>
+				</li>
+			{% endfor %}
+
+			{% for detailPage in all['header_pages'] %}
+				<li>
+					<details>
+						<summary>{{detailPage.removesuffix('.html')}}</summary>
+						<div>
+							<iframe src="{{detailPage}}" style="border-radius: 8px; border:none;" width="100%" height="100%"></iframe>
+						</div>
+					</details>
+				</li>
+			{% endfor%}
+		
+
 			<a href="{{url_for('login')}}"><button>Login</button></a>
 			<a href="{{url_for('register')}}"><button>Sign Up</button></a>
 		</ul>

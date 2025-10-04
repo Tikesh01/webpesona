@@ -77,12 +77,10 @@
 					icon.title = 'Show password';
 				}
 				
-				// Add focus to input after toggle
 				input.focus();
 			}
 			
 			function checkPasswordStrength(password) {
-				// Password strength criteria
 				const hasLower = /[a-z]/.test(password);
 				const hasUpper = /[A-Z]/.test(password);
 				const hasNumber = /\d/.test(password);
@@ -113,25 +111,11 @@
 			}
 			
 			document.addEventListener('DOMContentLoaded', function() {
-				// Setup password toggles
 				document.querySelectorAll('.password_wrapper input[type="password"]').forEach(input => {
 					const icon = input.nextElementSibling;
 					icon.classList.add('toggle-password', 'fa', 'fa-eye');
 					icon.title = 'Show password';
 					icon.onclick = () => togglePassword(input.id);
-					
-					// Add strength indicator if this is a registration password
-					if (input.closest('form').id === 'RegistrationWebpersona') {
-						const strengthDiv = document.createElement('div');
-						strengthDiv.className = 'password-strength';
-						input.parentElement.insertAdjacentElement('afterend', strengthDiv);
-						
-						input.addEventListener('input', function() {
-							const result = checkPasswordStrength(this.value);
-							strengthDiv.className = 'password-strength ' + result.feedback.class;
-							strengthDiv.title = result.feedback.text;
-						});
-					}
 				});
 			});
 		</script>
