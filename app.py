@@ -54,7 +54,7 @@ class website:
             self.debugMode = False
             self.isLogedin = False
             self.isRegistered = False
-            # Create initial web.json
+
             self.save_state()
 
         try:
@@ -538,6 +538,7 @@ def operation_with_img_files():
         w.previewPage = pathForPreview
         print('current : ', w.previewPage)
         w.previewPageHtml = w.readSourceCode(w.previewPage)
+        w.save_state()
         flash(f"Preview page set to {pathForPreview}", "info")
         
     if pathTochangeLogo:

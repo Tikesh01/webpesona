@@ -1,5 +1,5 @@
 {
-    "size": "100%",
+    "size": "390px",
     "sizes": [
         "100%",
         "320px",
@@ -15,9 +15,9 @@
         "1536px",
         "2560px"
     ],
-    "previewPage": "home.html",
-    "currentPage": "",
-    "body_content_editable": false,
+    "previewPage": "login.html",
+    "currentPage": "Products.html",
+    "body_content_editable": true,
     "debugMode": false,
     "isLogedin": false,
     "isRegistered": false
