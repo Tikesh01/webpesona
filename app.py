@@ -15,34 +15,75 @@ with app.app_context():
  
 class website:
     def __init__(self):
-        self.size = "100%"
-        self.sizes = ("100%",'320px','360px','390px','414px','480px','768px','820px','1024px','1280px','1440px','1536px','2560px')
         self.admin = "templates/adminPanel.html"
         self.folder = "templates/"
         self.extantion = ".html"
-        self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) ]
+        self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page)]
         self.unremovablePages = ['home.html','login.html','register.html']
         self.unviewPages = ['adminPanel.html','skeleton.html','Base.html']
-        self.folders =  [folder for folder in os.listdir('templates/') if os.path.isdir('templates/'+folder) and folder!='Forms' ]
-        self.folderDict = {folder : os.listdir("templates/"+folder) for folder in self.folders}
+        self.folders = [folder for folder in os.listdir('templates/') if os.path.isdir('templates/'+folder) and folder!='Forms']
+        self.folderDict = {folder: os.listdir("templates/"+folder) for folder in self.folders}
         self.favicons = os.listdir("static/favicons/")
         self.favicon = os.listdir("static/favicon/")
-        self.previewPage = "/"
         self.logo = os.listdir("static/logo/")
-        self.currentPage= str()
+        self.header_pages = [page for page in os.listdir('templates/Header_pages/')]
         self.themes = self.theme()
         self.len_of_theme_block = int()
-        self.body_content_editable = False
-        self.debugMode = False
+
+        try:
+            with open("static/web.json", "r") as wjs:
+                web_dict = json.load(wjs)
+    
+                self.size = web_dict.get("size", "100%")
+                self.sizes = list(web_dict.get("sizes", ["100%","320px","360px","390px","414px","480px","768px","820px","1024px","1280px","1440px","1536px","2560px"]))
+                self.previewPage = web_dict.get("previewPage", "Home.html")
+                self.currentPage = web_dict.get("currentPage", "")
+                self.body_content_editable = web_dict.get("body_content_editable", False)
+                self.debugMode = web_dict.get("debugMode", False)
+                self.isLogedin = web_dict.get("isLogedin", False)
+                self.isRegistered = web_dict.get("isRegistered", False)
+                
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            flash(f"Warning: Could not load web.json: {e}")
+    
+            self.size = "100%"
+            self.sizes = ["100%","320px","360px","390px","414px","480px","768px","820px","1024px","1280px","1440px","1536px","2560px"]
+            self.previewPage = "Home.html"
+            self.currentPage = str()
+            self.body_content_editable = False
+            self.debugMode = False
+            self.isLogedin = False
+            self.isRegistered = False
+            # Create initial web.json
+            self.save_state()
+
+        try:
+            with open("static/navigation.json", "r") as nav_file:
+                nav_dict = json.load(nav_file)
+                self.navigation = [{"name": key, "value": value} for key, value in nav_dict.items()]
+        except (FileNotFoundError, json.JSONDecodeError):
+            self.navigation = []
+
         self.previewPageHtml = self.readSourceCode(self.previewPage)
-        self.isLogedin = False
-        self.isRegistered = False
-        self.header_pages = [page for page in os.listdir('templates/Header_pages/') ]
-        with open("static/navigation.json", "r") as nav_file:
-            nav_dict = json.load(nav_file)
-            self.navigation = [{"name": key, "value": value} for key, value in nav_dict.items()]
 
-
+    def save_state(self):
+        """Save current state to web.json"""
+        state = {
+            "size": self.size,
+            "sizes": list(self.sizes),
+            "previewPage": self.previewPage,
+            "currentPage": self.currentPage,
+            "body_content_editable": self.body_content_editable,
+            "debugMode": self.debugMode,
+            "isLogedin": self.isLogedin,
+            "isRegistered": self.isRegistered
+        }
+        try:
+            with open("static/web.json", "w") as f:
+                json.dump(state, f, indent=4)
+        except Exception as e:
+            flash(f"Warning: Could not save state to web.json: {e}", 'dangour')
+            
     def theme(self):
         file = open("static/root.css", "r")
         return file.readlines()
@@ -112,14 +153,15 @@ class website:
     def make_content_editable(self):
         if self.body_content_editable == True:
             self.body_content_editable = False
-            return 'On'
+            result = 'On'
         else:
             self.body_content_editable = True
-            return 'Off'
+            result = 'Off'
+        self.save_state()
+        return result
             
 
     def addPage(self, name, title,HTML):  
-        # Create the page file if it doesn't exist
         if '.' in name:
             name = os.path.splitext(name)[0]
         if " " in name:
@@ -150,7 +192,7 @@ class website:
         else:
             return FileExistsError(name)
         self.pages = [page for page in os.listdir(self.folder) if not os.path.isdir(self.folder+page) ]
-        
+
     def addFavicon(self,icon_path):
         if len(self.favicon) < 1:
             shutil.copy(icon_path,"static/favicon/")
@@ -167,12 +209,14 @@ class website:
     def changeFrameSize(self,FrameSize):
         if FrameSize in self.sizes:
             self.size = FrameSize
+            self.save_state()
             return 1
             
         fsize = str(FrameSize)+"px"
         if fsize not in w.sizes and FrameSize > 0:
             self.sizes.append(fsize)
             self.size = fsize
+            self.save_state()
             print(self.size)
         
     def deleteFile(self,path):
@@ -527,7 +571,7 @@ def rotate_theme():
 
 @app.route("/Content-editable", methods=["POST"])
 def contetn_editable():
-    result = w.make_content_editabele()
+    result = w.make_content_editable()
     if w.previewPage == '/':
         w.previewPage = 'Home.html'
     if result == 'On':
@@ -543,8 +587,10 @@ def contetn_editable():
 def debug_mode_change():
     if w.previewPage == '/':
         w.previewPage = 'Home.html'
+        w.save_state()
         
     w.debugMode = not w.debugMode
+    w.save_state()
     flash('Debug mode toggled.', 'info')
     return redirect(url_for('admin'))
     
@@ -594,6 +640,7 @@ def register():
         db.session.commit()
         flash('Registration successful! Please sign in.', 'success')
         w.isRegistered = True
+        w.save_state()
         return redirect(url_for('login'))
     
     w.currentPage = 'register.html'
@@ -610,6 +657,7 @@ def login():
             session['user_id'] = user.id
             flash('Login successful!', 'success')
             w.isLogedin = True
+            w.save_state()
             return redirect(url_for('Home'))
         else:
             flash('Invalid credentials.', 'danger')
@@ -622,6 +670,7 @@ def logout():
     session.pop('user_id', None)
     flash('Logged out successfully.', 'info')
     w.isLogedin = False
+    w.save_state()
     return redirect(url_for('login'))
 
 @app.route('/implement', methods=['GET'])
