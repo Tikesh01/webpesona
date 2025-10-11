@@ -15,9 +15,9 @@
         "1536px",
         "2560px"
     ],
-    "previewPage": "Temp.html",
+    "previewPage": "header.html",
     "currentPage": "Products.html",
-    "body_content_editable": false,
+    "body_content_editable": true,
     "debugMode": false,
     "isLogedin": false,
     "isRegistered": false

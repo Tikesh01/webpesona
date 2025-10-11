@@ -20,7 +20,7 @@ class website:
         self.extantion = ".html"
         self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page)]
         self.unremovablePages = ['home.html','login.html','register.html']
-        self.unviewPages = ['adminPanel.html','skeleton.html','Base.html']
+        self.unviewPages = ['adminPanel.html','skeleton.html','Base.html', 'skeleton2.html']
         self.folders = [folder for folder in os.listdir('templates/') if os.path.isdir('templates/'+folder) and folder!='Forms']
         self.folderDict = {folder: os.listdir("templates/"+folder) for folder in self.folders}
         self.images = os.listdir("static/images/")
@@ -31,6 +31,9 @@ class website:
         self.len_of_theme_block = int()
 
         try:
+            with open("static/Admin_Details.json", "r") as admDel:
+                self.admin_details = dict(json.load(admDel))
+                
             with open("static/web.json", "r") as wjs:
                 web_dict = json.load(wjs)
     
@@ -168,7 +171,8 @@ class website:
                     
         file_path = self.folder + name + self.extantion
         partials = self.folder+'partials/'+name+self.extantion
-        if not os.path.exists(file_path) and not  os.path.exists(partials):
+        header_pages = self.folder+'Header_pages/'+name+self.extantion
+        if not os.path.exists(file_path) and not  os.path.exists(partials) and not os.path.exists(header_pages):
             with open("templates/Base.html", "r") as base:
                 baseF = base.readlines()
                 for i,line in enumerate(baseF):
@@ -181,14 +185,26 @@ class website:
                     if 'write_id' in line:
                         bodyF[i] = bodyF[i].replace('write_id', name+'.html')
                         break
+                    
+            if self.previewPage in self.header_pages:
+                file_path = header_pages
+                baseF[0] = "{% extends 'skeleton2.html' %}"
+                
+            code = baseF+bodyF
+                
             with open(file_path,'w') as file:
                 if HTML:
                     file.write(str(baseF)+HTML)
                 else:
-                    file.writelines(baseF+bodyF)
+                    file.writelines(code)
+                
+            if self.previewPage in self.header_pages:
+                self.header_pages = [pages for pages in os.listdir('templates/Header_pages/')]
+            else:
+                self.pages = [page for page in os.listdir(self.folder) if not os.path.isdir(self.folder+page) ]
         else:
             return FileExistsError(name)
-        self.pages = [page for page in os.listdir(self.folder) if not os.path.isdir(self.folder+page) ]
+       
 
     def addFavicon(self,icon_path):
         if len(self.favicon) < 1:
@@ -220,7 +236,7 @@ class website:
         os.remove(path) 
         self.images = os.listdir("static/images")
         self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) ] 
-        self.pages.remove('adminPanel.html')
+        self.header_pages = [pages for pages in os.listdir('templates/Header_pages/')]
         
     def changeLogo(self,path):
         if len(self.logo) < 1:
@@ -530,6 +546,8 @@ def operation_with_img_files():
         try:
             w.deleteFile("templates/" + pathToDelPage)
             w.previewPage = 'Home.html'
+            w.save_state()
+            
             flash("Page deleted successfully!", "success")
         except Exception as e:
             flash(f"Error deleting page: {e}", "danger")
@@ -620,8 +638,6 @@ def save_block_multi():
         C = 'error'
         flash(M,C)
         print(e)
-        
-    
         
     return redirect(url_for('admin'))
 

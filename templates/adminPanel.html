@@ -184,7 +184,35 @@
 				<div class="collapse navbar-collapse" id="navbarNav">
 					<ul class="navbar-nav ms-auto" style="gap: 1em;">
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<div class="dropdown-center" id="framesizeDropdown">
+								<a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									Resolutions
+								</a>
+
+								<ul class="dropdown-menu p-3" style="min-width: 220px;">
+									<form action="/frameSizeChange" method="post" enctype="multipart/form-data" id="sizelist" >
+									{% for size in all['sizes'] %}
+										<li>
+										<button type="submit" name="frame_size" value="{{size}}" class="btn btn-sm btn-outline-primary w-100">
+											{{ size }}
+										</button>
+										</li>
+									{% endfor %}
+									
+									<li >
+										<div class="input-group input-group-sm">
+											<input type="number" name="frame_size" class="form-control" placeholder="912" style="width: 2.5em;"/>
+											<button class="btn btn-success" type="submit">
+												<i class="fas fa-plus"></i>
+											</button>
+										</div>
+									</li>
+									</form>
+								</ul>
+							</div>
+						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 								Resources
 							</a>
 							<ul class="dropdown-menu dropdown-menu-dark">
@@ -206,7 +234,7 @@
 		<section id="the_web">
 			<div id="page_containers">
 				<div class="container-header mb-3">
-					<h1 class="mb-0"><i class="fas fa-file-alt me-2"></i>Pages</h1>
+					<!-- <h1 class="mb-0"><i class="fas fa-file-alt me-2"></i>Pages</h1> -->
 					<div class="input-group input-group-sm mt-2">
 						<span class="input-group-text" id="search-addon"><i class="fas fa-search"></i></span>
 						<input type="text" class="form-control" id="pageSearch" placeholder="Search pages..." aria-label="Search pages" aria-describedby="search-addon">
@@ -264,35 +292,6 @@
 				</script>
 			</div>
 			<div id="preview_container">
-				<div class="container-header d-flex justify-content-between align-items-center">
-					<h1 class="mb-0"><i class="fas fa-desktop me-2"></i>Your Website</h1>
-					<div class="dropdown-center" id="framesizeDropdown">
-						<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" >
-							Resolutions
-						</button>
-
-						<ul class="dropdown-menu p-3" style="min-width: 220px;">
-							<form action="/frameSizeChange" method="post" enctype="multipart/form-data" id="sizelist" >
-							{% for size in all['sizes'] %}
-								<li>
-								<button type="submit" name="frame_size" value="{{size}}" class="btn btn-outline-primary w-100">
-									{{ size }}
-								</button>
-								</li>
-							{% endfor %}
-							
-							<li class="border-top pt-2 mt-2">
-								<div class="input-group input-group-sm">
-									<input type="number" name="frame_size" class="form-control" placeholder="912" style="background-color: #f8f9fa;"/>
-									<button class="btn btn-success" type="submit">
-										<i class="fas fa-plus"></i>
-									</button>
-								</div>
-							</li>
-							</form>
-						</ul>
-					</div>
-				</div>
 				<div id="frameContainer" style="border-top: 0.5px solid rgba(128, 128, 128, 0.39);">
 					{% if web.debugMode %}
 					<form action="">
@@ -309,9 +308,9 @@
 				</div>
 			</div>
 			<div id="feature_list">
-				<div class="container-header mb-3">
+				<!-- <div class="container-header mb-3">
 					<h1 class="mb-0"><i class="fas fa-star me-2"></i>Features</h1>
-				</div>
+				</div> -->
 				{% if web.previewPage == 'header.html' %}
 					<div class="features" id="addNavigation">
 						<p>
@@ -321,7 +320,7 @@
 						</p>
 						<div class="collapse" id="addNavCollapse">
 							<div class="card card-body">
-								<form action="/Addition" method="POST" enctype="multipart/form-data">
+								<form action="/navigation_addition" method="POST" enctype="multipart/form-data">
 									<div class="input-group mb-2">
 										<input type="text" name="navigationText" id="navigationText" class="form-control form-control-sm" placeholder="Text" required>
 										<input type="number" name="navigationTextPos" id="navigationTextPos" class="form-control form-control-sm" placeholder="Pos" style="max-width: 60px;">
@@ -362,7 +361,7 @@
 					</p>
 					<div class="collapse" id="addPageCollapse">
 						<div class="card card-body">
-							<form action="/Addition" method="POST" enctype="multipart/form-data">
+							<form action="/page_addition" method="POST" enctype="multipart/form-data">
 								<input type="text" name="fileName" class="filName form-control form-control-sm mb-2" placeholder="Page name (e.g., about_us)" oninput="toVarName(this.className, ' ', '_')"/>
 								<input type="text" name="title" id="fileTitle" class="form-control form-control-sm mb-2" placeholder="Title (e.g., about-webpersona)" />
 								<div id="addPageButtons" class="d-flex justify-content-end gap-2">
@@ -445,6 +444,26 @@
 						<input class="form-check-input" type="checkbox" role="switch" name="debugMode" id="debugging" onchange="this.form.submit()" {% if web.debugMode %}checked{% endif %}>
 						<label class="form-check-label" for="debugging">Debug Mode</label>
 					</form>
+				</div>
+				<div class="features" id="User Details">
+					<p>
+						<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#adminDetailsCollapse" aria-expanded="false" aria-controls="adminDetailsCollapse">
+							<i class="fas fa-user"></i> Your Details
+						</button>
+					</p>
+					<div class="collapse" id="adminDetailsCollapse">
+						<div class="card card-body">
+							<form action="" method="post" enctype="multipart/form-data" >
+								{% for detail in web.admin_details.items() %}
+								<div class="input-group input-group-sm mb-3">
+									<span class="input-group-text" id="inputGroup-sizing-sm">{{detail[0]}}</span>
+									<input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" value="{{detail[1]}}">
+								</div>
+								{%endfor%}
+								<button class="btn btn-outline-primary p-0 px-1">Save</button>
+							</form>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>
