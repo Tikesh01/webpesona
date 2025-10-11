@@ -23,7 +23,7 @@ class website:
         self.unviewPages = ['adminPanel.html','skeleton.html','Base.html']
         self.folders = [folder for folder in os.listdir('templates/') if os.path.isdir('templates/'+folder) and folder!='Forms']
         self.folderDict = {folder: os.listdir("templates/"+folder) for folder in self.folders}
-        self.favicons = os.listdir("static/favicons/")
+        self.images = os.listdir("static/images/")
         self.favicon = os.listdir("static/favicon/")
         self.logo = os.listdir("static/logo/")
         self.header_pages = [page for page in os.listdir('templates/Header_pages/')]
@@ -124,14 +124,11 @@ class website:
                     blocks.append(current_block)
                     current_block = []
                     in_block = False
-        # In case file doesn't end with a newline
         if current_block:
             blocks.append(current_block)
 
-        # Remove any empty blocks
         blocks = [b for b in blocks if any(l.strip() for l in b)]
 
-        # Rotate blocks
         if len(blocks) > 1:
             if direction == 'right':
                 blocks = blocks[1:] + [blocks[0]]
@@ -141,7 +138,7 @@ class website:
         for i in blocks:
             len_of_theme_block = len(i)
             break
-        # Flatten blocks back to lines
+        
         newLines = [line for block in blocks for line in block]
 
         with open("static/root.css", "w", encoding="utf-8") as file:
@@ -153,10 +150,10 @@ class website:
     def make_content_editable(self):
         if self.body_content_editable == True:
             self.body_content_editable = False
-            result = 'On'
+            result = 'off'
         else:
             self.body_content_editable = True
-            result = 'Off'
+            result = 'on'
         self.save_state()
         return result
             
@@ -202,9 +199,9 @@ class website:
             shutil.move("static/favicon/"+self.favicon[0], "static/favicons/")
             shutil.copy(icon_path,"static/favicon/")
         self.favicon = os.listdir("static/favicon/")
-        self.favicons = os.listdir("static/favicons")
+        self.images = os.listdir("static/favicons")
         print(self.favicon)
-        print(self.favicons)
+        print(self.images)
         
     def changeFrameSize(self,FrameSize):
         if FrameSize in self.sizes:
@@ -221,7 +218,7 @@ class website:
         
     def deleteFile(self,path):
         os.remove(path) 
-        self.favicons = os.listdir("static/favicons")
+        self.images = os.listdir("static/images")
         self.pages = [page for page in os.listdir('templates/') if not os.path.isdir('templates/'+page) ] 
         self.pages.remove('adminPanel.html')
         
@@ -229,12 +226,12 @@ class website:
         if len(self.logo) < 1:
             shutil.copy(path,"static/logo/")
         else:
-            if os.path.exists("static/favicons/"+self.logo[0]):
-                os.remove("static/favicons/"+self.logo[0])
-            shutil.move("static/logo/"+self.logo[0], "static/favicons/")
+            if os.path.exists("static/images/"+self.logo[0]):
+                os.remove("static/images/"+self.logo[0])
+            shutil.move("static/logo/"+self.logo[0], "static/images/")
             shutil.copy(path,"static/logo/")
         self.logo = os.listdir("static/logo/")
-        self.favicons = os.listdir("static/favicons")
+        self.images = os.listdir("static/images")
     
     def write_code_to_page(self,page,content,type, position=None):
         for folder in self.folderDict.keys():
@@ -255,7 +252,6 @@ class website:
                 cleaned = "\n".join(line for line in content.splitlines() if line.strip() != "")
                 lines.insert(len(lines)-4, cleaned + "\n")
                 f.writelines(lines)
-        
     
     def setImgInPage(self,imgPath, page,position=None):
         self.write_code_to_page(page, imgPath, 'img')
@@ -353,22 +349,22 @@ class website:
         
     def remove_last_n_lines(self,filepath, n):
         with open(filepath, 'r+b') as f:
-            f.seek(0, os.SEEK_END)  # Move to the end of the file
+            f.seek(0, os.SEEK_END)  
             end = f.tell()
 
             count = 0
             while f.tell() > 0:
-                f.seek(-1, os.SEEK_CUR)  # Move back one byte
+                f.seek(-1, os.SEEK_CUR)  
                 char = f.read(1)
 
                 if char == b'\n':
                     count += 1
-                    if count == n + 1:  # Count an extra newline to find the start of the line to keep
+                    if count == n + 1: 
                         f.truncate()
                         print(f"Removed {n} lines from the end of the file.")
                         return 1
                     
-                f.seek(-1, os.SEEK_CUR) # Move back again to process the previous byte
+                f.seek(-1, os.SEEK_CUR) 
                 
     def addLogic(self, path):
         with open(path,'r') as f:
@@ -399,13 +395,9 @@ def Home():
 def admin():
     w.currentPage = "adminPanel.html"
     return render_template("adminPanel.html",  all=w.__dict__,web=w)
-        
-        
-@app.route('/Addition', methods=['POST'])
-def addition():
-    name = request.form.get("fileName")
-    title = request.form.get('title')
-    # HTML = request.files['ownHtml']
+
+@app.route('/navigation_addition', methods=['POST'])
+def nav_addition():
     navText = request.form.get('navigationText')
     navTextPos = request.form.get('navigationTextPos')
     navPage = request.form.get('navigationPage')
@@ -429,38 +421,46 @@ def addition():
             w.navigation = [{"name": key, "value": value} for key, value in new_nav_dict.items()]
     except Exception as e:
         flash(f"Navigation update error: {e}", "danger")
-            
-    # if HTML and HTML.filename:
-    #     if HTML.filename.endswith('.py'):
-    #         fpath = os.path.join('../webpersona',HTML.filename)
-    #         if os.path.exists(fpath):
-    #             M='Rename the Python File'
-    #             C = 'info'
-    #         else:
-    #             HTML.save(fpath)
-    #             w.addLogic(fpath)
-    #             M = "Backend logic saved succesfully" 
-    #             C='success'
-    #     else:
-    #         fpath = os.path.join('templates',HTML.filename)
-    #         if not os.path.exists(fpath):
-    #             HTML.save(fpath) 
-    #             M = f'Your page {HTML.filename} added succesfully !'
-    #             C= 'success'
-    #             w.pages = [page for page in os.listdir(w.folder) if not os.path.isdir(w.folder+page)]
-    #         else:
-    #             M= f'{HTML.filename} already exist'
-    #             C = 'info'
-    #     flash(M,C)
         
-    # elif name and title:
-    #     result = w.addPage(name, title,HTML)
-    #     if isinstance(result, Exception):
-    #         flash(str(result) +"already exist", 'danger')
-    #     else:
-    #         flash('Page added successfully!', 'success')
-    # elif (not name or not title):
-    #     flash('Seems you have not typed Page Name or Title','danger')
+    return redirect('admin')
+        
+@app.route('/page_addition', methods=['POST'])
+def page_addition():
+    name = request.form.get("fileName")
+    title = request.form.get('title')
+    HTML = request.files['ownHtml']
+            
+    if HTML and HTML.filename:
+        if HTML.filename.endswith('.py'):
+            fpath = os.path.join('../webpersona',HTML.filename)
+            if os.path.exists(fpath):
+                M='Rename the Python File'
+                C = 'info'
+            else:
+                HTML.save(fpath)
+                w.addLogic(fpath)
+                M = "Backend logic saved succesfully" 
+                C='success'
+        else:
+            fpath = os.path.join('templates',HTML.filename)
+            if not os.path.exists(fpath):
+                HTML.save(fpath) 
+                M = f'Your page {HTML.filename} added succesfully !'
+                C= 'success'
+                w.pages = [page for page in os.listdir(w.folder) if not os.path.isdir(w.folder+page)]
+            else:
+                M= f'{HTML.filename} already exist'
+                C = 'info'
+        flash(M,C)
+        
+    if name and title:
+        result = w.addPage(name, title,HTML)
+        if isinstance(result, Exception):
+            flash(str(result) +"already exist", 'danger')
+        else:
+            flash('Page added successfully!', 'success')
+    elif (not name or not title):
+        flash('Seems you have not typed Page Name or Title','danger')
     
     return redirect(url_for('admin'))
 
@@ -485,10 +485,10 @@ def deletion():
 @app.route('/faviconAddition', methods =['POST'])
 def image_edition():
     icon = request.files["icon_path"]
-    iconPath = os.path.join("static/favicons", icon.filename)
+    iconPath = os.path.join("static/images", icon.filename)
     try:
         icon.save(iconPath)
-        w.favicons = os.listdir("static/favicons")
+        w.images = os.listdir("static/favicons")
         flash("Favicon added successfully!", "success")
     except Exception as e:
         flash(f"Error adding favicon: {e}", "danger")
@@ -543,14 +543,14 @@ def operation_with_img_files():
         
     if pathTochangeLogo:
         try:
-            w.changeLogo("static/favicons/" + pathTochangeLogo)
+            w.changeLogo("static/images/" + pathTochangeLogo)
             flash("Logo changed successfully!", "success")
         except Exception as e:
             flash(f"Error changing logo: {e}", "danger")
     
     if pathToSetInPage:
         try:
-            w.setImgInPage(page="templates/"+w.previewPage,imgPath="static/favicons/"+pathToSetInPage)
+            w.setImgInPage(page=w.previewPage,imgPath="static/images/"+pathToSetInPage)
             flash("Image set successfully!", "success")
         except Exception as e:
             flash(f"Error setting image: {e}", "danger")
@@ -575,9 +575,9 @@ def contetn_editable():
     result = w.make_content_editable()
     if w.previewPage == '/':
         w.previewPage = 'Home.html'
-    if result == 'On':
+    if result == 'on':
         flash('Content edit mode On.', 'success')
-    elif result == 'Off':
+    elif result == 'off':
         flash('Content edit mode Off.', 'info')
     else:
         flash(f'{Exception}','danger')
@@ -612,14 +612,16 @@ def save_block_multi():
         w.edit_content(file, block_id, html)
         M = 'Edited block saved successfully!'
         C = 'success'
+        flash(M,C)
         print('done')
         
     except Exception as e:
         M = f'Error saving content block: {e}' 
         C = 'error'
+        flash(M,C)
         print(e)
         
-    flash(M,C)
+    
         
     return redirect(url_for('admin'))
 

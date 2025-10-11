@@ -1,53 +1,117 @@
-{% extends 'skeleton.html' %} {% block title %}
-Register - webpersona
-{%endblock%} 
-{% block page %}
+{% extends 'skeleton.html' %}
+{% block title %}Register - WebPersona{% endblock %}
 <style>
-    #RegistrationWebpersona .form-group{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 3rem;
-        input{
-            width: 21em;
+#signupFormContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#signupCard{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background: #9d949416;
+    gap: 3em;
+    img{
+        width: 45%;
+    }
+    #signupForm{
+        background: transparent;
+    }
+    input{
+        background: transparent;
+        border: none;
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.364);
+        border-radius: 0;
+    }
+}
+  @media(max-width:700px){
+    #signupCard{
+        flex-direction: column;
+        gap: 1em;
+        background: none;
+        img{
+            width: 70%;
+      }
+    }
+  }
+  @media(max-width:340px){
+    #signupCard{
+        #signForm{
+            padding: 0;
         }
     }
+  }
 </style>
-<section id='register.html' class="content" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}"><!--start-->
-    <div class="content-wrapper register-container">
-        <div class="card">
-            <h1>Register</h1>
-            <form action="/register" method="POST" id="RegistrationWebpersona">
-                <div id="name-field" class="form-group">
-                    <label for="name-input">Name:</label>
-                    <input type="text" id="name-input" name="name" required placeholder="First Middle last">
+{% block page %}
+<section id="register.html" class="content py-5 d-flex justify-content-center align-items-start bg-light" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}" ><!--start-->
+    <div class="1 card border-0 p-4" id="signupCard">
+        <img src="../static/images/Sign up-bro.svg" alt="">
+        <form action="/register" method="POST" id="signupForm" class="needs-validation" novalidate>
+            <h2 class="text-center mb-4 fw-bold text-primary">Sign Up</h2>
+            <div class="mb-3">
+                <label for="name-input" class="form-label fw-semibold">Name</label>
+                <input type="text" class="form-control" id="name-input" name="name" required
+                placeholder="First Middle Last">
+                <div class="invalid-feedback">Please enter your full name.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="email-input" class="form-label fw-semibold">Email</label>
+                <input type="email" class="form-control" id="email-input" name="email" required
+                placeholder="e.g., example123@mail.com">
+                <div class="invalid-feedback">Please enter a valid email.</div>
+            </div>
+
+            <!-- <div class="mb-3">
+                <label for="mobile-input" class="form-label fw-semibold">Mobile</label>
+                <input type="text" class="form-control" id="mobile-input" name="mobile" required
+                maxlength="10" minlength="10" placeholder="000 0000 000">
+                <div class="invalid-feedback">Enter a valid 10-digit mobile number.</div>
+            </div> -->
+
+
+            <!-- <div class="mb-3">
+                <label for="address-input" class="form-label fw-semibold">Address</label>
+                <input type="text" class="form-control" id="address-input" name="address"
+                placeholder="Eg. 14, Ram Nagar, Delhi, India (492382)">
+            </div> -->
+
+            <div class="mb-3">
+                <label for="password-input" class="form-label fw-semibold">Password</label>
+                <div class="input-group">
+                <input type="password" class="form-control" id="password-input" name="password"
+                    placeholder="Type your password" minlength="8" required>
+                <button class="btn btn-outline-secondary" type="button" id="togglePassword" title="Show/Hide Password">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <div class="invalid-feedback">Password must be at least 8 characters.</div>
                 </div>
-                <div id="email-field" class="form-group">
-                    <label for="email-input">Email:</label>
-                    <input type="email" id="email-input" name="email" required placeholder="e.g., example123@mail.com">
-                </div>
-                <div id="mobile-field" class="form-group">
-                    <label for="mobile-input">Mobile:</label>
-                    <input type="text" id="mobile-input" name="mobile" maxlength="10" minlength="10" required="" placeholder="000 0000 000">
-                </div>
-                <div id="address-field" class="form-group">
-                    <label for="address-input">Address:</label>
-                    <input type="text" id="address-input" name="address" placeholder="Eg. 14,Ram Nagar,Delhi,India(492382)">
-                </div>
-                <div id="password-field" class="form-group">
-                    <label for="password-input">Password:</label>
-                    <div class="password_wrapper">
-                        <input type="password" name="password" id="password-input" placeholder="Type the Registered password" minlength="8" required />
-                        <i class="fas fa-eye" title="View password" id="view_password_icon"></i>
-                    </div> 
-                </div>
-                <div id="buttons-field">
-                    <button type="reset">Reset</button>
-                    <button type="submit">Register</button>
-                </div>
-                <p class="moveto-link">Already have an account? <a href="/login">Login here</a></p>
-        </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="reset" class="btn btn-outline-danger">Reset</button>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+
+            <p class="text-center mt-3">
+                Already have an account? <a href="/login" class="text-decoration-none fw-semibold text-primary">Login here</a>
+            </p>
+        </form>
     </div>
 </section><!--Close-->
-{%endblock%}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const toggleBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password-input');
+    toggleBtn.addEventListener('click', function () {
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+      this.querySelector('i').classList.toggle('fa-eye');
+      this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+  });
+</script>
+{% endblock %}

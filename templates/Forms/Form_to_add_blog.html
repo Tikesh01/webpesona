@@ -4,9 +4,12 @@
         <h2 id="Title">Add Blog Card</h2>
     </div>
     <div class="form-group">
-        <label for="B1">The heading(s) of Content using Enter (↩) key</label>
-        <textarea  name="headingsOfBlog" id="B1" oninput="generateHeadings(this.value, 'fieldsetsContainerBlog')" placeholder="e.g., Essay on India
-        About Me & More"></textarea>   
+        <label for="B1">The heading(s) of Content using Enter (↩) key</label>  
+        <div class="input-group">
+            <textarea  name="headingsOfBlog" id="B1" oninput="generateHeadings(this.value, 'fieldsetsContainerBlog')" placeholder="e.g., Essay on India
+        About Me & More" class="form-control"></textarea> 
+            <input type="number" name="containerPosBlog" id="containerPosBlog" class="form-control" placeholder="Container-Position" style="max-width: 5em" value="0">
+        </div>
     </div>
 
     <div id="fieldsetsContainerBlog">
@@ -20,7 +23,7 @@
     </div>
     <div class="buttons-group">
         <button type="button" onclick="resetForm('fieldsetsContainerBlog')">Reset</button>
-        <button type="button" onclick="generateCode('blogPreview', 'Content')">Generate Content Code</button>
+        <button type="button" onclick="generateCode('blogPreview', 'Content',  document.getElementById('containerPosBlog').value)">Generate Content Code</button>
     </div> 
 </form>
 <script>
@@ -44,8 +47,8 @@
                             <textarea  name="${headingList[i-1]}_content" id="${headingList[i-1]}_contents" oninput="updatePreviewBlog('blogPreview')" rows='5' ></textarea>   
                         </div>   
                         <div class="form-group" style='display: none;' id='${headingList[i-1]}_subHeadingsGroup'>
-                            <label for="${headingList[i-1]}_subheadings">Sub-heading(s) of ${headingList[i-1]}</label>
-                            <textarea  name="${headingList[i-1]}_subheadings" id="${headingList[i-1]}_subheadings"  placeholder="e.g., Introduction, Culture, History, ..." oninput="generateHeadings(this.value,'${headingList[i-1]}_sub-subheadingContainer'),updatePreviewBlog('blogPreview')"></textarea>   
+                            <label for="${headingList[i-1]}_subheadings">Sub-heading(s) of ${headingList[i-1]} separedted by (↩)</label>
+                            <textarea  name="${headingList[i-1]}_subheadings" id="${headingList[i-1]}_subheadings"  placeholder="e.g., Introduction Culture History ..." oninput="generateHeadings(this.value,'${headingList[i-1]}_sub-subheadingContainer'),updatePreviewBlog('blogPreview')"></textarea>   
                         </div>
                         <div id='${headingList[i-1]}_sub-subheadingContainer' class='biggerContainer'></div>
                     </div>`
@@ -71,47 +74,70 @@
         }
     }
     
-    function updatePreviewBlog(pContainer){
-        const headings = document.getElementById('B1').value
-        const headingList = headings.trim().split('\n')
-        const preview = document.getElementById(pContainer)
-        preview.innerHTML =""
-        for(let i=1; i<=headingList.length; i++){
-            headingList[i-1] = headingList[i-1].replace(/ /gi, "_")
-            preview.innerHTML += `
-                <div class="card" id='${headingList[i-1]}'>
-                    <h1>${headingList[i - 1].replace(/_/gi," ")}</h1>
-                `;
+    function updatePreviewBlog(pContainer) {
+    const headings = document.getElementById('B1').value.trim();
+    const headingList = headings.split('\n');
+    const preview = document.getElementById(pContainer);
+    preview.innerHTML = "";
 
-            const contentOrSubhead = document.getElementById(`${headingList[i - 1]}_noSubHead`).checked;
+    for (let i = 0; i < headingList.length; i++) {
+        const mainHeading = headingList[i].trim().replace(/ /g, "_");
 
-            if (contentOrSubhead) {
-                const content = document.getElementById(`${headingList[i - 1]}_contents`)?.value || "Your dynamic content goes here";
+        // 🟢 Card structure for each main heading
+        let cardHtml = `
+        <div class="card shadow-sm border-0 mb-4 p-4 rounded-4">
+            <div class="card-header bg-transparent border-0 px-0">
+            <h2 class="fw-bold text-primary mb-3">${headingList[i]}</h2>
+            </div>
+            <div class="card-body">`;
 
-                preview.innerHTML += `
-                    <div id="${headingList[i - 1]}-Content">
-                    ${content}
-                    </div>
-                `;
-            } 
-            else if(!contentOrSubhead){
-                const subheadingList = document.getElementById(`${headingList[i - 1]}_subheadings`).value.trim().split("\n");
+        const contentOrSubhead = document.getElementById(`${mainHeading}_noSubHead`)?.checked;
 
-                for (let j = 1; j <= subheadingList.length; j++) {
-                    subheadingList[i-1] = subheadingList[i-1].replace(/ /gi, "_")
-                    preview.innerHTML += `
-                    <div class="subcard">
-                        <h2>${subheadingList[j - 1].replace(/_/gi, " ")}</h2>
-                        <div id="${headingList[i - 1]}_${subheadingList[j - 1]}">
-                        Content
-                        </div>
-                    </div>
-                `;
-                }
-            }
+        // 🔹 CASE 1: Direct content (no subheadings)
+        if (contentOrSubhead) {
+        const content = document.getElementById(`${mainHeading}_contents`)?.value || "Your dynamic content goes here";
 
-             preview.innerHTML += `</div>`;
+        cardHtml += `
+            <div id="${mainHeading}-Content" class="p-3 bg-light border rounded-3">
+            <p class="text-muted">${content}</p>
+            </div>`;
         }
+
+        // 🔹 CASE 2: Subheadings with content blocks
+        else {
+        const subheadingList = document.getElementById(`${mainHeading}_subheadings`)?.value.trim().split("\n") || [];
+        cardHtml += `<div class="accordion accordion-flush" id="accordion-${mainHeading}">`;
+
+        for (let j = 0; j < subheadingList.length; j++) {
+            const sub = subheadingList[j].trim().replace(/ /g, "_");
+            const subDisplay = subheadingList[j].trim();
+
+            cardHtml += `
+            <div class="accordion-item border-0 mb-2">
+                <h2 class="accordion-header" id="heading-${mainHeading}-${j}">
+                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#collapse-${mainHeading}-${j}" aria-expanded="false" aria-controls="collapse-${mainHeading}-${j}">
+                    ${subDisplay}
+                </button>
+                </h2>
+                <div id="collapse-${mainHeading}-${j}" class="accordion-collapse collapse" data-bs-parent="#accordion-${mainHeading}">
+                <div class="accordion-body bg-light text-muted border-start border-3 border-primary" id="${mainHeading}_${sub}">
+                    Content for ${subDisplay}
+                </div>
+                </div>
+            </div>`;
+        }
+
+        cardHtml += `</div>`; // close accordion
+        }
+
+        cardHtml += `
+            </div> <!-- end card-body -->
+        </div> <!-- end card -->
+        `;
+
+        preview.innerHTML += cardHtml;
     }
-    
+    }
+
 </script>

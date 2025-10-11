@@ -1,42 +1,12 @@
 {% extends 'skeleton.html' %}
 {% block title %}
-Temporary page 
+Temporary 
 {%endblock%} 
 {% block page %}
-<section id="temp.html" class="content" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}"><!--start-->
-	<div class="content-wrapper">
-		<div class="card">
-			<form action="#" method="GET" id="Contact_Form">
-				<h1>Contact Form</h1>
-				<div class="form-group">
-					<label for="Contact_form_name">Enter your name</label>
-					<input type="text" name="Contact_form_name" id="Contact_form_name" required="" placeholder="Enter your name here......">
-				</div>
-				<div class="form-group">
-					<label for="Contact_Form_Address">Enter Your Full Address</label>
-					<textarea name="Contact_Form_Address" placeholder="e.g., Shakti Nagar, Raipur, 493441" id="Contact_Form_Address" required="" rows="4"></textarea>
-				</div>
-				<div class="form-group smallButtons">
-					<label><h4>Select Your Gender</h4></label>
-					<div>
-						<label for="contact_form_gender-Male"><input type="radio" name="contact_form_gender" value="Male" id="contact_form_gender-Male">Male</label>
-					</div>
-					<div>
-						
-						<label for="contact_form_gender-Female"><input type="radio" name="contact_form_gender" value="Female" id="contact_form_gender-Female">Female</label>
-					</div>
-					<div>
-						<label for="contact_form_gender-Others"><input type="radio" name="contact_form_gender" value="Others" id="contact_form_gender-Others">Others</label>
-					</div>
-				</div>
-				<div id="buttons-field">
-					<button disabled="disabled">School</button>
-					<button type="submit">Submit</button>
-				</div>
-			</form>
-			<dl>
-			</dl>
-		</div>
-	</div>
+<section id="Temp.html" class="content py-5" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}"><!--start-->
+    <div class="1 container" title="container-position-1">
+        <h1>This is Your Temporary page</h1>
+        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illum totam maiores quos. Hic sint incidunt ipsam explicabo tempora dignissimos sed maxime sit distinctio beatae minima veniam laborum, tenetur nisi illo.</p>
+    </div>
 </section><!--Close-->
 {%endblock%}

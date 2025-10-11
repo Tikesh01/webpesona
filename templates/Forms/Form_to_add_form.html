@@ -8,8 +8,9 @@
         color: #2c3e50;
         background: white;
         position: relative;
-        max-width: 90%;
-        max-height: 90%;
+        max-width: 95%;
+        max-height: 95%;
+        top: -10px;
         overflow: auto;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
@@ -257,8 +258,11 @@
         <h2 id="Title">Add Form Card</h2>
     </div>    
     <div class="form-group">
-        <label for="T1">Heading</label>
-        <input type="text" name="headingOfForm" id="T1" placeholder="Enter form heading (e.g., Contact Form)" required>
+        <label for="T1">Heading & Position</label>
+        <div class="input-group">
+            <input type="text" name="headingOfForm" id="T1" placeholder="Enter form heading (e.g., Contact Form)" class="form-control" required/>
+            <input type="number" name="containerPosForm" id="containerPosForm" class="form-control" placeholder="Container-Position" style="max-width: 8em" value="0">
+        </div>
     </div>
     <div >
         <label for="formMethod">Select a method:</label>
@@ -290,11 +294,11 @@
     
     <div class="buttons-group">
         <button type="button" onclick="resetForm('fieldsetsContainerForm')">Reset</button>
-        <button type="button" onclick="generateFormCode()">Generate Form Code</button>
+        <button type="button" onclick="generateFormCode(document.getElementById('containerPosForm').value)">Generate Form Code</button>
     </div>
 </form>
 
-<div id="templates" style="display: none;">
+<div id="templates" hidden>
     <div class="detail" id="inputTemplate">
         <h4>Input</h4>
         <div class="form-group">
@@ -600,177 +604,216 @@
         
         preview.innerHTML = previewHTML;
     }
-
+    
     function generatePreviewElement(element, type) {
         let html = '';
-        
-        switch(type) {
-            case 'input':
+
+        switch (type) {
+            case 'input': {
                 const inputName = element.querySelector('input[name$="inputName"]')?.value || 'input';
                 const inputLabel = element.querySelector('input[name$="inputLabel"]')?.value || 'Input Field';
                 const inputType = element.querySelector('select[name$="inputType"]')?.value || 'text';
                 const inputPlaceholder = element.querySelector('input[name$="inputPlaceholder"]')?.value || '';
                 const inputRequired = element.querySelector('input[type="checkbox"][name$="requiredInp"]')?.checked;
+
+                // Special handling for different input types
+                let inputClass = "form-control";
+                let wrapperClass = "mb-3";
                 
-                html = `<div class="form-group">
-                            <label for="${inputName}">${inputLabel}</label>
-                    `;
-                if(inputRequired){
-                    html += `   <input type="${inputType}" name="${inputName}" id="${inputName}" required placeholder="${inputPlaceholder}" />`
+                if (inputType === 'color') {
+                    inputClass = "form-control form-control-color";
+                } else if (inputType === 'range') {
+                    inputClass = "form-range";
+                } else if (inputType === 'file') {
+                    inputClass = "form-control";
+                    wrapperClass += " file-input-wrapper";
                 }
-                else{
-                    html += `   <input type="${inputType}" name="${inputName}" id="${inputName}" placeholder="${inputPlaceholder}" />`
+
+                html = `<div class="${wrapperClass}">\n`;
+                html += `\t<label for="${inputName}" class="form-label fw-semibold">${inputLabel}</label>\n`;
+                html += `\t<input type="${inputType}" class="${inputClass}" name="${inputName}" id="${inputName}" placeholder="${inputPlaceholder}"${inputRequired ? ' required' : ''}>\n`;
+                
+                // Add help text for file inputs
+                if (inputType === 'file') {
+                    html += `\t<div class="form-text">Choose a file to upload.</div>\n`;
                 }
-                html+= '\n</div>'
+                
+                html += `</div>\n`;
                 break;
-                
-            case 'textarea':
+            }
+
+            case 'textarea': {
                 const textareaName = element.querySelector('input[name$="textareaName"]')?.value || 'textarea';
                 const textareaLabel = element.querySelector('input[name$="textareaLabel"]')?.value || 'Textarea';
                 const textareaPlaceholder = element.querySelector('input[name$="textareaPlaceholder"]')?.value || '';
                 const textareaRows = element.querySelector('input[name$="textareaRows"]')?.value || '4';
                 const textareaRequired = element.querySelector('input[type="checkbox"][name$="requiredTextarea"]')?.checked;
-                
-                html = `
-                    <div class="form-group">
-                        <label for="${textareaName}">${textareaLabel}</label>
-                    `;
-                if(textareaRequired){
-                    html += `    <textarea name="${textareaName}" placeholder="${textareaPlaceholder}" id="${textareaName}" required rows="${textareaRows}" ></textarea>`
-                }
-                else{
-                    html += `    <textarea name="${textareaName}" placeholder="${textareaPlaceholder}" id="${textareaName}" rows="${textareaRows}"></textarea>`
-                }
-                html += '\n</div>'
-                break;
 
-                
-            case 'select':
+                html = `<div class="mb-3">\n`;
+                html += `\t<label for="${textareaName}" class="form-label fw-semibold">${textareaLabel}</label>\n`;
+                html += `\t<textarea class="form-control" name="${textareaName}" id="${textareaName}" placeholder="${textareaPlaceholder}" rows="${textareaRows}"${textareaRequired ? ' required' : ''}></textarea>\n`;
+                html += `</div>\n`;
+                break;
+            }
+
+            case 'select': {
                 const selectName = element.querySelector('input[name$="selectName"]')?.value || 'select';
                 const selectLabel = element.querySelector('input[name$="selectLabel"]')?.value || 'Select Option';
                 const selectOptions = element.querySelector('textarea[name$="selectOptions"]')?.value || '';
                 const options = selectOptions.split(',').map(opt => opt.trim()).filter(opt => opt);
                 const selectRequired = element.querySelector('input[type="checkbox"][name$="requiredSelect"]')?.checked;
-                
-                html = `
-                    <div class="form-group">
-                        <label for="${textareaName}">${selectLabel}</label>
-                `;
-                if(selectRequired){
-                    html += `<select name="${selectName}" id="${selectName}" required>`
-                }
-                else{
-                    html += `<select name="${selectName}" id="${selectName}">`
-                }
 
-                html += `   ${options.map(opt => `<option value="${opt}">${opt}</option>\n`).join('')}
-                        </select>
-                    </div>`
+                html = `<div class="mb-3">\n`;
+                html += `\t<label for="${selectName}" class="form-label fw-semibold">${selectLabel}</label>\n`;
+                html += `\t<select class="form-select" name="${selectName}" id="${selectName}"${selectRequired ? ' required' : ''}>\n`;
+                html += `\t\t<option value="" selected disabled>Choose an option...</option>\n`;
+                html += options.map(opt => `\t\t<option value="${opt.toLowerCase().replace(/ /g, '_')}">${opt}</option>`).join('\n') + '\n';
+                html += `\t</select>\n`;
+                html += `</div>\n`;
                 break;
-                
-            case 'radio':
+            }
+
+            case 'radio': {
                 const radioName = element.querySelector('input[name$="radioName"]')?.value || 'radio';
                 const radioLabel = element.querySelector('input[name$="radioLabel"]')?.value || 'Radio Options';
                 const radioOptions = element.querySelector('textarea[name$="radioOptions"]')?.value || '';
                 const radioOptionsList = radioOptions.split(',').map(opt => opt.trim()).filter(opt => opt);
                 const radioRequired = element.querySelector('input[type="checkbox"][name$="requiredRadio"]')?.checked;
+
+                html = `<div class="mb-3">\n`;
+                html += `\t<label class="form-label fw-semibold">${radioLabel}</label>\n`;
                 
-                html = `
-                    <div class="form-group smallButtons">
-                        <label><h4>${radioLabel}</h4></label>
-                `;
-                if(radioRequired){
-                    html += `   ${radioOptionsList.map(opt => `
-                                <div>
-                                    <label for="${radioName}-${opt}"><input type="radio" name="${radioName}" value="${opt}" required id="${radioName}-${opt}" >${opt}</label>
-                                </div>
-                            `).join('')}    
-                        `
-                }
-                else{
-                    html += `   ${radioOptionsList.map(opt => `
-                                <div>
-                                    <label for="${radioName}-${opt}"><input type="radio" name="${radioName}" value="${opt}" id="${radioName}-${opt}"> ${opt}</label>
-                                </div>
-                            `).join('')}
-                            `
-                }
-                html += '</div>'
+                // Use row and col for responsive radio layout
+                html += `\t<div class="row g-2">\n`;
+                html += radioOptionsList.map(opt => {
+                    const optionId = `${radioName}-${opt.toLowerCase().replace(/ /g, '-')}`;
+                    return `\t\t<div class="col-md-4 col-sm-6">\n\t\t\t<div class="form-check">\n\t\t\t\t<input class="form-check-input" type="radio" name="${radioName}" value="${opt.toLowerCase().replace(/ /g, '_')}" id="${optionId}"${radioRequired ? ' required' : ''}>\n\t\t\t\t<label class="form-check-label" for="${optionId}">${opt}</label>\n\t\t\t</div>\n\t\t</div>`;
+                }).join('\n') + '\n';
+                html += `\t</div>\n`;
+                html += `</div>\n`;
                 break;
-                
-            case 'checkbox':
+            }
+
+            case 'checkbox': {
                 const checkboxName = element.querySelector('input[name$="checkboxName"]')?.value || 'checkbox';
                 const checkboxLabel = element.querySelector('input[name$="checkboxLabel"]')?.value || 'Checkbox Options';
                 const checkboxOptions = element.querySelector('textarea[name$="checkboxOptions"]')?.value || '';
                 const checkboxOptionsList = checkboxOptions.split(',').map(opt => opt.trim()).filter(opt => opt);
+
+                html = `<div class="mb-3">\n`;
+                html += `\t<label class="form-label fw-semibold">${checkboxLabel}</label>\n`;
                 
-                html = `
-                    <div class="form-group">
-                        <label>${checkboxLabel}</label>
-                        ${checkboxOptionsList.map(opt => `
-                            <div>
-                                <input type="checkbox" name="${checkboxName}" value="${opt}" id="${checkboxName}-${opt}">
-                                <label for="${checkboxName}-${opt}">${opt}</label>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
+                // Use row and col for responsive checkbox layout
+                html += `\t<div class="row g-2">\n`;
+                html += checkboxOptionsList.map(opt => {
+                    const optionId = `${checkboxName}-${opt.toLowerCase().replace(/ /g, '-')}`;
+                    return `\t\t<div class="col-md-4 col-sm-6">\n\t\t\t<div class="form-check">\n\t\t\t\t<input class="form-check-input" type="checkbox" name="${checkboxName}[]" value="${opt.toLowerCase().replace(/ /g, '_')}" id="${optionId}">\n\t\t\t\t<label class="form-check-label" for="${optionId}">${opt}</label>\n\t\t\t</div>\n\t\t</div>`;
+                }).join('\n') + '\n';
+                html += `\t</div>\n`;
+                html += `</div>\n`;
                 break;
-                
-            case 'button':
+            }
+
+            case 'button': {
                 const buttonType = element.querySelector('select[name$="buttonType"]')?.value || 'button';
                 const buttonText = element.querySelector('input[name$="buttonText"]')?.value || 'Button';
-                
-                html = `
-                    <div class="form-group buttons-field">
-                        <button type="${buttonType}">${buttonText}</button>
-                    </div>
-                `;
+
+                // Determine button style based on type
+                let buttonClass = "btn-primary";
+                if (buttonType === 'reset') buttonClass = "btn-outline-secondary";
+                if (buttonType === 'disabled') buttonClass = "btn-secondary disabled";
+
+                html = `<div class="mb-3">\n`;
+                html += `\t<button type="${buttonType}" class="btn ${buttonClass} px-4 py-2">${buttonText}</button>\n`;
+                html += `</div>\n`;
                 break;
-        }
-        
-        return html;
-    }
-    
-    function generateFormCode() {
-        const formHeading = document.getElementById('T1').value || 'Form Title';
-        const methodRadio = document.getElementsByName('formMethod')
-        let method = "GET"
-        for(const rad of methodRadio){
-            if(rad.checked){
-                method = rad.value;
             }
         }
-        
-        let formHTML = `<form action="#" method="${method}" id="${formHeading.replace(/ /gi,"_")}">\n\t<h1>${formHeading}</h1>\n`;
-         
+
+        return html;
+    }
+
+    function generateFormCode(pos) {
+        const formHeading = document.getElementById('T1').value || 'Form Title';
+        const methodRadio = document.getElementsByName('formMethod');
+        let method = "GET";
+        for (const rad of methodRadio) {
+            if (rad.checked) method = rad.value;
+        }
+
+        // Enhanced container with proper Bootstrap classes
+        let formHTML = `<div class="${pos} container my-5">\n`;
+        formHTML += `\t<div class="row justify-content-center">\n`;
+        formHTML += `\t\t<div class="col-12 col-lg-10 col-xl-8">\n`;
+        formHTML += `\t\t\t<div class="card shadow-sm border-0">\n`;
+        formHTML += `\t\t\t\t<div class="card-header bg-primary text-white py-3">\n`;
+        formHTML += `\t\t\t\t\t<h1 class="h3 mb-0 text-center"><i class="fas fa-form me-2"></i>${formHeading}</h1>\n`;
+        formHTML += `\t\t\t\t</div>\n`;
+        formHTML += `\t\t\t\t<div class="card-body p-4 p-md-5">\n`;
+        formHTML += `\t\t\t\t\t<form action="#" method="${method}" id="${formHeading.replace(/ /g, "_")}" class="needs-validation" novalidate>\n`;
+
         for (let i = 1; i <= legends.length; i++) {
             const fieldset = document.getElementById(`fieldset-${i}`);
             if (!fieldset) continue;
-            
-            if(legends.length>1) formHTML += `\t<fieldset>\n\t<legend>${legends[i-1]}</legend>\n`;
-            
+
+            if (legends.length > 1) {
+                formHTML += `\t\t\t\t\t\t<fieldset class="mb-4 p-4 border rounded-3 bg-light">\n`;
+                formHTML += `\t\t\t\t\t\t\t<legend class="h5 fw-semibold text-primary mb-3 px-2"><i class="fas fa-layer-group me-2"></i>${legends[i-1]}</legend>\n`;
+            }
+
             const elementsContainer = document.getElementById(`elements-container-${i}`);
             if (elementsContainer) {
                 const elements = elementsContainer.querySelectorAll('.detail');
                 elements.forEach(el => {
                     const type = el.getAttribute('data-type');
-                    formHTML += '    ' + generatePreviewElement(el, type).replace(/\n/g, '\n    ') + '\n';
+                    formHTML += '\t\t\t\t\t\t' + generatePreviewElement(el, type).replace(/\n/g, '\n\t\t\t\t\t\t') + '\n';
                 });
             }
-            
-            if(legends.length>1) formHTML += `\t</fieldset>\n`;
-        }
-        
-        formHTML += `</form>`;
 
-        const form = document.getElementById('implementCodeFormCont')
-        const texta = document.getElementById("MainCode")
-        form.style.display = 'flex'
+            if (legends.length > 1) formHTML += '\t\t\t\t\t\t</fieldset>\n';
+        }
+
+        // Add submit button if not already added
+        formHTML += `\t\t\t\t\t\t<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 pt-3 border-top">\n`;
+        formHTML += `\t\t\t\t\t\t\t<button type="reset" class="btn btn-outline-secondary me-md-2">Reset Form</button>\n`;
+        formHTML += `\t\t\t\t\t\t\t<button type="submit" class="btn btn-success px-4"><i class="fas fa-paper-plane me-2"></i>Submit Form</button>\n`;
+        formHTML += `\t\t\t\t\t\t</div>\n`;
+
+        formHTML += `\t\t\t\t\t</form>\n`;
+        formHTML += `\t\t\t\t</div>\n`;
+        formHTML += `\t\t\t</div>\n`;
+        formHTML += `\t\t</div>\n`;
+        formHTML += `\t</div>\n`;
+        formHTML += `</div>\n`;
+
+        // Add validation script
+        formHTML += `\n<!-- Bootstrap Form Validation Script -->\n`;
+        formHTML += `<script>\n`;
+        formHTML += `// Bootstrap form validation\n`;
+        formHTML += `(function () {\n`;
+        formHTML += `  'use strict'\n`;
+        formHTML += `  var forms = document.querySelectorAll('.needs-validation')\n`;
+        formHTML += `  Array.prototype.slice.call(forms)\n`;
+        formHTML += `    .forEach(function (form) {\n`;
+        formHTML += `      form.addEventListener('submit', function (event) {\n`;
+        formHTML += `        if (!form.checkValidity()) {\n`;
+        formHTML += `          event.preventDefault()\n`;
+        formHTML += `          event.stopPropagation()\n`;
+        formHTML += `        }\n`;
+        formHTML += `        form.classList.add('was-validated')\n`;
+        formHTML += `      }, false)\n`;
+        formHTML += `    })\n`;
+        formHTML += `})()\n</scrip`;
+        formHTML += 't>'
+        const form = document.getElementById('implementCodeFormCont');
+        const texta = document.getElementById("MainCode");
+        form.style.display = 'flex';
+        
         texta.value = formHTML;
-        remove_form('form_to_add_card')
+
+        remove_form('form_to_add_card');
     }
-    
+
     function resetForm(container) {
         if (confirm('Are you sure you want to reset the form? All your inputs will be lost.')) {
             document.getElementById('form_to_add_stuffs').reset();
@@ -779,5 +822,4 @@
             fieldsetCount = 0;
         }
     }
-
 </script>

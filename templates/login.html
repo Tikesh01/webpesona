@@ -1,44 +1,96 @@
 {% extends 'skeleton.html' %}
-{% block title %}
-Login-Webpersona
-{%endblock%} 
+{% block title %}Login - WebPersona{% endblock %}
 {% block page %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const toggleBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password-input');
+    toggleBtn.addEventListener('click', function () {
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+      this.querySelector('i').classList.toggle('fa-eye');
+      this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+  });
+</script>
 <style>
-   #LoginWebpersona .form-group{
-       display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 3rem;
-        input{
-            width: 21em;
-        }
+ 
+  #loginCard{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background: #9d949416;
+    gap: 3em;
+    max-width: 700px;
+    margin: auto;
+    img{
+      width: 45%;
     }
+    #loginForm{
+      background: transparent;
+    }
+    input{
+      background: transparent;
+      border: none;
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.364);
+      border-radius: 0;
+    }
+  }
+  @media(max-width:700px){
+    #loginCard{
+      flex-direction: column;
+      gap: 1em;
+      background: none;
+      img{
+        width: 70%;
+      }
+    }
+  }
+  @media(max-width:340px){
+    #loginCard{
+      #loginForm{
+        padding: 0;
+      }
+    }
+  }
 </style>
-<section id="login.html" class="content" contenteditable="{{ true if all['body_content_editable'] else false }}"><!--start-->
-  <div class="content-wrapper login-container">
-    <div  class="card" >
-      <h1>Login</h1>
-      <form action="/login" method="POST" id="LoginWebpersona">
-        <div class="form-group">
-          <label for="loginEmail">Email:</label>
-          <input type="email" name="email" id="loginEmail" placeholder="e.g., example123@domain.com" required />
-        </div>
-        <div class="form-group" id="password-field">
-          <label for="password-input">Password:</label>
-          <div class="password_wrapper">
-              <input type="password" name="password" id="password-input" placeholder="Type the Registered password" minlength="8" required />
-              <i class="fas fa-eye" title="View password" id="view_password_icon"></i>
-          </div> 
-        </div>
-        <p class="moveto-link"><a href="">Forgot Password ?</a></p>
-        <div id="buttons-field">
-          <button type="reset">Reset</button>
-          <button type="submit">Login</button>
-        </div>
-        <p class="moveto-link">Don't have an account? <a href="{{ url_for('register') }}">Sign-Up here</a></p>
-      </form>
+<section id="login.html" class="content py-5" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}" > <!--start-->
+    <div class="1 card border-0  p-4" id="loginCard">
+        <img src="../static/images/Mobile login-bro.svg" alt="">
+        <form action="/login" method="POST" id="LoginWebpersona" class="needs-validation" id="loginForm" novalidate>
+            <h2 class="text-center mb-4 fw-bold text-primary">Login</h2>
+            <div class="mb-3">
+                <label for="loginEmail" class="form-label fw-semibold">Email</label>
+                <input type="email" class="form-control" id="loginEmail" name="email" placeholder="e.g., example123@domain.com" required>
+                <div class="invalid-feedback">Please enter a valid email.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password-input" class="form-label fw-semibold">Password</label>
+              <div class="input-group">
+                  <input type="password" class="form-control" id="password-input" name="password" placeholder="Enter your password" minlength="8" required>
+                  <button class="btn btn-outline-secondary border-0" type="button" id="togglePassword" title="Show/Hide Password">
+                      <i class="fas fa-eye"></i>
+                  </button>
+                  <div class="invalid-feedback">Password must be at least 8 characters long.</div>
+              </div>
+            </div>
+
+            <div class="text-end mb-3">
+                <a href="#" class="text-decoration-none small text-primary">Forgot Password?</a>
+            </div>
+
+            <div class="d-flex justify-content-end gap-3">
+                <button type="reset" class="btn btn-outline-danger">Reset</button>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+
+            <p class="text-center mt-4 mb-0">
+                Don't have an account?
+                <a href="{{ url_for('register') }}" class="text-decoration-none fw-semibold text-primary">Sign up here</a>
+            </p>
+        </form>
     </div>
-  </div>
 </section><!--Close-->
-{%endblock%}
+{% endblock %}

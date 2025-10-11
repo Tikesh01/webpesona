@@ -1,45 +1,14 @@
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 0.2em;
-        font-family: sans-serif;
-        font-size: 0.95em;
-    }
-
-    th, td {
-        border: 1px solid #ddd;
-        padding: 0.6em 0.8em;
-        text-align: left;
-    }
-
-    th {
-        background: #3498db;
-        color: white;
-        font-weight: 600;
-    }
-
-    tr:nth-child(even) {
-        background: #f9f9f9;
-    }
-
-    tr:hover {
-        background: #f1f1f1;
-    }
-    #fieldsetsContainerTab,#fieldsetsContainerBlog{
-        display: grid; 
-        grid-template-columns:repeat(2,1fr); 
-        gap: 1em;
-    }
-</style>
 <form id="form_to_add_stuffs">
     <div class="form_card_header">
         <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
         <h2 id="Title">Add Table Card</h2>
     </div>
     <div class="form-group">
-        <label for="F1">Heading</label>
-        <input type="text" name="headingOfTab" id="F1" placeholder="Enter table heading (e.g., Student Details)" oninput="updatePreviewTab('tablePreview')"/>
+        <label for="F1">Heading & Position</label>
+        <div class="input-group">
+            <input type="text" name="headingOfTab" id="F1" placeholder="Enter table heading (e.g., Student Details)" oninput="updatePreviewTab('tablePreview')" class="form-control"/>
+            <input type="number" name="containerPosTab" id="containerPosTab" class="form-control" placeholder="Container-Position" style="max-width: 7em" value="0">
+        </div>
     </div>
     <div class="form-group">
         <label for="F2">File to Table ( Excel or CSV files )</label>
@@ -64,7 +33,7 @@
 
     <div class="buttons-group">
         <button type="button" onclick="resetForm('fieldsetsContainerTab')">Reset</button>
-        <button type="button" onclick="generateCode('tablePreview', 'Table')">Generate table Code</button>
+        <button type="button" onclick="generateCode('tablePreview', 'Table',  document.getElementById('containerPosTab').value)">Generate table Code</button>
     </div>
 </form>
 <script >
@@ -188,10 +157,8 @@
                 const rows = document.getElementById(`F4${i}`).value
                 const footers = document.getElementById(`F5${i}`).value.trim().split(',')
                 let tableHtml="";
-
-                if(fieldsets.length>1) tableHtml += `<fieldset>\n\t<legend>${fieldsets[i-1]}</legend>\n\t`
                     
-                tableHtml += `<table>\n`;
+                tableHtml += `<h4>${fieldsets[i-1]}</h4>\n\t<table class="table table-bordered table-striped table-hover">\n\t`;
                 
                 if(tableType==='hBoth'){
                     const normalHeaders = document.getElementById(`normal_headers${i}`)
@@ -206,7 +173,7 @@
                     const top = document.getElementById(`top${i}`).value.trim().split('\n')
                     const left = document.getElementById(`left${i}`).value.trim().split('\n')
 
-                    tableHtml += createDoubleheadedTable(top, left)
+                    tableHtml += `${createDoubleheadedTable(top, left)}`
                 }
 
                 if (headers.length > 0) {
@@ -253,26 +220,27 @@
                 }
 
                 tableHtml += "\t</table>"
-                if(fieldsets.length>1) tableHtml += `\n</fieldset>\n`;
+                tableHtml = `\t<div class='table-responsive'>\n\t${tableHtml}\n</div>\n`;
 
                 previewCont.innerHTML += tableHtml;
             }
         }
     }
-    function generateCode(pCont, element, file=null){
-        remove_form('form_to_add_card')
+    function generateCode(pCont, element,pos,file=null){
+        remove_form('form_to_add_card');
         const previewCont = document.getElementById(pCont);
-        const code = previewCont.innerHTML;
+        let code = previewCont.innerHTML;
+
+        code = `\n<div class='${pos}'>\n\t${code}\n</div>\n`;
 
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = code;
-
         const formattedCode = tempDiv.innerHTML;
 
         previewCont.innerHTML = "";
-        const form = document.getElementById('implementCodeFormCont')
-        const texta = document.getElementById("MainCode")
-        form.style.display = 'flex'
+        const form = document.getElementById('implementCodeFormCont');
+        const texta = document.getElementById("MainCode");
+        form.style.display = 'flex';
         texta.value = formattedCode;
 
     }

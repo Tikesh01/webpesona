@@ -3,6 +3,9 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    scroll-behavior: smooth;
+    transition: all 0.3s ease-in-out;
+
 }
 
 body,
@@ -10,6 +13,12 @@ html {
     height: 100%;
     width: 100%;
     background-color: #dddddd4a;
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+.content, .content-wrapper, .container-fluid {
+  transition: height 0.4s ease, width 0.4s ease, padding 0.3s ease;
 }
 
 button {
@@ -19,185 +28,82 @@ button {
 input[type=submit],select,input[type=file]{
     cursor: pointer;
 }
-.highlight{
-    background-color: #3498db;
-}
-nav {
-    height: 50px;
-    background-color: #2c3e50;
-    text-align: center;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 0 3em;
-
-    ul {
-        display: flex;
-        float: inline-end;
-        gap: 15px;
-
-        li {
-            padding: 0.3em 1em;
-            border-radius: 30px;
-            select{
-                padding: 0.3em 0.3em;
-                border-radius: 20px;
-                font-weight: bolder;
-                color: orange;
-                background: transparent;
-            }
-            #debugModeForm{
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-        }
-        li:hover{
-            background-color: rgba(255, 255, 255, 0.082);
-
-        }
-    }
-
-}
-
-nav h1 {
-    font-size: 1.5rem;
-    text-align: center;
-}
-
-nav h1 i {
-    margin-right: 10px;
-    color: #3498db;
-}
-
 #the_web {
-    gap: 10px;
-    padding: 5px;
     height: auto;
     width: 100%;
     display: flex;
+}
+.highlight{
+    background-color: #3498db;
+    color: white;
+}
+
+/* Global Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #bdc3c7;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #a2a9af;
 }
 
 #page_containers,
 #preview_container,
 #feature_list {
     background: white;
-    border-radius: 8px;
     padding: 10px;
-    box-shadow: 0 2px 10px #0000000d;
-    scroll-behavior: smooth;
-    scrollbar-width:thin;
-    scrollbar-color: #3498db #f1f1f1;
+    border-right: 0.5px rgba(128, 128, 128, 0.4) solid;
 }
 #page_containers {
     height: 100vh;
     width: 250px;
     overflow: auto;
+    
 }
 
-#containers_list {
-    margin-top: 1em;
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
-
-}
-
-#containers_list details {
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 7px;
-    transition: all 0.2s;
-}
-
-#containers_list details:hover {
-    border-color: #3498db;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-#containers_list summary {
+.folder-header {
     cursor: pointer;
-    padding: 1px 7px;
-    padding-right: 0;
     background-color: #f8f9fa;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    font-weight: bold;
     transition: background-color 0.2s;
 }
-
-#containers_list summary:hover {
+.folder-header:hover {
     background-color: #e9ecef;
 }
-
-#containers_list summary::before {
-
-    color: #297fb996;
+.folder-header .fa-chevron-down {
+    transition: transform 0.3s ease;
 }
-
+.folder-header[aria-expanded="false"] .fa-chevron-down {
+    transform: rotate(-90deg);
+}
 #preview_container {
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100vh;
-    width: calc(100% - 520px);
-    max-width: calc(100% - 520px);
+    width: calc(100% - 500px);
+    max-width: calc(100% - 500px);
     padding: 0 1px;
 }
-#previewContainerHeader{
-    position: relative;
-    width: 100%;
-    text-align: center;
-    z-index: 0;
-}
-
-#preview_container #frameSizeForm{
-    position: absolute;
-    right: 1%;
-    top: 50%;
-    transform: translateY(-50%);
-    
-    #resolutions {
-        border: 1px solid #3498db33;
-        padding: 0.2em 0.8em;
-        border-radius: 24px;
-        background: #f8fafd;
-        box-shadow: 0 1px 4px #3498db11;
-        margin-left: 0.5em;
-        summary::before {
-            content: "";
-        }
-        ul {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            li {
-                padding: 0.1em ;
-                border-radius: 16px;
-                background: transparent;
-                transition: background 0.2s, color 0.2s;
-                cursor: pointer;
-            }
-            li:hover,
-            li:active {
-                background: #3498db22;
-                color: #3498db;
-            }
-        }
+#preview_container #framesizeDropdown{
+    #sizelist{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 0.5em;
     }
-    #resolutions:open{
-        position: absolute;
-        background: #eaf6fd;
-        border-color: #354a58;
-        box-shadow: 0 2px 8px #3498db22;
-    }
-
 }
 
 #preview_container #frameContainer {
@@ -235,76 +141,18 @@ nav h1 i {
         margin-right: 6px;
     }
 }
-.features {
-    form {
-        gap: 10px;
-    }
-}
 
-#feature_list h1,
-#page_containers h1,
-#preview_container h1{
+.container-header {
+    border-radius: 0.25rem 0.25rem 0 0;
+}
+.container-header h1 {
     color: #2c3e50;
-    text-align: center;
-    font-size: 1.5rem;
-    /* margin-bottom: 10px; */
+    font-size: 1.2rem;
+    font-weight: 600;
 }
-
-#feature_list input,#feature_list select  {
-    width: 49%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: border-color 0.2s;
-    margin: 0.4em 0;
+.container-header i {
+    color: #3498db;
 }
-
-#addPage #pageType{
-    width: 49%;
-    padding: 0.6em 0.2em;
-}
-#feature_list input:focus {
-    border-color: #3498db;
-    outline: none;
-}
-
-#feature_list button {
-    width: 49%;
-    padding: 9px 12px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 20px;
-    transition: background-color 0.2s;
-    margin: 0.2em 0;
-}
-
-#feature_list button:hover {
-    background-color: #2980b9;
-}
-
-#feature_list #favicons_container {
-    width: 100%;
-    display: flex;
-    align-items: center;
-
-    /* background-color: #3498db; */
-    gap: 0.5em;
-
-    img {
-        max-height: 100%;
-        width: 20px;
-    }
-
-    p {
-        width: 40%;
-        max-width: 40%;
-        overflow: hidden;
-    }
-}
-
 #edit_favicon {
     display: block;
     width: 50%;
@@ -316,7 +164,8 @@ nav h1 i {
         color: #3498db;
         transition: color 0.2s;
         float: right;
-        margin: 0 0.34em;
+        margin: 0 0.4em;
+        font-size: smaller;
     }
 
     label:hover {
@@ -325,34 +174,6 @@ nav h1 i {
 
     input {
         display: none;
-    }
-}
-
-#color {
-    width: 100%;
-
-    form {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        h4 {
-            color: rgb(110, 2, 103);
-            border: 1px solid #3498db;
-            padding: 0.3em 0.5em;
-            border-radius: 5px;
-            margin: 1em 0.8em;
-            text-align: center;
-        }
-
-        button {
-            width: auto;
-            padding: 0.7em 1.2em;
-            border-radius: 15px;
-            background-color: #3498db;
-            color: #ddd;
-        }
     }
 }
 
@@ -368,34 +189,27 @@ nav h1 i {
 }
 
 #EditContent input[type="checkbox"],#debugging {
-    width: 22px;
+    width: 40px;
     height: 22px;
     accent-color: #3498db;
-    border-radius: 6px;
+    border-radius: 20px;
     border: 1.5px solid #3498db;
     margin-right: 0.5em;
     transition: box-shadow 0.2s;
     box-shadow: 0 1px 3px #00000010;
 }
-
+#EditContent input[type="checkbox"]:hover,#debugging:hover{
+    accent-color: #68b7ebd4;
+}
 #EditContent label,#debugModeForm label {
     font-size: 1.1em;
-    color: #2c3e50;
+    color: #3498db;
     font-weight: 500;
     cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: color 0.2s;
-}
-#debugModeForm label{
-    color: orange;
-}
-
-#EditContent input[type="checkbox"]:hover {
-    box-shadow: 0 0 0 2px #3498db33;
 }
 
 #EditContent label:hover {
-    color: #3498db;
+    color: #0985d7;
 }
 .form_to_add_card, #implementCodeFormCont{
     display: none;
@@ -407,169 +221,20 @@ nav h1 i {
     backdrop-filter: blur(2px);
     z-index: 1000;
 }
-.editer_tool_wrapper{
+.editor-toolbar-wrapper {
     position: fixed;
-    bottom: 0.2%;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 2em;
-    background:transparent;
-    border-radius: 10px;
-    padding: 0.2em 0.5em;
+    z-index: 1050;
+    padding: 8px;
+    background-color: rgba(44, 62, 80, 0.9); /* Dark, semi-transparent */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    backdrop-filter: blur(5px);
 }
-.tools {
-    display: flex;
-    color: rgb(195, 255, 0);
-    font-size: larger;
-    label{
-        position: relative;
-        padding: 0em 1em;
-        .fa-circle-plus{
-            position: absolute;
-            font-size: small;
-            color: rgb(21, 182, 241);
-        }
-    }
-    label:hover{
-       scale: 1.15;
-    }
-    input{
-        display: none;
-    }
-}
-#saveEditedButton {
-    background: rgb(195, 255, 0);
-    padding: 0.7em 1.2em;
-    border-radius: 20px;
-    border: none;
-    color: #2c3e50;
-    font-weight: bolder;
-    cursor: pointer;
-}
-#saveEditedButton:hover{
-    scale: 1.05 ;
-}
-@media (max-width: 1024px) {
-    main {
-        flex-direction: column;
-        height: auto;
-        gap: 0.5em;
-    }
-    #web_containers, #feature_list, #preview_container {
-        width: 100%;
-        max-width: 100%;
-        height: auto;
-        margin-bottom: 1em;
-        box-shadow: 0 1px 6px #00000010;
-    }
-    #preview_container {
-        min-height: 350px;
-        align-items: stretch;
-    }
-    #feature_list {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 0.5em;
-    }
-    .features {
-        flex: 1 1 45%;
-        min-width: 220px;
-        margin-bottom: 0.5em;
-    }
-}
-
-@media (max-width: 820px) {
-    nav {
-        flex-direction: column;
-        padding: 0 1em;
-        height: auto;
-    }
-    nav ul {
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
-        align-items: flex-start;
-    }
-    main {
-        flex-direction: column;
-        padding: 0.5em;
-        gap: 0.5em;
-    }
-    #web_containers, #feature_list, #preview_container {
-        width: 100%;
-        max-width: 100%;
-        height: auto;
-        margin-bottom: 1em;
-    }
-    #feature_list {
-        font-size: 0.95em;
-        flex-direction: column;
-    }
-    .features {
-        min-width: 180px;
-    }
-}
-
-@media (max-width: 600px) {
-    nav {
-        flex-direction: column;
-        padding: 0 0.5em;
-        height: auto;
-    }
-    nav h1 {
-        font-size: 1.1rem;
-    }
-    main {
-        flex-direction: column;
-        padding: 0.2em;
-        gap: 0.3em;
-    }
-    #web_containers, #feature_list, #preview_container {
-        width: 100%;
-        max-width: 100%;
-        height: auto;
-        margin-bottom: 1em;
-        padding: 0.5em 0.2em;
-        box-shadow: 0 1px 4px #00000010;
-    }
-    #feature_list {
-        font-size: 0.9em;
-        flex-direction: column;
-    }
-    .features {
-        min-width: 140px;
-        margin-bottom: 0.5em;
-    }
-    #preview_container h1, #web_containers h1, #feature_list h1 {
-        font-size: 1.1rem;
-    }
-    #feature_list button, #feature_list input {
-        width: 100%;
-        font-size: 0.95em;
-        padding: 0.5em 0.2em;
-    }
-    #addPage textarea {
-        width: 100%;
-    }
-    #feature_list #favicons_container img {
-        width: 16px;
-    }
-}
-
-@media (max-width: 400px) {
-    nav h1 {
-        font-size: 0.95rem;
-    }
-    #feature_list h1, #web_containers h1, #preview_container h1 {
-        font-size: 1rem;
-    }
-    #feature_list button, #feature_list input {
-        font-size: 0.85em;
-        padding: 0.4em 0.1em;
-    }
-    .features {
-        min-width: 100px;
+@media(max-width:325px){
+    .message{
+        max-width: 310px;
     }
 }
