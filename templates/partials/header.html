@@ -2,11 +2,21 @@
 {% block title %}
 <!--title-->
 {%endblock%} 
+
 {% block page %}
+<style>
+  @media(max-width: 385px){
+    #Navbar{
+        padding-left: 0em !important;
+        padding-right: 0em !important;
+        
+    }
+  }
+</style>
 <header id="header.html" contenteditable="{{ 'true' if all['body_content_editable'] and all['previewPage']=='header.html' else 'false' }}" class="bg-light shadow-sm" ><!--start-->
   <div class="extraUp"></div>
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-white px-3 py-2 rounded-bottom">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white px-3 py-2 rounded-bottom" id="Navbar">
     <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center gap-2" href="#">
         <img src="../../static/logo/{{all['logo'][0]}}" alt="webpersona" id="Logo" class="img-fluid" style="height: 40px; width: auto;" />
