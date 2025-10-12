@@ -17,7 +17,7 @@ html {
     scroll-padding-top: 80px;
 }
 nav{
-    background: transparent;
+    background-color: #dddddd4a;
 }
 button {
     font-weight: bolder;
@@ -171,7 +171,8 @@ input[type=submit],select,input[type=file]{
     transition: all 0.4s ease;
     overflow-y: auto;
     max-height: 100vh;
-    z-index: 1050;
+    display: flex;
+    flex-direction: column;
 }
 
 #sideCollapsePageCont.collapsed,#sideCollapseFeaturesCont.collapsed {
@@ -179,6 +180,11 @@ input[type=submit],select,input[type=file]{
     width: 40px;  
     content: '';
 }
+/* #collapseContent{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+} */
 #sideCollapseFeaturesCont.collapsed{
     right: 40px;
 }
