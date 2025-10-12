@@ -16,11 +16,9 @@ html {
     scroll-behavior: smooth;
     scroll-padding-top: 80px;
 }
-
-.content, .content-wrapper, .container-fluid {
-  transition: height 0.4s ease, width 0.4s ease, padding 0.3s ease;
+nav{
+    background: transparent;
 }
-
 button {
     font-weight: bolder;
     cursor: pointer;
@@ -28,7 +26,7 @@ button {
 input[type=submit],select,input[type=file]{
     cursor: pointer;
 }
- #sizelist{
+#sizelist{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     list-style: none;
@@ -40,6 +38,7 @@ input[type=submit],select,input[type=file]{
     height: auto;
     width: 100%;
     display: flex;
+    position: relative;
 }
 .highlight{
     background-color: #3498db;
@@ -48,8 +47,8 @@ input[type=submit],select,input[type=file]{
 
 /* Global Scrollbar Styling */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -57,7 +56,7 @@ input[type=submit],select,input[type=file]{
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #bdc3c7;
+    background-color: #149bf6;
     border-radius: 6px;
 }
 
@@ -72,13 +71,6 @@ input[type=submit],select,input[type=file]{
     padding: 10px;
     border-right: 0.5px rgba(128, 128, 128, 0.4) solid;
 }
-#page_containers {
-    height: 100vh;
-    width: 250px;
-    overflow: auto;
-    
-}
-
 .folder-header {
     cursor: pointer;
     background-color: #f8f9fa;
@@ -99,9 +91,7 @@ input[type=submit],select,input[type=file]{
     flex-direction: column;
     align-items: center;
     height: 100vh;
-    width: calc(100% - 500px);
-    max-width: calc(100% - 500px);
-    padding: 0 1px;
+    width: 100%;
 }
 
 #preview_container #frameContainer {
@@ -114,55 +104,6 @@ input[type=submit],select,input[type=file]{
         height: 90vh;
         line-height: 6px;
         padding: 1em;
-    }
-}
-
-#feature_list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 255px;
-    height: 100vh;
-    overflow: auto;
-}
-#feature_list h3{
-    i{
-        margin-right: 6px;
-    }
-}
-
-.container-header {
-    border-radius: 0.25rem 0.25rem 0 0;
-}
-.container-header h1 {
-    color: #2c3e50;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-.container-header i {
-    color: #3498db;
-}
-#edit_favicon {
-    display: block;
-    width: 50%;
-    margin: 0.5em 0;
-    /* background-color: antiquewhite; */
-
-    label {
-        cursor: pointer;
-        color: #3498db;
-        transition: color 0.2s;
-        float: right;
-        margin: 0 0.4em;
-        font-size: smaller;
-    }
-
-    label:hover {
-        color: #2980b9;
-    }
-
-    input {
-        display: none;
     }
 }
 
@@ -212,17 +153,70 @@ input[type=submit],select,input[type=file]{
 }
 .editor-toolbar-wrapper {
     position: fixed;
-    bottom: 10px;
+    top: 2px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1050;
     padding: 8px;
-    background-color: rgba(44, 62, 80, 0.9); /* Dark, semi-transparent */
+    /* background-color: rgba(44, 62, 80, 0.9); 
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px); */
+}
+#sideCollapsePageCont, #sideCollapseFeaturesCont  {
+    height: 100%;
+    width: 25%;
+    background: #f8f9fa;
+    border-right : 0.5px solid rgba(128, 128, 128, 0.389);
+    transition: all 0.4s ease;
+    overflow-y: auto;
+    max-height: 100vh;
+    z-index: 1050;
+}
+
+#sideCollapsePageCont.collapsed,#sideCollapseFeaturesCont.collapsed {
+    overflow: hidden;
+    width: 40px;  
+    content: '';
+}
+#sideCollapseFeaturesCont.collapsed{
+    right: 40px;
+}
+
+#collapseTogglePagePanel, #collapseToggleFeaturesPanel {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding:  0.5em 0.4em;
+    width: 100%;
+}
+
+#collapseTogglePagePanel:hover, #collapseToggleFeaturesPanel:hover {
+    background:rgba(144, 145, 146, 0.26);
+}
+@media(max-width: 1025px){
+    #sideCollapsePageCont, #sideCollapseFeaturesCont  {
+        width: 55%;
+    }
+}
+@media(max-width:790px){
+    #sideCollapsePageCont, #sideCollapseFeaturesCont  {
+        width: 70%;
+    }
+}
+@media(max-width:480px){
+    #sideCollapsePageCont, #sideCollapseFeaturesCont  {
+        width: 120%;
+    }
+}
+@media(max-width:430px){
+    #sideCollapsePageCont, #sideCollapseFeaturesCont  {
+        width: 150%;
+    }
 }
 @media(max-width:325px){
+    #sideCollapsePageCont, #sideCollapseFeaturesCont  {
+        width: 300%;
+    }
     .message{
         max-width: 310px;
     }
