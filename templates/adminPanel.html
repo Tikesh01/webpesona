@@ -35,6 +35,24 @@
 					});
 				}
 			}
+			function changeSize(width, height, contId){
+				const container = document.getElementById(contId)
+				container.style.height = height;
+				container.style.width = width;
+				localStorage.setItem('contHeight', height)
+				localStorage.setItem('contWidth', width)
+				console.log(width)
+			}   
+			document.addEventListener('DOMContentLoaded', function(){
+				const container = document.getElementById('Iframe');
+				const h = localStorage.getItem('contHeight')
+				const w = localStorage.getItem('contWidth')
+
+				if(w && h){
+					container.style.height = h;
+					container.style.width = w;
+				}
+			}); 
 		</script>	
 		<script>
 			function toVarName(inputId, old, New){
@@ -189,8 +207,7 @@
 		</div>
 		{% else %}
 		{% endif %}
-
-	
+		
 		<nav class="navbar navbar-expand-lg" style="border-bottom:0.5px solid rgba(128, 128, 128, 0.4);">
 			<div class="container-fluid">
 				<a class="navbar-brand" href="#"><i class="fas fa-cogs me-2"></i>Control Panel</a>
@@ -206,24 +223,24 @@
 								</a>
 
 								<ul class="dropdown-menu p-3" style="min-width: 220px;">
-									<form action="/frameSizeChange" method="post" enctype="multipart/form-data" id="sizelist" >
-									{% for size in all['sizes'] %}
-										<li>
-										<button type="submit" name="frame_size" value="{{size}}" class="btn btn-sm btn-outline-primary w-100">
-											{{ size }}
-										</button>
+									<div id="sizelist" >
+										{% for size in  all['sizes'] %}
+											<li>
+												<button type="button" onclick="changeSize('{{size}}', '100%', 'Iframe')" name="frame_size" class="btn btn-sm btn-outline-primary w-100">
+													{{ size }}
+												</button>
+											</li>
+										{% endfor %}
+						
+										<li >
+											<div class="input-group input-group-sm">
+												<input type="number" name="frame_size" class="form-control" placeholder="912" style="width: 2.5em;"/>
+												<button class="btn btn-success" type="submit">
+													<i class="fas fa-plus"></i>
+												</button>
+											</div>
 										</li>
-									{% endfor %}
-									
-									<li >
-										<div class="input-group input-group-sm">
-											<input type="number" name="frame_size" class="form-control" placeholder="912" style="width: 2.5em;"/>
-											<button class="btn btn-success" type="submit">
-												<i class="fas fa-plus"></i>
-											</button>
-										</div>
-									</li>
-									</form>
+									</div>
 								</ul>
 							</div>
 						</li>
@@ -249,7 +266,7 @@
 		</nav>
 		<section id="the_web">
 			<div id="preview_container">
-				<div id="frameContainer">
+				<div id="frameContainer" style="max-width: 100%;">
 					{% if web.debugMode %}
 					<form action="">
 						<textarea name="changedCode" id="debugTextareaCode" row="150" colum>
@@ -260,8 +277,7 @@
 						<button type='submit'>Apply</button>
 					</form>
 					{%endif%}
-					<iframe src="{{ all['previewPage']}}" width="{{ all['size'] }}" height="100%" 
-					style="display: block; margin: auto;" id="Iframe" ></iframe>
+					<iframe src="{{ all['previewPage']}}" style="display: block; margin: auto;" id="Iframe" ></iframe>
 				</div>
 			</div>
 			<div id="sideCollapsePageCont" class="collapsed">

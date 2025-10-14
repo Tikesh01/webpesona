@@ -36,8 +36,6 @@ class website:
                 
             with open("static/web.json", "r") as wjs:
                 web_dict = json.load(wjs)
-    
-                self.size = web_dict.get("size", "100%")
                 self.sizes = list(web_dict.get("sizes", ["100%","320px","360px","390px","414px","480px","768px","820px","1024px","1280px","1440px","1536px","2560px"]))
                 self.previewPage = web_dict.get("previewPage", "Home.html")
                 self.currentPage = web_dict.get("currentPage", "")
@@ -48,8 +46,6 @@ class website:
                 
         except (FileNotFoundError, json.JSONDecodeError) as e:
             flash(f"Warning: Could not load web.json: {e}")
-    
-            self.size = "100%"
             self.sizes = ["100%","320px","360px","390px","414px","480px","768px","820px","1024px","1280px","1440px","1536px","2560px"]
             self.previewPage = "Home.html"
             self.currentPage = str()
@@ -72,7 +68,6 @@ class website:
     def save_state(self):
         """Save current state to web.json"""
         state = {
-            "size": self.size,
             "sizes": list(self.sizes),
             "previewPage": self.previewPage,
             "currentPage": self.currentPage,
