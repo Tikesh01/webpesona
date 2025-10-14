@@ -214,19 +214,6 @@ class website:
         print(self.favicon)
         print(self.images)
         
-    def changeFrameSize(self,FrameSize):
-        if FrameSize in self.sizes:
-            self.size = FrameSize
-            self.save_state()
-            return 1
-            
-        fsize = str(FrameSize)+"px"
-        if fsize not in w.sizes and FrameSize > 0:
-            self.sizes.append(fsize)
-            self.size = fsize
-            self.save_state()
-            print(self.size)
-        
     def deleteFile(self,path):
         os.remove(path) 
         self.images = os.listdir("static/images")
@@ -505,15 +492,6 @@ def image_edition():
         flash(f"Error adding favicon: {e}", "danger")
     return redirect(url_for('admin'))
 
-@app.route('/frameSizeChange', methods = ['POST'])
-def responsiveness(): 
-    size = request.form.get('frame_size')
-    result = w.changeFrameSize(size)
-    if result == 1:
-        flash('Frame size changed successfully!', 'success')
-    else:
-        flash('Frame size added!', 'info')
-    return redirect(url_for('admin'))
 
 @app.route('/delete-change-Favicon-page',methods=['POST'])
 def operation_with_img_files():
