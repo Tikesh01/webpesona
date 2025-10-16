@@ -85,10 +85,10 @@ input[type=submit],select,input[type=file]{
     flex-direction: column;
     align-items: center;
     height: 100%;
-    width: calc(100% - 100px);
+    width: calc(100% - 80px);
     background-color: #f0f0f0;
     padding: 2px;
-    max-width: calc(100vw - 100px);
+    max-width: calc(100vw - 80px);
     overflow: auto;
 }
 
@@ -131,24 +131,33 @@ input[type=submit],select,input[type=file]{
     flex-direction: column;
 }
 
-#sideCollapsePageCont.collapsed,#sideCollapseFeaturesCont.collapsed {
-    overflow: hidden;
-    width: 50px;  
-    content: '';
-}
 #sideCollapsePageCont{
     width: calc(100% + 50px);
 }
 
-#sideCollapseFeaturesCont.collapsed{
-    right: 40px;
-}
 
 #collapseTogglePagePanel, #collapseToggleFeaturesPanel {
     cursor: pointer;
     transition: all 0.3s ease;
-    padding:  0.5em 0.4em;
+    padding:  0.4em;
     width: 100%;
+    font-size: smaller;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+#sideCollapsePageCont.collapsed,#sideCollapseFeaturesCont.collapsed {
+    overflow: hidden;
+    flex-direction: row;
+    width: 40px;  
+    #collapseTogglePagePanel, #collapseToggleFeaturesPanel{
+        flex-direction: column;
+        gap: 2em;
+       .heading{
+            transform: rotate(90deg);
+       }
+    }
 }
 
 #collapseTogglePagePanel:hover, #collapseToggleFeaturesPanel:hover {

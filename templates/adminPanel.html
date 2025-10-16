@@ -96,7 +96,7 @@
 			function writeToPage(code, pageNameId){
 				const iframe = document.getElementById('Iframe');
 				const iframeDoc = iframe.contentWindow.document;
-				largeContainer = iframeDoc.getElementById(pageNameId)
+				const largeContainer = iframeDoc.getElementById(pageNameId)
 				
 				largeContainer.innerHTML += code;
 				alert(largeContainer.innerHTML)
@@ -279,7 +279,7 @@
 			
 			<div class="webSettingsCont">
 				<div id="sideCollapsePageCont" class="collapsed">
-					<i class="fas fa-angles-left" id="collapseTogglePagePanel" onclick="collapse(this.id, 'sideCollapsePageCont')"></i>
+					<span  id="collapseTogglePagePanel" onclick="collapse(this.id, 'sideCollapsePageCont')" ><i class="fas fa-angles-left"></i> <div class="heading">PAGES</div></span>
 					<div class="p-2" id="collapsePageContent">
 						<div class="container-header mb-3">
 							<div class="input-group input-group-sm mt-2">
@@ -340,7 +340,7 @@
 					</div>
 				</div>
 				<div id="sideCollapseFeaturesCont" class="collapsed">
-					<i class="fas fa-angles-left" id="collapseToggleFeaturesPanel" onclick="collapse(this.id, 'sideCollapseFeaturesCont')"></i>
+					<span id="collapseToggleFeaturesPanel" onclick="collapse(this.id, 'sideCollapseFeaturesCont')"><i class="fas fa-angles-left"></i> <div class="heading">FEATURES</div></span>
 					<div class="p-2" id="collapseFeaturesContent">
 						<div class="accordion" id="featuresAccordion">
 							{% if web.previewPage == 'header.html' %}
@@ -503,5 +503,8 @@
 				</div>
 			</div>
 		</section>
+		<div id="databse">
+			sdf
+		</div>
 	</body>
 </html>
