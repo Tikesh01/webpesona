@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request,redirect, url_for, flash, session, send_from_directory
 import re, os, shutil, json
 from models import db, User
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.secret_key = 'happy_happy_happy' 
@@ -9,6 +10,7 @@ app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///webpersona.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
+migrate = Migrate(app, db)
 
 with app.app_context():
     db.create_all()
@@ -47,7 +49,7 @@ class website:
                 self.isRegistered = web_dict.get("isRegistered", False)
                 
         except (FileNotFoundError, json.JSONDecodeError) as e:
-            flash(f"Warning: Could not load web.json: {e}")
+            flash(f"Warning: Could not load web.json: {e}", "error")
             self.sizes = ["100%","320px","360px","390px","414px","480px","768px","820px","1024px","1280px","1440px","1536px","2560px"]
             self.previewPage = "Home.html"
             self.currentPage = str()
