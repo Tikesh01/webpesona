@@ -5,34 +5,46 @@
     </div>
     <div class="form-group">
         <div>
-            <input class="form-check-input" type="radio" name="radioLabel" id="radioLabel1" value="imgCaps" aria-label="...">
-            <label for="radioLabel1" class="form-check-label">Image caps</label>
+            <input onchange="updatePreviewImgCard('imgCardPreview')" class="form-check-input" type="radio" name="imgCardType" id="radioLabel1" value="imgCaps" aria-label="..." checked>
+            <label for="radioLabel1" class="form-check-label" >Image caps</label>
         </div>
         <div>
-            <input class="form-check-input" type="radio" name="radioLabel" id="radioLabel2" value="OverImg" aria-label="...">
-            <label for="radioLabel2" class="form-check-label" >Image Overlays</label>
+            <input class="form-check-input" type="radio" name="imgCardType" id="radioLabel2" value="overImg" aria-label="..." onchange="updatePreviewImgCard('imgCardPreview')">
+            <label for="radioLabel2" class="form-check-label"  >Image Overlays</label>
         </div>
         <div>
-            <input class="form-check-input" type="radio" name="radioLabel" id="radioLabel3" value="Horizontal" aria-label="...">
+            <input class="form-check-input" type="radio" name="imgCardType" id="radioLabel3" value="horizontal" aria-label="..." onchange="updatePreviewImgCard('imgCardPreview')">
             <label for="radioLabel3" class="form-check-label">Horizontal</label>
         </div>
     </div>
 
     <div id="grid-card-config-${titleId}" class="card bg-light p-3 rounded border shadow-sm">
         <div class="form-group mb-1">
-            <label for="${titleId}-title" class="form-label-sm">Card Title & Position</label>
+            <label for="cTitle" class="form-label-sm">Card Title & Position</label>
            <div class="input-group input-group-sm">
-                <input type="text" id="title" class="form-control" oninput="updatePreviewImgCard('gridPreview')" placeholder="Card Title" required>
+                <input type="text" id="cTitle" class="form-control" oninput="updatePreviewImgCard('imgCardPreview')" placeholder="Card Title" required>
                 <input type="number" id="containerPosImgCard" class="form-control" value="0" style="max-width: 5em;">
            </div>
         </div>
         <div class="form-group form-group mb-1">
-            <label for="${titleId}-img" class="form-label-sm">Image (optional)</label>
-            <input type="file" id="img" class="form-control form-control-sm" accept="image/*" onchange="updatePreviewImgCard('gridPreview')">
+            <label for="cImg" class="form-label-sm">Image (optional)</label>
+            <select id="cImg" class="form-control form-control-sm" onselect="updatePreviewImgCard('imgCardPreview')">
+                <option class="me-auto text-truncate" value="noImg">No Image</option >
+                {% for icon in all['images'] %}
+                    <option class="me-auto text-truncate" value="../static/images/{{icon}}">{{icon}}</option>
+                {%endfor%}
+            </select>
         </div>
         <div class="form-group mb-1">
-            <label for="${titleId}-text" class="form-label-sm">Card Text</label>
-            <textarea id="${titleId}-text" class="form-control form-control-sm" rows="3" placeholder="Enter card content..." oninput="updatePreviewPreviewCard('gridPreview')"></textarea>
+            <label for="cText" class="form-label-sm">Card Text</label>
+            <textarea id="cText" class="form-control form-control-sm" rows="3" placeholder="Enter card content..." oninput="updatePreviewImgCard('imgCardPreview')"></textarea>
+        </div>
+        <div class="form-group mb-1">
+            <label for="cWidth" class="form-label-sm">Width (%)</label>
+            <div class="input-group-sm d-flex">
+                <input id="cWidth" class="form-control" type="range" min="25" max="100" step="25" oninput="updatePreviewImgCard('imgCardPreview'), showSize('ccWidth', this.value)">
+                <input type="number" id="ccWidth" class="form-control" style="width: 5em;">
+            </div>
         </div>
     </div>
 
@@ -51,7 +63,70 @@
 
 <script>
     function updatePreviewImgCard(previewContId){
-        
+        const previewCont = document.getElementById(previewContId)
+        const cardType = document.querySelector('input[name="imgCardType"]:checked').value;
+        const title = document.getElementById('cTitle').value || "Card Title"
+        const img = document.getElementById('cImg').value
+        const text = document.getElementById('cText').value || "This is a wider card with supporting text below as a natural lead-in to additional content"
+        const supportingText = "This is supporting text You can Change."
+        const width = document.getElementById('cWidth').value || "75"
+        let cardHtml = ""
+        previewCont.innerHTML = ""
+        if(cardType=='horizontal'){
+            cardHtml = createImgHorizontal(img, title, text, supportingText, width)
+        }
+        else if(cardType=='overImg'){
+            cardHtml = createImgOverlaysCard(img, title, text, supportingText, width)
+        }
+        else{
+            cardHtml = createImgCapsCard(img, title, text, supportingText, width)
+        }
 
+        previewCont.innerHTML = cardHtml;
+    }
+    function createImgCapsCard(img, title, text, sText, width){
+        let imgCaps = `<div class="card mb-3 w-${width}" id="${title.replace(/ /g, " ")}">\n`
+        if (img !== "noImg")
+            imgCaps += `    <img src="${img}" class="card-img-top" alt="...">\n`
+
+        imgCaps += `    <div class="card-body">
+                <h5 class="card-title">${title}</h5>
+                <p class="card-text">${text}</p>
+                <p class="card-text"><small class="text-body-secondary">${sText}</small></p>
+            </div>
+        </div>`
+
+        return imgCaps
+    }
+    function createImgOverlaysCard(img, title, text, sText, width){
+        let overImg = `<div class="card text-bg-dark w-${width} m-auto" id="${title.replace(/ /g, " ")}">\n`
+        if (img !== "noImg")
+            overImg += `    <img src="${img}" class="card-img" >\n`
+                
+        overImg +=`    <div class="card-img-overlay">
+                    <h5 class="card-title">${title}</h5>
+                    <p class="card-text">${text}</p>
+                    <p class="card-text"><small>${sText}</small></p>
+                </div>
+            </div>`
+
+        return overImg
+    }
+    function createImgHorizontal(img, title, text, sText, width){
+        let h = `<div class="card mb-3 w-${width}" id="${title.replace(/ /g, " ")}">\n`
+        h += `    <div class="row g-0">\n\t<div class="col-md-4">\n`
+        if (img !== "noImg")
+            h += `          <img src="${img}" class="img-fluid rounded-start" alt="...">\n</div>\n`
+                
+        h +=`        <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">${title}</h5>
+                        <p class="card-text">${text}</p>
+                        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>`
+        return h
     }
 </script>

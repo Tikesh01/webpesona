@@ -601,15 +601,11 @@ def save_block_multi():
     html = data.get("html")
     try:
         w.edit_content(file, block_id, html)
-        M = 'Edited block saved successfully!'
-        C = 'success'
-        flash(M,C)
+        flash('Edited block saved successfully!','success')
         print('done')
         
     except Exception as e:
-        M = f'Error saving content block: {e}' 
-        C = 'error'
-        flash(M,C)
+        flash(f'Error saving content block: {e}','error')
         print(e)
         
     return redirect(url_for('admin'))
