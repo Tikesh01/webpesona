@@ -36,11 +36,22 @@ input[type=submit],select,input[type=file]{
         width: 100%;
     }
 }
+main{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
 #the_web {
     height: calc(100vh -  60px);
     width: 100%;
     display: flex;
     position: relative;
+}
+#database_container{
+    padding: 1em;
+    min-height:100vh;
+    max-height: 100vh;
+    overflow: auto;
 }
 .highlight{
     background-color: #3498db;
@@ -163,53 +174,22 @@ input[type=submit],select,input[type=file]{
 #collapseTogglePagePanel:hover, #collapseToggleFeaturesPanel:hover {
     background:rgba(144, 145, 146, 0.26);
 }
-#EditContent form.content_edit {
-    display: flex;
-    align-items: center;
-    box-shadow: 0 2px 8px #00000010;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 1em 1em;
-    margin-top: 1em;
-    gap: 0.7em;
-}
-
-#EditContent input[type="checkbox"],#debugging {
-    width: 40px;
-    height: 22px;
-    accent-color: #3498db;
-    border-radius: 20px;
-    border: 1.5px solid #3498db;
-    margin-right: 0.5em;
-    transition: box-shadow 0.2s;
-    box-shadow: 0 1px 3px #00000010;
-}
-#EditContent input[type="checkbox"]:hover,#debugging:hover{
-    accent-color: #68b7ebd4;
-}
-#EditContent label,#debugModeForm label {
-    font-size: 1.1em;
-    color: #3498db;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-#EditContent label:hover {
-    color: #0985d7;
-}
 .form_to_add_card, #implementCodeFormCont{
     display: none;
     position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
     height: 100%;
     width: 100%;
     justify-content: flex-start;
     align-items: center;
     backdrop-filter: blur(2px);
     z-index: 1000;
+
 }
 .editor-toolbar-wrapper {
-    position: fixed;
-    top: 2px;
+    position: absolute;
+    top: -55px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1050;

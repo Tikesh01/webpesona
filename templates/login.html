@@ -2,57 +2,56 @@
 {% block title %}Login - WebPersona{% endblock %}
 {% block page %}
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const toggleBtn = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password-input');
-    toggleBtn.addEventListener('click', function () {
-      const type = passwordInput.type === 'password' ? 'text' : 'password';
-      passwordInput.type = type;
-      this.querySelector('i').classList.toggle('fa-eye');
-      this.querySelector('i').classList.toggle('fa-eye-slash');
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password-input');
+        toggleBtn.addEventListener('click', function () {
+          const type = passwordInput.type === 'password' ? 'text' : 'password';
+          passwordInput.type = type;
+          this.querySelector('i').classList.toggle('fa-eye');
+          this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
     });
-  });
 </script>
 <style>
- 
-  #loginCard{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    background: #9d949416;
-    gap: 3em;
-    max-width: 700px;
-    margin: auto;
-    img{
-      width: 45%;
-    }
-    #loginForm{
-      background: transparent;
-    }
-    input{
-      background: transparent;
-      border: none;
-      border-bottom: 0.5px solid rgba(0, 0, 0, 0.364);
-      border-radius: 0;
-    }
-  }
-  @media(max-width:700px){
     #loginCard{
-      flex-direction: column;
-      gap: 1em;
-      background: none;
-      img{
-        width: 70%;
-      }
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        background: #9d949416;
+        gap: 3em;
+        max-width: 700px;
+        margin: auto;
+        img{
+            width: 45%;
+        }
+        #loginForm{
+            background: transparent;
+        }
+        input{
+            background: transparent;
+            border: none;
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.364);
+            border-radius: 0;
+        }
     }
-  }
+    @media(max-width:700px){
+        #loginCard{
+            flex-direction: column;
+            gap: 1em;
+            background: none;
+            img{
+                width: 70%;
+            }
+        }
+    }
   @media(max-width:340px){
-    #loginCard{
-      #loginForm{
-        padding: 0;
+      #loginCard{
+          #loginForm{
+              padding: 0;
+          }
       }
-    }
   }
 </style>
 <section id="login.html" class="content py-5" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}" > <!--start-->
@@ -70,7 +69,7 @@
               <label for="password-input" class="form-label fw-semibold">Password</label>
               <div class="input-group">
                   <input type="password" class="form-control" id="password-input" name="password" placeholder="Enter your password" minlength="8" required>
-                  <button class="btn btn-outline-secondary border-0" type="button" id="togglePassword" title="Show/Hide Password">
+                  <button class="btn btn-outline-secondary border-bottom" type="button" id="togglePassword" title="Show/Hide Password">
                       <i class="fas fa-eye"></i>
                   </button>
                   <div class="invalid-feedback">Password must be at least 8 characters long.</div>

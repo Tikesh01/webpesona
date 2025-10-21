@@ -1,6 +1,158 @@
-<form id="form_to_add_stuffs" action="#">
+<form class="form_to_add_stuffs" action="#">
     <div class="form_card_header">
         <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
         <h2 id="Title">Add Grid Card</h2>
     </div>
+    <div class="form-group">
+        <label for="g1">Heading & Position</label>
+        <div class="input-group">
+            <input type="text" name="headingOfGrid" id="g1" placeholder="Enter Container heading (e.g., Student Details)" oninput="updatePreviewGrid('gridPreview')" class="form-control" required/>
+            <input type="number" name="containerPosGrid" id="containerPosGrid" class="form-control" placeholder="Container-Position" style="max-width: 5em" value="0">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="titleOfCards">Card titles Enter (↩) seperated (Unique) & Number of card per row</label>
+        <div class="input-group">
+            <textarea id="titleOfCards" class="form-control" placeholder="e.g., Card One&#10;Card Two&#10;Card Three" required oninput="GridTemplate(String(this.value).trim().split('\n'))"></textarea>
+            <input type="number" name="numberOfCardPerRow" id="g3" value="3" min="1" max="6" class="form-control" style="max-width: 6em;" oninput="updatePreviewGrid('gridPreview')" required>
+        </div>
+    </div>
+    <div id="fieldsetsContainerGrid" class="biggerContainer" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2em;">
+       
+    </div>
+    <div class="preview-container">
+        <h3>Grid Style Preview</h3>
+        <div id="gridPreview" class="form-preview">
+            <p>Your Grid Style preview will appear here</p>
+        </div>
+    </div>
+
+    <div class="buttons-group">
+        <button type="button" onclick="resetForm('fieldsetsContainerGrid')">Reset</button>
+        <button type="button" onclick="generateCode('gridPreview', 'Grid style',  document.getElementById('containerPosGrid').value)">Generate Code</button>
+    </div>
 </form>
+<script>
+    function GridTemplate(cardTitles){
+        const templateContainer = document.getElementById('fieldsetsContainerGrid');
+        templateContainer.innerHTML = "";
+        const uniqueTitles = [...new Set(cardTitles.filter(t => t.trim() !== ''))];
+
+        uniqueTitles.forEach(realTitle => {
+            const titleId = realTitle.replace(/[^a-zA-Z0-9]/g, "_");
+            const template = `
+            <div id="grid-card-config-${titleId}" class="card bg-light p-3 rounded border shadow-sm">
+                <h5 class="text-primary border-bottom pb-2 mb-1">${realTitle}</h5>
+                <div class="mb-2 text-center">
+                    <img id="${titleId}-img-preview" src="https://via.placeholder.com/150" alt="Image Preview" class="img-thumbnail" style="max-height: 100px; display: none;">
+                </div>
+                <div class="form-group form-group mb-1">
+                    <label for="${titleId}-img" class="form-label-sm">Image (optional)</label>
+                    <input type="file" id="${titleId}-img" class="form-control form-control-sm" accept="image/*" onchange="previewCardImage(this, '${titleId}-img-preview'); updatePreviewGrid('gridPreview')">
+                </div>
+                <div class="form-group mb-1">
+                    <label for="${titleId}-title" class="form-label-sm">Card Title</label>
+                    <input type="text" id="${titleId}-title" class="form-control form-control-sm" value='${realTitle}' oninput="updatePreviewGrid('gridPreview')" required>
+                </div>
+                <div class="form-group mb-1">
+                    <label for="${titleId}-text" class="form-label-sm">Card Text</label>
+                    <textarea id="${titleId}-text" class="form-control form-control-sm" rows="3" placeholder="Enter card content..." oninput="updatePreviewGrid('gridPreview')"></textarea>
+                </div>
+                <div class="form-group mb-1">
+                    <label for="${titleId}-linkSrc" class="form-label-sm">Link (optional)</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="${titleId}-linkText" class="form-control" placeholder="e.g., Read more" oninput="updatePreviewGrid('gridPreview')">
+                        <select class="form-select" id="${titleId}-linkSrc" onchange="toggleExternalLink('${titleId}'); updatePreviewGrid('gridPreview')">
+                            <option value="">No Link</option>
+                            {% for page in all['pages'] %}
+                                {% if page not in all['unviewPages'] %}
+                                <option value='{{page}}'>{{page}}</option>
+                                {% endif %}
+                            {% endfor %}
+                            <option value="external">External Link</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" id="${titleId}-linkUrl-group" style="display:none;">
+                    <input type="url" id="${titleId}-linkUrl" placeholder="e.g., https://example.com" class="form-control form-control-sm" oninput="updatePreviewGrid('gridPreview')">
+                </div>
+            </div>`;
+            templateContainer.innerHTML += template;
+        });
+        updatePreviewGrid('gridPreview');
+    }
+
+    function previewCardImage(input, previewId) {
+        const preview = document.getElementById(previewId);
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.src = 'https://via.placeholder.com/150';
+            preview.style.display = 'none';
+        }
+    }
+
+    function toggleExternalLink(titleId) {
+        const linkSrc = document.getElementById(`${titleId}-linkSrc`).value;
+        const urlGroup = document.getElementById(`${titleId}-linkUrl-group`);
+        urlGroup.style.display = (linkSrc === 'external') ? 'block' : 'none';
+    }
+
+    function updatePreviewGrid(pcont) {
+        const previewCont = document.getElementById(pcont);
+        const mainHeading = document.getElementById('g1').value || 'My Grid';
+        const cardsPerRow = document.getElementById('g3').value || 3;
+        const colClass = `col-md-${12 / cardsPerRow}`;
+        const bgColors = ['primary-subtle', 'secondary-subtle', 'success-subtle', 'danger-subtle', 'warning-subtle', 'info-subtle', 'light'];
+
+        let previewHTML = `<h2 class="text-primary mb-4">${mainHeading}</h2>\n`;
+        previewHTML += `<div class="row row-cols-1 row-cols-md-${cardsPerRow} g-4">\n`;
+
+        const uniqueTitles = [...new Set(document.getElementById('titleOfCards').value.trim().split('\n').filter(t => t.trim() !== ''))];
+
+        uniqueTitles.forEach(realTitle => {
+            const titleId = realTitle.replace(/[^a-zA-Z0-9]/g, "_");
+            
+            const cardTitle = document.getElementById(`${titleId}-title`)?.value || realTitle;
+            const cardText = document.getElementById(`${titleId}-text`)?.value || 'Some quick example text to build on the card title and make up the bulk of the card\'s content.';
+            const imgPreviewSrc = document.getElementById(`${titleId}-img-preview`)?.src;
+            const hasImage = imgPreviewSrc && !imgPreviewSrc.includes('placeholder');
+
+            const linkText = document.getElementById(`${titleId}-linkText`)?.value;
+            const linkSrcValue = document.getElementById(`${titleId}-linkSrc`)?.value;
+            let linkHref = '#';
+            if (linkSrcValue === 'external') {
+                linkHref = document.getElementById(`${titleId}-linkUrl`)?.value || '#';
+            } else if (linkSrcValue) {
+                linkHref = linkSrcValue;
+            }
+
+            const randomBg = bgColors[Math.floor(Math.random() * bgColors.length)];
+            previewHTML += `    <div class="col">\n`;
+            previewHTML += `        <div class="card h-100 shadow-sm ${randomBg === 'light' ? '' : 'border-0'} bg-${randomBg}">\n`;
+            if (hasImage) {
+                previewHTML += `            <img src="${imgPreviewSrc}" class="card-img-top" alt="${cardTitle}">\n`;
+            }
+            previewHTML += `            <div class="card-body">\n`;
+            previewHTML += `                <h5 class="card-title">${cardTitle}</h5>\n`;
+            previewHTML += `                <p class="card-text">${cardText}</p>\n`;
+            if (linkText && linkSrcValue) {
+                previewHTML += `                <a href="${linkHref}" class="btn btn-primary">${linkText}</a>\n`;
+            }
+            previewHTML += `            </div>\n`;
+            previewHTML += `        </div>\n`;
+            previewHTML += `    </div>\n`;
+        });
+
+        previewHTML += `</div>`;
+        previewCont.innerHTML = previewHTML;
+        if (uniqueTitles.length === 0) {
+            previewCont.innerHTML = '<p>Your Grid Style preview will appear here</p>';
+        }
+    }
+</script>

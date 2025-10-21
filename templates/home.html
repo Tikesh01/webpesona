@@ -1,40 +1,133 @@
 {% extends 'skeleton.html' %}
 {% block title%} Home-Webpersona {%endblock%} {% block page %}
+<style>
+    .main-hero-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .hero-content h1 .animated-text {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease-out forwards;
+        animation-delay: var(--animation-delay, 0s);
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .hero-btn {
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .hero-image-container {
+        position: relative;
+    }
+
+    .hero-image {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0px); }
+    }
+    .floating-shapes .shape {
+        position: absolute;
+        border-radius: 50%;
+        background-color: rgba(0, 123, 255, 0.08);
+        animation: bubble 25s linear infinite;
+    }
+
+    .floating-shapes .shape:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-duration: 22s; }
+    .floating-shapes .shape:nth-child(2) { width: 30px; height: 30px; left: 20%; animation-duration: 18s; animation-delay: 2s; }
+    .floating-shapes .shape:nth-child(3) { width: 50px; height: 50px; left: 35%; animation-duration: 30s; }
+    .floating-shapes .shape:nth-child(4) { width: 100px; height: 100px; left: 50%; animation-duration: 15s; animation-delay: 5s; }
+    .floating-shapes .shape:nth-child(5) { width: 20px; height: 20px; left: 65%; animation-duration: 28s; }
+    .floating-shapes .shape:nth-child(6) { width: 60px; height: 60px; left: 80%; animation-duration: 20s; animation-delay: 3s; }
+    .floating-shapes .shape:nth-child(7) { width: 40px; height: 40px; left: 90%; animation-duration: 35s; }
+    .floating-shapes .shape:nth-child(8) { width: 120px; height: 120px; left: 5%; bottom: 10%; animation-duration: 40s; }
+    .floating-shapes .shape:nth-child(9) { width: 45px; height: 45px; left: 85%; bottom: 20%; animation-duration: 26s; }
+    .floating-shapes .shape:nth-child(10) { width: 70px; height: 70px; left: 45%; bottom: 5%; animation-duration: 19s; }
+
+    @keyframes bubble {
+        0% {
+            transform: translateY(0) scale(1);
+            opacity: 0;
+        }
+        10% {
+            opacity: 1;
+        }
+        90% {
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-100vh) scale(1.5);
+            opacity: 0;
+        }
+    }
+</style>
 <section id="Home.html" style="min-height: 90vh;" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}"><!--start-->
 	<section class="main-hero-section position-relative overflow-hidden bg-light py-5">
-		<div class="floating-shapes position-absolute top-0 start-0 w-100 h-100">
+		<div class="floating-shapes position-absolute top-0 start-0 w-100 h-100" aria-hidden="true">
+			<div class="shape"></div>
+			<div class="shape"></div>
+			<div class="shape"></div>
+			<div class="shape"></div>
+			<div class="shape"></div>
+			<div class="shape"></div>
+			<div class="shape"></div>
 			<div class="shape"></div>
 			<div class="shape"></div>
 			<div class="shape"></div>
 		</div>
-
-		<div class="container text-center text-md-start position-relative">
-			<div class="row align-items-center">
-			<div class="col-12 col-md-3 mb-4 mb-md-0">
-				<img src="../static/images/heroImg.svg" alt="WebPersona" class="img-fluid" style="max-width: 280px;">
-			</div>
-			<div class="col-12 col-md-9">
-				<div class="hero-content">
-				<h1 class="display-4 fw-bold mb-2">Design Meets,</h1>
-				<h1 class="display-4 fw-bold mb-3">Brilliance Begins.</h1>
-				<p class="lead mb-4 text-secondary">
-					Transform your digital presence with our innovative solutions that blend stunning design with powerful functionality. Let's create something extraordinary together.
-				</p>
-				<a href="{{url_for('login')}}" class="btn btn-primary btn-lg">Get Started</a>
+	
+		<div class="container py-5 position-relative">
+			<div class="row align-items-center g-5">
+				<div class="col-lg-7 text-center text-lg-start">
+					<div class="hero-content">
+						<h1 class="display-3 fw-bolder mb-3 lh-1">
+							<span class="d-block animated-text">Design Meets,</span>
+							<span class="d-block text-primary animated-text" style="--animation-delay: 0.2s;">Brilliance Begins.</span>
+						</h1>
+						<p class="lead text-muted mb-4" style="max-width: 550px;">
+							Transform your digital presence with our innovative solutions that blend stunning design with powerful functionality. Let's create something extraordinary together.
+						</p>
+						<div class="d-flex flex-column flex-sm-row align-items-center justify-content-center justify-content-lg-start gap-3">
+							<a href="{{url_for('login')}}" class="btn btn-primary btn-lg px-4 py-3 d-inline-flex align-items-center gap-2 hero-btn">
+								Get Started <i class="fas fa-arrow-right"></i>
+							</a>
+							<a href="#features" class="btn btn-outline-secondary btn-lg px-4 py-3 hero-btn">
+								Learn More
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-5">
+					<div class="hero-image-container">
+						<img src="../static/images/heroImg.svg" alt="WebPersona" class="img-fluid hero-image">
+					</div>
 				</div>
 			</div>
-			</div>
-		</div>
-		<div class="floating-shapes position-absolute bottom-0 end-0">
-			<div class="shape"></div>
-			<div class="shape"></div>
-			<div class="shape"></div>
 		</div>
 	</section>
 	<section id="Home.html" class="content py-5">
 		<div class="1 container">
-			<h2>Your Landing Page</h2>
-			Dynamic content goes here 
+			<h2 class="text-primary">Your Landing Page</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis cupiditate necessitatibus similique, tempore soluta obcaecati voluptatum ipsum blanditiis quod deserunt reiciendis distinctio ducimus ipsam, voluptas consequatur eius rem omnis officia!</p>
 		</div>
 	</section>
 </section><!--Close-->

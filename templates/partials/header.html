@@ -1,63 +1,62 @@
 {% extends 'skeleton2.html' %}
 {% block title %}
-<!--title-->
+Header-Webpersona
 {%endblock%} 
 
 {% block page %}
 <style>
-  @media(max-width: 385px){
     #Navbar{
-        padding-left: 0em !important;
-        padding-right: 0em !important;
-        
+        max-width: 1440px;
+        margin: auto;
     }
-  }
+    @media(max-width: 385px){
+        #Navbar{
+            padding-left: 0em !important;
+            padding-right: 0em !important;
+        }
+    }
 </style>
-<header id="header.html" contenteditable="{{ 'true' if all['body_content_editable'] and all['previewPage']=='header.html' else 'false' }}" class="bg-light shadow-sm" ><!--start-->
-  <div class="extraUp"></div>
+ {% include 'Extra/UpperHeader.html' %}
+<header id="header.html" contenteditable="{{ 'true' if all['body_content_editable'] and all['previewPage']=='header.html' else 'false' }}" class="bg-white  shadow-sm" ><!--start-->
+    <nav class="navbar navbar-expand-lg px-3 py-2 rounded-bottom" id="Navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../home.html">
+              <img src="../../static/logo/{{all['logo'][0]}}" alt="webpersona" id="Logo" class="img-fluid" style="height: 40px; width: auto;" />
+              <h1 class="fs-4 fw-bold m-0 text-primary">WEBPERSONA</h1>
+            </a>
+          
+            <button contenteditable="false" class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
+              aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-white px-3 py-2 rounded-bottom" id="Navbar">
-    <div class="container-fluid">
-      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-        <img src="../../static/logo/{{all['logo'][0]}}" alt="webpersona" id="Logo" class="img-fluid" style="height: 40px; width: auto;" />
-        <h1 class="fs-4 fw-bold m-0 text-primary">WEBPERSONA</h1>
-      </a>
-      
-      <button contenteditable="false" class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
-        data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
-        aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+                <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center">
+                    {% for nav in all['navigation'] %}
+                    <li class="nav-item mx-2">
+                      <a href="{{ nav['value'] }}" class="nav-link fw-semibold text-dark">{{ nav['name'] }}</a>
+                    </li>
+                    {% endfor %}
 
-      <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
-        <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center">
-          {% for nav in all['navigation'] %}
-            <li class="nav-item mx-2">
-              <a href="{{ nav['value'] }}" class="nav-link fw-semibold text-dark">{{ nav['name'] }}</a>
-            </li>
-          {% endfor %}
+                    {% for detailPage in all['header_pages'] %}
+                    <li class="nav-item dropdown mx-2 ">
+                        <a class="nav-link dropdown-toggle fw-semibold text-dark" href="#" id="navbarDropdown{{loop.index}}"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          {{ detailPage.removesuffix('.html') }}
+                        </a>
+                        <div class="dropdown-menu p-2 dropdown-menu-lg-end" style="padding: 0 0;" aria-labelledby="navbarDropdown{{loop.index}}">
+                            <iframe src="{{detailPage}}" width="430px" height="300px"></iframe>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
 
-          {% for detailPage in all['header_pages'] %}
-            <li class="nav-item dropdown mx-2 ">
-              <a class="nav-link dropdown-toggle fw-semibold text-dark" href="#" id="navbarDropdown{{loop.index}}"
-                role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {{ detailPage.removesuffix('.html') }}
-              </a>
-              <div class="dropdown-menu p-2 dropdown-menu-lg-end" style="padding: 0 0;" aria-labelledby="navbarDropdown{{loop.index}}">
-                  <iframe src="{{detailPage}}" width="430px" height="300px"></iframe>
-              </div>
-            </li>
-          {% endfor %}
-        </ul>
-
-        <div class="d-flex flex-wrap gap-2 mt-3 mt-lg-0 ms-lg-3">
-          <a href="{{url_for('login')}}" class="btn btn-outline-primary px-3">Login</a>
-          <a href="{{url_for('register')}}" class="btn btn-primary px-3">Sign Up</a>
+                <div class="d-flex flex-wrap gap-2 mt-3 mt-lg-0 ms-lg-3">
+                    <a href="{{url_for('login')}}" class="btn btn-outline-primary px-3">Login</a>
+                    <a href="{{url_for('register')}}" class="btn btn-primary px-3">Sign Up</a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </nav>
-
-  <div class="extraDown"></div>
+    </nav>
 </header><!--Close-->
 {%endblock%}

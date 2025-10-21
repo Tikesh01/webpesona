@@ -1,77 +1,76 @@
 {% extends 'skeleton2.html' %}
 {% block title %}
-<!--title-->
+Footer Webpersona
 {%endblock%} 
 {% block page %}
+{% include 'Extra/UpperFooter.html' %}
 <footer id="footer.html" contenteditable="{{ 'true' if all['body_content_editable'] and all['previewPage']=='footer.html' else 'false' }}" class="bg-dark text-light pt-5 pb-3 mt-auto border-top border-secondary"><!--start-->
-  <div class="container">
-    <div class="row g-4 align-items-start">
+    <div class="container ">
+        <div class="row g-4 align-items-start">
 
-      <div class="col-md-4 text-center text-md-start">
-        <div class="d-flex align-items-center justify-content-center justify-content-md-start mb-3">
-          <img src="../../static/logo/{{all['logo'][0]}}" alt="WebPersona Logo" class="img-fluid me-2" style="height: 40px;" />
-          <span class="fs-4 fw-bold text-primary">WebPersona</span>
-        </div>
+          <div class="col-md-4 text-center text-md-start">
+              <div class="d-flex align-items-center justify-content-center justify-content-md-start mb-3">
+                  <!--NO--><img src="../../static/logo/{{all['logo'][0]}}" alt="WebPersona Logo" class="img-fluid me-2" style="height: 40px;" />
+                  <span class="fs-4 fw-bold text-primary">WebPersona</span>
+              </div>
 
-        <div class="d-flex justify-content-center justify-content-md-start gap-3 mb-3">
-          <a href="#" class="text-light fs-5"><i class="fab fa-facebook"></i></a>
-          <a href="#" class="text-light fs-5"><i class="fab fa-twitter"></i></a>
-          <a href="#" class="text-light fs-5"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="text-light fs-5"><i class="fab fa-linkedin"></i></a>
-        </div>
+              <div class="d-flex justify-content-center justify-content-md-start gap-3 mb-3">
+                  <a href="#" class="text-light fs-5"><i class="fab fa-facebook"></i></a>
+                  <a href="#" class="text-light fs-5"><i class="fab fa-twitter"></i></a>
+                  <a href="#" class="text-light fs-5"><i class="fab fa-instagram"></i></a>
+                  <a href="#" class="text-light fs-5"><i class="fab fa-linkedin"></i></a>
+              </div>
 
-        <p class="small mb-0">&copy; 2025 <span class="fw-semibold">WebPersona</span>. All rights reserved.</p>
-      </div>
-
-      <div class="col-6 col-md-2">
-        <h5 class="fw-semibold mb-3 text-primary">Site Map</h5>
-        <ul class="list-unstyled small">
-          {% for i in all['pages'] %}
-          <li><a href="{{i}}" class="text-light text-decoration-none d-block mb-1">{{ i }}</a></li>
-          {% endfor %}
-        </ul>
-      </div>
-
-      <div class="col-6 col-md-2">
-        <h5 class="fw-semibold mb-3 text-primary">Contact Us</h5>
-        <p class="small mb-1">
-          <i class="fas fa-envelope me-2"></i>
-          <a href="mailto:ts2665857@gmail.com" class="text-light text-decoration-none">ts2665857@gmail.com</a>
-        </p>
-        <p class="small mb-1">
-          <i class="fas fa-phone me-2"></i>
-          <a href="tel:+91 8770006085" class="text-light text-decoration-none">+91 8770006085</a>
-        </p>
-      </div>
-
-      <div class="col-6 col-md-2">
-        <h5 class="fw-semibold mb-3 text-primary">Current Page</h5>
-        <button class="btn btn-outline-light btn-sm">{{ all['currentPage'] }}</button>
-      </div>
-
-      <div class="col-6 col-md-2">
-        <h5 class="fw-semibold mb-3 text-primary">Privacy Policy</h5>
-        <a href="#" class="text-light text-decoration-none small">View Policy</a>
-      </div>
-
-      <div class="col-12 mt-4">
-        <h5 class="fw-semibold text-primary mb-3">We Need Your Feedback</h5>
-        <form action="" method="post" class="d-flex flex-column flex-md-row align-items-start gap-3">
-          <textarea name="feedback" id="Feedback" rows="3"
-            class="form-control bg-dark text-light border-secondary"
-            placeholder="Please! Write your experience..."></textarea>
-          <div class="d-flex gap-2">
-            <button type="reset" class="btn btn-outline-danger">Reset</button>
-            <button type="submit" class="btn btn-primary">Send</button>
+              <p class="small mb-0">&copy; 2025 <span class="fw-semibold">WebPersona</span>. All rights reserved.</p>
           </div>
-        </form>
-      </div>
 
+        <div class="col-6 col-md-2">
+            <h5 class="fw-semibold mb-3 text-primary">Site Map</h5>
+            <ul class="list-unstyled small">
+                {% for i in all['pages'] %}
+                <li><a href="{{i}}" class="text-light text-decoration-none d-block mb-1">{{ i }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-6 col-md-2">
+            <h5 class="fw-semibold mb-3 text-primary">Contact Us</h5>
+            <p class="small mb-1">
+                <i class="fas fa-envelope me-2"></i>
+                <a href="mailto:ts2665857@gmail.com" class="text-light text-decoration-none">ts2665857@gmail.com</a>
+            </p>
+            <p class="small mb-1">
+                <i class="fas fa-phone me-2"></i>
+                <a href="tel:+91 8770006085" class="text-light text-decoration-none">+91 8770006085</a>
+            </p>
+        </div>
+
+          <div class="col-6 col-md-2">
+              <h5 class="fw-semibold mb-3 text-primary">Current Page</h5>
+              <button class="btn btn-outline-light btn-sm">{{ all['currentPage'] }}</button>
+          </div>
+
+          <div class="col-6 col-md-2">
+              <h5 class="fw-semibold mb-3 text-primary">Privacy Policy</h5>
+              <a href="#" class="text-light text-decoration-none small">View Policy</a>
+          </div>
+
+          <div class="col-12 mt-4">
+              <h5 class="fw-semibold text-primary mb-3">We Need Your Feedback</h5>
+              <form action="" method="post" class="d-flex flex-column flex-md-row align-items-start gap-3">
+                  <textarea name="feedback" id="Feedback" rows="3" class="form-control bg-dark text-light border-secondary" placeholder="Please! Write your experience..."></textarea>
+                  <div class="d-flex gap-2">
+                      <button type="reset" class="btn btn-outline-danger">Reset</button>
+                      <button type="submit" class="btn btn-primary">Send</button>
+                  </div>
+              </form>
+          </div>
+
+        </div>
     </div>
-  </div>
 </footer><!--Close-->
 <div class="bg-dark text-center text-light py-2">
-  <hr>
-  <h6 class="m-0 small">Created with ❤️ using <span class="text-primary fw-semibold">WEBPERSONA</span></h6>
+    <hr>
+    <h6 class="m-0 small">Created with ❤️ using <span class="text-primary fw-semibold">WEBPERSONA</span></h6>
 </div>
 {%endblock%}

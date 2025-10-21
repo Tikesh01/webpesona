@@ -12,6 +12,7 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+    Users = User.query.all()
  
 class website:
     def __init__(self):
@@ -29,7 +30,8 @@ class website:
         self.header_pages = [page for page in os.listdir('templates/Header_pages/')]
         self.themes = self.theme()
         self.len_of_theme_block = int()
-
+        self.user_db = Users
+    
         try:
             with open("static/Admin_Details.json", "r") as admDel:
                 self.admin_details = dict(json.load(admDel))
@@ -83,16 +85,15 @@ class website:
             flash(f"Warning: Could not save state to web.json: {e}", 'dangour')
             
     def theme(self):
-        file = open("static/root.css", "r")
+        file = open("static/css/root.css", "r")
         return file.readlines()
             
     def readSourceCode(self,page):
         if page == '/':
             return ["Select a Page!"]
-        if page in self.folderDict['partials']:
-            page = 'partials/'+page
-        if page in self.folderDict['Header_pages']:
-            page = 'Header_pages/'+page
+        for folder in self.folderDict.keys():
+            if page in self.folderDict[folder]:
+                page = folder +'/'+page
             
         page = self.folder+page
 
@@ -248,7 +249,7 @@ class website:
                 f.writelines(lines)
             if 'element':
                 cleaned = "\n".join(line for line in content.splitlines() if line.strip() != "")
-                lines.insert(len(lines)-4, cleaned + "\n")
+                lines.insert(len(lines)-2, cleaned + "\n")
                 f.writelines(lines)
     
     def setImgInPage(self,imgPath, page,position=None):
@@ -385,7 +386,6 @@ w =website()
 
 @app.route('/')
 def Home():
-    
     w.currentPage = "home.html"
     return render_template('home.html', all=w.__dict__ ,web=w)
 
@@ -689,8 +689,12 @@ def render_page(name):
                 return render_template(f'Header_pages/{name}', all=w.__dict__, web = w)
             except:
                 return render_template(f"partials/{name}", all=w.__dict__, web=w)
+            
         except:
-            return render_template(f"{name}", all=w.__dict__, web = w)
+            try:
+                return render_template(f'Extra/{name}', all=w.__dict__, web=w)
+            except:
+                return render_template(f"{name}", all=w.__dict__, web = w)
     else:
         print("dynamic-n")
         if name == "Home.html":

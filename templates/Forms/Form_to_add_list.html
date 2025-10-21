@@ -1,4 +1,4 @@
-<form action="#" method="post" id="form_to_add_stuffs">
+<form action="#" method="post" class="form_to_add_stuffs">
     <div class="form_card_header">
         <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
         <h2 id="Title">Add List Card</h2>
@@ -86,7 +86,7 @@
         listCreatorsForms[i].style.display = 'none';
     }
 
-    let listHtml = `<h2 class="text-primary fw-bold mb-4">${listHeading}</h2>\n`;
+    let listHtml = `<h2 class="text-primary mb-4">${listHeading}</h2>\n`;
 
     if (typeOfList === 'ol') listHtml += createOl();
     else if (typeOfList === 'ul') listHtml += createUl();
@@ -106,10 +106,7 @@
         let olList = `<ol class="list-group list-group-numbered border rounded shadow-sm p-3 bg-light" type="${typeOfOl}">\n`;
 
         for (let i = 0; i < listItems.length; i++) {
-            olList += `  <li class="list-group-item d-flex justify-content-between align-items-center lh-sm">
-            <span>${listItems[i]}</span>
-            <span class="badge bg-primary rounded-pill">${i + 1}</span>
-            </li>\n`;
+            olList += `\t<li class="list-group-item d-flex gap-2 lh-sm">\n\t\t<span>${listItems[i]}</span>\n\t</li>\n`;
         }
 
         olList += "</ol>";

@@ -1,5 +1,5 @@
 <style>
-    #form_to_add_stuffs,#implementCodeForm {
+    .form_to_add_stuffs,#implementCodeForm {
         padding: 2.5em;
         border-radius: 15px;
         display: flex;
@@ -16,20 +16,6 @@
         transition: all 0.3s ease;
         margin: 0 auto;
         z-index: 100;
-    }
-
-    #form_to_add_stuffs::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    #form_to_add_stuffs::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-
-    #form_to_add_stuffs::-webkit-scrollbar-thumb {
-        background: #3498db;
-        border-radius: 10px;
     }
 
     #close {
@@ -74,17 +60,6 @@
         font-size: 0.9em;
         margin-bottom: 0.3em;
         font-weight: 500;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        padding: 0.7em 1em;
-        border-radius: 8px;
-        border: 2px solid #bdc3c7;
-        background: white;
-        transition: all 0.3s ease;
-        font-size: 0.95em;
     }
 
     .form-group input:focus,
@@ -153,12 +128,6 @@
         margin: 0.2em 0;
     }
 
-    .detail .form-group input,
-    .detail .form-group select,
-    .detail .form-group textarea {
-        padding: 0.5em 0.9em;
-        font-size: 0.8em;
-    }
 
     .detail h4 {
         color: #3498db;
@@ -206,7 +175,7 @@
 
     .preview-container {
         margin-top: 2em;
-        padding: 1.5em;
+        padding: 1em;
         background: #f8f9fa;
         border-radius: 10px;
         border: 1px solid #e9ecef;
@@ -252,7 +221,7 @@
         }
     }
 </style>
-<form action="" method="post" id="form_to_add_stuffs">
+<form action="" method="post" class="form_to_add_stuffs">
     <div class="form_card_header">
         <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
         <h2 id="Title">Add Form Card</h2>
@@ -279,7 +248,7 @@
     <div class="form-group">
         <label for="F9">Enter the Block names ( Fieldsets-legends ) using Enter (↩) key</label>
         <textarea name="headingsOfFieldsetForm" id="T11" min="0" placeholder="e.g., Home Address
-        Work Address" oninput="generateFieldsets(this.value,'fieldsetsContainerForm')"></textarea>
+        Work Address" oninput="generateFieldsets(this.value,'fieldsetsContainerForm')" class="form-control"></textarea>
     </div>
     
     <div id="fieldsetsContainerForm">
@@ -302,8 +271,8 @@
     <div class="detail" id="inputTemplate">
         <h5>Input</h5>
         <div class="form-group">
-            <label>Type</label>
-            <select name="inputType">
+            <label for="">Type</label>
+            <select name="inputType" class="form-control">
                 <option value="text">Text</option>
                 <option value="email">Email</option>
                 <option value="password">Password</option>
@@ -321,9 +290,9 @@
                 <option value="tel">Tel</option>
             </select>
         </div>
-        <div class="form-group">
+        <div class="form-group-sm">
             <label>Placeholder</label>
-            <input type="text" name="inputPlaceholder" placeholder="Enter placeholder text">
+            <input type="text" name="inputPlaceholder" placeholder="Enter placeholder text" class="form-control">
         </div>
         <div class="form-group">
             <label for='logicalNameInp'>Logical name</label>

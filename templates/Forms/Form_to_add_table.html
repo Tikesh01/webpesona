@@ -1,4 +1,4 @@
-<form id="form_to_add_stuffs">
+<form class="form_to_add_stuffs">
     <div class="form_card_header">
         <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
         <h2 id="Title">Add Table Card</h2>
@@ -12,16 +12,16 @@
     </div>
     <div class="form-group">
         <label for="F2">File to Table ( Excel or CSV files )</label>
-        <input type="file" accept=".xslx, .csv, .xls" name="fileToTab" id="F2" placeholder="Select a file" oninput="updatePreviewTab('tablePreview', 'F2')" />
+        <input type="file" accept=".xslx, .csv, .xls" name="fileToTab" id="F2" placeholder="Select a file" oninput="updatePreviewTab('tablePreview', 'F2')" class="form-control" />
     </div>
 
     <div class="form-group">
         <label for="F9">Enter the Block names ( Fieldsets-legends ) using Enter (↩) key</label>
         <textarea name="headingsOfFieldsetTab" id="F9" rows="3" placeholder="e.g., School-Student
-        College-Student" oninput="generateFieldsets(this.value,'fieldsetsContainerTab')" ></textarea>
+        College-Student" oninput="generateFieldsets(this.value,'fieldsetsContainerTab')" class="form-control"></textarea>
     </div>
     
-    <div id="fieldsetsContainerTab" class="biggerContainer">
+    <div id="fieldsetsContainerTab" class="biggerContainer" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2em;">
 
     </div>
     <div class="preview-container">
@@ -118,7 +118,7 @@
         const tableTitle = document.getElementById('F1').value || 'Title'
         previewCont.innerHTML = ""
 
-        let previewHtml = `<h3>${tableTitle}</h3>\n`
+        let previewHtml = `<h2 class="text-primary" >${tableTitle}</h2>\n`
         previewCont.innerHTML = previewHtml;
         if (fileInp != null) {
             const inputEl = document.getElementById(fileInp);
@@ -158,7 +158,7 @@
                 const footers = document.getElementById(`F5${i}`).value.trim().split(',')
                 let tableHtml="";
                     
-                tableHtml += `<h4>${fieldsets[i-1]}</h4>\n\t<table class="table table-bordered table-striped table-hover">\n\t`;
+                tableHtml += `<h5 class="text-secondary" >${fieldsets[i-1]}</h5>\n\t<table class="table table-bordered table-striped table-hover">\n\t`;
                 
                 if(tableType==='hBoth'){
                     const normalHeaders = document.getElementById(`normal_headers${i}`)
@@ -231,7 +231,7 @@
         const previewCont = document.getElementById(pCont);
         let code = previewCont.innerHTML;
 
-        code = `\n<div class='${pos}'>\n\t${code}\n</div>\n`;
+        code = `\n<div class='${pos} container'>\n\t${code}\n</div>\n`;
 
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = code;

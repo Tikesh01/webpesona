@@ -3,22 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-   <style>
-    #content{
-        width: 100%;
-        height: 100%;
-        background: #aea8a8a3;
-    }
-   </style>
-   <script>
-    
-   </script>
+    <title>Modern Text Container</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .modern-text-container {
+				padding: 2rem;
+				border-radius: 15px;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+				background-color: #f8f9fa; /* Light gray background */
+			}
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const images = document.querySelectorAll('.card-img-top');
+            images.forEach(img => {
+                img.addEventListener('error', () => {
+                    img.style.display = 'none';
+                });
+            });
+        });
+
+    </script>
 </head>
 <body>
-    <button type="button" onclick="changeSize('320px', '620px', 'content')">Change Size</button>
-    <div id="content">
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores corporis illo vel, perspiciatis tenetur sequi facilis tempora consectetur nihil non similique voluptatibus odit adipisci consequatur a doloribus repellendus dignissimos eaque.
-    </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100">
+                    <img src=".." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae, corrupti! Cupiditate modi ratione reiciendis iure? Voluptatem, architecto in! Autem, hic! Corrupti distinctio eos quo ratione nesciunt recusandae ad eveniet neque.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src=".." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">This is a short card.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100">
+                    <img src="" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <a href="#"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
 </body>
 </html>

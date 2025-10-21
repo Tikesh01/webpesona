@@ -4,8 +4,12 @@ sdf
 {% block page %}
 <section id="New.html" class="content py-5" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}"><!--start-->
 	<div class="1 container">
-		<h1>See the Newest ones</h1>
-		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quae, aliquid itaque excepturi magni cumque sit odio eos nam blanditiis, quidem ratione harum ea labore eum, veniam distinctio. Molestiae, ab!</p>
+		<div class="row align-items-center g-5 py-0">
+			<div class="col-lg-6">
+				<h1 class="display-5 fw-bold lh-1 mb-3 text-primary">See the newest ones!</h1>
+				<p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quae, aliquid itaque excepturi magni cumque sit odio eos nam blanditiis, quidem ratione harum ea labore eum, veniam distinctio. Molestiae, ab!</p>
+			</div>
+		</div>
 	</div>
 </section><!--Close-->
 {%endblock%}

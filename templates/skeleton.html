@@ -18,6 +18,21 @@
 			}
 			.content{
 				min-height: 90vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 2em;
+			}
+			.modern-text-container {
+				padding: 2rem;
+				border-radius: 15px;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+				background-color: #f8f9fa; /* Light gray background */
+			}
+			@media(max-width: 380px){
+				.modern-text-container{
+					padding: 1rem;
+				}
 			}
 			@media(max-width:325px){
 				.message{
@@ -50,6 +65,7 @@
 						const label = document.querySelector(`label[for='${id}']`);
 						if (label) {
 							label.innerHTML += ` <span style="color: red;">*</span>`;
+							break
 						}
 					}
 				}

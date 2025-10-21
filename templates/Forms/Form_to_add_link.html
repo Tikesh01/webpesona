@@ -1,6 +1,47 @@
-<form id="form_to_add_stuffs" action="#">
+<form class="form_to_add_stuffs" action="#">
     <div class="form_card_header">
         <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
         <h2 id="Title">Add Links</h2>
+    </div>
+    <div class="form-group">
+        <label class="form-label">Choose Link Style</label>
+        <div class="d-flex flex-wrap align-items-center gap-3 p-2 border rounded bg-light">
+            <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-btn-primary" value="btn btn-primary" onchange="updateLinkPreview()" checked><label class="form-check-label" for="style-btn-primary"><span class="btn btn-primary btn-sm">Primary</span></label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-btn-secondary" value="btn btn-secondary" onchange="updateLinkPreview()"><label class="form-check-label" for="style-btn-secondary"><span class="btn btn-secondary btn-sm">Secondary</span></label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-btn-success" value="btn btn-success" onchange="updateLinkPreview()"><label class="form-check-label" for="style-btn-success"><span class="btn btn-success btn-sm">Success</span></label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-btn-danger" value="btn btn-danger" onchange="updateLinkPreview()"><label class="form-check-label" for="style-btn-danger"><span class="btn btn-danger btn-sm">Danger</span></label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-underline-primary" value="link-primary link-underline-opacity-50-hover" onchange="updateLinkPreview()"><label class="form-check-label" for="style-underline-primary"><span class="link-primary">Primary Link</span></label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-underline-secondary" value="link-secondary link-underline-opacity-50-hover" onchange="updateLinkPreview()"><label class="form-check-label" for="style-underline-secondary"><span class="link-secondary">Secondary Link</span></label></div>
+        </div>
+    </div>
+    
+    <div class="form-group mb-1">
+        <label for="" class="form-label-sm">The text and the refrence</label>
+        <div class="input-group input-group-sm">
+            <input type="text" id="linkText" class="form-control" placeholder="e.g., Read more" oninput="updatePreviewGrid('gridPreview')">
+            <select class="form-select" id="linkSrc" onchange="toggleExternalLink('${titleId}'); updatePreviewGrid('gridPreview')">
+                <option value="">No Link</option>
+                {% for page in all['pages'] %}
+                    {% if page not in all['unviewPages'] %}
+                    <option value='{{page}}'>{{page}}</option>
+                    {% endif %}
+                {% endfor %}
+                <option value="external">External Link</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group" id=linkUrl-group" style="display:none;">
+        <input type="url" id="${titleId}-linkUrl" placeholder="e.g., https://example.com" class="form-control form-control-sm" oninput="updatePreviewGrid('gridPreview')">
+    </div>
+    <div class="preview-container">
+        <h3>Link Preview</h3>
+        <div id="linkPreview" class="form-preview">
+            <p>Your Link preview will appear here</p>
+        </div>
+    </div>
+
+    <div class="buttons-group">
+        <button type="button">Reset</button>
+        <button type="button">Generate Code</button>
     </div>
 </form>

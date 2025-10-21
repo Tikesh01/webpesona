@@ -12,3 +12,11 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.__dict__}>'
+    
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    p_title = db.Column(db.String(50), nullable=False)
+    p_description = db.Column(db.String(), nullable=False)
+    p_price = db.Column(db.Float(), nullable=False)
+    p_amount = db.Column(db.Float(), nullable=False)
+    p_special = db.Column(db.String(), nullable=False)

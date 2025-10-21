@@ -1,6 +1,45 @@
-<form id="form_to_add_stuffs" action="#">
+<form class="form_to_add_stuffs">
     <div class="form_card_header">
         <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
         <h2 id="Title">Add iframe Card</h2>
     </div>
+    <div class="form-group">
+        <label for="containerPosIframe">Url to embed the document, video or webpage</label>
+        <div class="input-group">
+            <input type="url" name="urlIframe" id="UrlIframe" class="form-control" required placeholder="e.g. https://example.com/">
+            <input type="number" name="containerPosIframe" id="contPosIframe" class="form-control" placeholder="Container-Position" style="max-width: 5em" value="0">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="iframeHeight">Height (in vh-viewport height)</label>
+        <div class="input-group-sm">
+            <input type="range" min="0" max="100" value="50" oninput="showSize('iframeHeight', this.value),updatePreviewIframe('iframePreview')"  id="iframepHeightRange" class="form-range">
+            <input type="number" name="" style="width: 4.5em;" class="form-control" id="iframeHeight" oninput="showSize('iframeHeightRange', this.value)" onchange="updatePreviewIframe('iframePreview')" />
+        </div>
+    </div>
+    <div class="preview-container">
+        <h3>Iframe Preview</h3>
+        <div id="iframePreview" class="form-preview">
+            <p>Your Iframe preview will appear here</p>
+        </div>
+    </div>
+    <div class="buttons-group">
+        <button type="button" onclick="resetForm('fieldsetsContainerTab')">Reset</button>
+        <button type="button" onclick="generateCode('iframePreview', 'Iframe',  document.getElementById('contPosIframe').value)">Generate Code </button>
+    </div>
 </form>
+<script>
+    function updatePreviewIframe(pContainer){
+        const url = document.getElementById('UrlIframe').value
+        const previewContainer = document.getElementById('iframePreview')
+        const height = document.getElementById('iframeHeight').value
+        try {
+            new URL(urlString);
+            iframeHtml = `<iframe src="${url}" style="width: 100%;height: ${height}vh;" title="${url}"></iframe>`
+            previewContainer.innerHTML = iframeHtml
+        
+        } catch (error) {
+            previewContainer.innerHTML = 'Invalid URL'
+        }
+    }
+</script>
