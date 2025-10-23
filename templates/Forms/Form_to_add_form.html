@@ -44,33 +44,45 @@
         padding-bottom: 0.5em;
     }
 
-    .form-group {
+    .form-field, .form-group {
         width: 100%;
         display: flex;
         flex-direction: column;
         margin: 0.5em 0;
         position: relative;
     }
+    .form-field-sm{
+        input{
+
+        }
+
+        select{
+
+        }
+        textarea{
+            
+        }
+    }
     .smallButtons{
         flex-direction: row;
         gap: 1em;
     }
-    .form-group label {
+    .form-field label, .form-group label {
         color: #34495e;
         font-size: 0.9em;
         margin-bottom: 0.3em;
         font-weight: 500;
     }
 
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
+    .form-group input:focus,.form-field input:focus
+    .form-group select:focus,  .form-field select:focus
+    .form-group textarea:focus, .form-field textarea:focus {
         border-color: #3498db;
         box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         outline: none;
     }
 
-    .form-group input[type="number"] {
+    .form-group input[type="number"], .form-field input[type="number"] {
         width: 100px;
     }
 
@@ -129,9 +141,7 @@
     }
 
 
-    .detail h4 {
-        color: #3498db;
-        margin-bottom: 1em;
+    .detail h5 {
         padding-bottom: 0.5em;
         border-bottom: 1px solid #eee;
     }
@@ -233,14 +243,14 @@
             <input type="number" name="containerPosForm" id="containerPosForm" class="form-control" placeholder="Container-Position" style="max-width: 8em" value="0">
         </div>
     </div>
-    <div >
+    <div class="d-flex gap-3">
         <label for="formMethod">Select a method:</label>
-        <div class="form-group smallButtons">
-            <input type="radio" name="formMethod" id="GETMethod" value="GET" checked>
+        <div class="form-check">
+            <input type="radio" name="formMethod" id="GETMethod" value="GET" class="form-check-input" checked>
             <label for="GETMethod">GET (Fast)</label>
         </div>
-        <div class="form-group smallButtons">
-            <input type="radio" name="formMethod" id="POSTMethod" value="POST">
+        <div class="form-check">
+            <input type="radio" name="formMethod" id="POSTMethod" value="POST" class="form-check-input">
             <label for="POSTMethod">POST (Secure)</label>
         </div>  
     </div>
@@ -269,10 +279,10 @@
 
 <div id="templates" hidden>
     <div class="detail" id="inputTemplate">
-        <h5>Input</h5>
-        <div class="form-group">
+        <h5 class="text-primary">Input</h5>
+        <div class="form-field">
             <label for="">Type</label>
-            <select name="inputType" class="form-control">
+            <select name="inputType" class="form-control form-control-sm">
                 <option value="text">Text</option>
                 <option value="email">Email</option>
                 <option value="password">Password</option>
@@ -418,7 +428,7 @@
                 }
             }
         }
-	});
+    });
     let legends;
     function generateFieldsets(legend,container) {
         const fieldsetsContainer = document.getElementById(container);
@@ -470,30 +480,30 @@
                 fieldsetDiv.id = `fieldset-${i}`;
                 fieldsetDiv.innerHTML = `
                     <div class="fieldset-header">${legends[i-1]}</div>
-                    <div class="numbers">
+                    <div class="numbers" id="inputNumCont">
                         <div class="form-group">
                             <label>Inputs</label>
-                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'input', this.value)">
+                            <input type="number" min="0" value="0" class='form-control form-control-sm' oninput="generateElements(${i}, 'input', this.value)">
                         </div>
                         <div class="form-group">
                             <label>Textareas</label>
-                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'textarea', this.value)" />
+                            <input type="number" min="0" value="0" class='form-control form-control-sm' oninput="generateElements(${i}, 'textarea', this.value)" />
                         </div>
                         <div class="form-group">
                             <label>Select tags</label>
-                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'select', this.value)" />
+                            <input type="number" min="0" class='form-control form-control-sm' value="0" oninput="generateElements(${i}, 'select', this.value)" />
                         </div>
                         <div class="form-group">
                             <label>Radios</label>
-                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'radio', this.value)" />
+                            <input type="number" min="0" class='form-control form-control-sm' value="0" oninput="generateElements(${i}, 'radio', this.value)" />
                         </div>
                         <div class="form-group">
                             <label>Checkboxes</label>
-                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'checkbox', this.value)">
+                            <input type="number" min="0" class='form-control form-control-sm' value="0" oninput="generateElements(${i}, 'checkbox', this.value)">
                         </div>
                         <div class="form-group">
                             <label>Buttons</label>
-                            <input type="number" min="0" value="0" oninput="generateElements(${i}, 'button', this.value)">
+                            <input type="number" min="0" class='form-control form-control-sm' value="0" oninput="generateElements(${i}, 'button', this.value)">
                         </div>
                     </div>
                     <div id="elements-container-${i}" class="allDetails"></div>

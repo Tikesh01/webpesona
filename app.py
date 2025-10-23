@@ -84,7 +84,7 @@ class website:
             with open("static/web.json", "w") as f:
                 json.dump(state, f, indent=4)
         except Exception as e:
-            flash(f"Warning: Could not save state to web.json: {e}", 'dangour')
+            flash(f"Warning: Could not save state to web.json: {e}", 'error')
             
     def theme(self):
         file = open("static/css/root.css", "r")
@@ -389,12 +389,12 @@ w =website()
 @app.route('/')
 def Home():
     w.currentPage = "home.html"
-    return render_template('home.html', all=w.__dict__ ,web=w)
+    return render_template('home.html',web=w)
 
 @app.route('/admin')
 def admin():
     w.currentPage = "adminPanel.html"
-    return render_template("adminPanel.html",  all=w.__dict__,web=w)
+    return render_template("adminPanel.html",web=w)
 
 @app.route('/navigation_addition', methods=['POST'])
 def nav_addition():
@@ -431,6 +431,8 @@ def page_addition():
     HTML = request.files['ownHtml']
             
     if HTML and HTML.filename:
+        M = ""
+        C = ""
         if HTML.filename.endswith('.py'):
             fpath = os.path.join('../webpersona',HTML.filename)
             if os.path.exists(fpath):
@@ -634,7 +636,7 @@ def register():
         return redirect(url_for('login'))
     
     w.currentPage = 'register.html'
-    return render_template('register.html', web=w, all=w.__dict__)
+    return render_template('register.html', web=w)
 
 # Login route
 @app.route('/login', methods=['GET', 'POST'])
@@ -653,7 +655,7 @@ def login():
             flash('Invalid credentials.', 'danger')
     
     w.currentPage = 'login.html'
-    return render_template('login.html', all=w.__dict__, web=w)
+    return render_template('login.html', web=w)
 
 @app.route('/logout')
 def logout():
@@ -684,15 +686,15 @@ def render_page(name):
         w.currentPage = name
         try:
             try:
-                return render_template(f'Header_pages/{name}', all=w.__dict__, web = w)
+                return render_template(f'Header_pages/{name}', web = w)
             except:
-                return render_template(f"partials/{name}", all=w.__dict__, web=w)
+                return render_template(f"partials/{name}",  web=w)
             
         except:
             try:
-                return render_template(f'Extra/{name}', all=w.__dict__, web=w)
+                return render_template(f'Extra/{name}', web=w)
             except:
-                return render_template(f"{name}", all=w.__dict__, web = w)
+                return render_template(f"{name}",  web = w)
     else:
         print("dynamic-n")
         if name == "Home.html":
