@@ -27,15 +27,6 @@ button {
 input[type=submit],select,input[type=file]{
     cursor: pointer;
 }
-#sizelist{
-    display: flex;
-    justify-content: space-between;
-    padding: 1em 1.5em;
-    gap: 0.5em;
-    input[type='range']{
-        width: 100%;
-    }
-}
 main{
     display: flex;
     flex-direction: column;
@@ -46,6 +37,9 @@ main{
     width: 100%;
     display: flex;
     position: relative;
+}
+#sizelist{
+    padding: 1em 1.5em;
 }
 #database_container{
     padding: 1em;
@@ -185,21 +179,20 @@ main{
     align-items: center;
     backdrop-filter: blur(2px);
     z-index: 1000;
+    background: #00000067;
 
 }
 .editor-toolbar-wrapper {
-    position: absolute;
-    top: -55px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1050;
-    padding: 8px;
+    padding: 1em;
 
+    .btn-group{
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+    }
 }
 @media(max-width: 1025px){
 }
 @media(max-width:790px){
-   
 }
 @media(max-width:480px){
     
@@ -223,6 +216,11 @@ main{
     }
 }
 @media(max-width:325px){
+    .editor-toolbar-wrapper {
+        .btn-group{
+            grid-template-columns: repeat(5, 1fr);
+        }
+    }
     .webSettingsCont{
         max-width: 90%;
     }

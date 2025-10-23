@@ -37,16 +37,16 @@
                 headingList[i-1] = headingList[i-1].replace(/ /gi,"_")
                 html = `
                     <div class='fieldset-container' id='contentTemplate-${i}'>
-                        <div class="form-group smallButtons">
+                        <div class="form-field-sm smallButtons">
                             <label for="${headingList[i-1]}_noSubHead">No Sub headings</label>
                             <input type="checkbox" name="${headingList[i-1]}_noSubHeading" id="${headingList[i-1]}_noSubHead" onchange="checkNoSubHeadings('${headingList[i-1]}_noSubHead', '${headingList[i-1]}_subHeadingsGroup','${headingList[i-1]}_contentGroup')" checked />
                         </div>
                         <div class="fieldset-header">${headingList[i-1].replace(/_/gi," ")}</div>
-                        <div class="form-group" id="${headingList[i-1]}_contentGroup">
+                        <div class="form-field-sm" id="${headingList[i-1]}_contentGroup">
                             <label for="${headingList[i-1]}_contents">Content of ${headingList[i-1]}</label>
                             <textarea  name="${headingList[i-1]}_content" id="${headingList[i-1]}_contents" oninput="updatePreviewBlog('blogPreview')" rows='5' ></textarea>   
                         </div>   
-                        <div class="form-group" style='display: none;' id='${headingList[i-1]}_subHeadingsGroup'>
+                        <div class="form-field-sm" style='display: none;' id='${headingList[i-1]}_subHeadingsGroup'>
                             <label for="${headingList[i-1]}_subheadings">Sub-heading(s) of ${headingList[i-1]} separedted by (↩)</label>
                             <textarea  name="${headingList[i-1]}_subheadings" id="${headingList[i-1]}_subheadings"  placeholder="e.g., Introduction Culture History ..." oninput="generateHeadings(this.value,'${headingList[i-1]}_sub-subheadingContainer'),updatePreviewBlog('blogPreview')"></textarea>   
                         </div>

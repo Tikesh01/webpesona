@@ -17,11 +17,11 @@ Header-Webpersona
     }
 </style>
  {% include 'Extra/UpperHeader.html' %}
-<header id="header.html" contenteditable="{{ 'true' if all['body_content_editable'] and all['previewPage']=='header.html' else 'false' }}" class="bg-white  shadow-sm" ><!--start-->
+<header id="header.html" contenteditable="{{ 'true' if web.body_content_editable and web.previewPage == 'header.html' else 'false' }}" class="bg-white  shadow-sm" ><!--start-->
     <nav class="navbar navbar-expand-lg px-3 py-2 rounded-bottom" id="Navbar">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center gap-2" href="../home.html">
-              <img src="../../static/logo/{{all['logo'][0]}}" alt="webpersona" id="Logo" class="img-fluid" style="height: 40px; width: auto;" />
+              <img src="../../static/logo/{{ web.logo[0]}}" alt="webpersona" id="Logo" class="img-fluid" style="height: 40px; width: auto;" />
               <h1 class="fs-4 fw-bold m-0 text-primary">WEBPERSONA</h1>
             </a>
           
@@ -33,13 +33,13 @@ Header-Webpersona
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
                 <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center">
-                    {% for nav in all['navigation'] %}
+                    {% for nav in web.navigation %}
                     <li class="nav-item mx-2">
                       <a href="{{ nav['value'] }}" class="nav-link fw-semibold text-dark">{{ nav['name'] }}</a>
                     </li>
                     {% endfor %}
 
-                    {% for detailPage in all['header_pages'] %}
+                    {% for detailPage in web.header_pages %}
                     <li class="nav-item dropdown mx-2 ">
                         <a class="nav-link dropdown-toggle fw-semibold text-dark" href="#" id="navbarDropdown{{loop.index}}"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
                           {{ detailPage.removesuffix('.html') }}

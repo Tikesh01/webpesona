@@ -10,12 +10,15 @@
         position: relative;
         max-width: 95%;
         max-height: 95%;
-        top: 15px;
         overflow: auto;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
         margin: 0 auto;
         z-index: 100;
+    }
+    #fieldsetsContainerTab,#fieldsetsContainerBlog{
+        display: flex;
+        gap: 1em;
     }
 
     #close {
@@ -44,7 +47,7 @@
         padding-bottom: 0.5em;
     }
 
-    .form-field, .form-group {
+    .form-field-sm , .form-group {
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -52,37 +55,34 @@
         position: relative;
     }
     .form-field-sm{
-        input{
-
-        }
-
-        select{
-
-        }
-        textarea{
-            
+        input, select, textarea{
+            padding: 0.3em 0.6em;
+            border: 0.5px solid rgba(128, 128, 128, 0.444);
+            border-radius: 3px;
+            font-size: 14px;
+            font-weight: normal;
         }
     }
     .smallButtons{
         flex-direction: row;
         gap: 1em;
     }
-    .form-field label, .form-group label {
+    .form-field-sm label, .form-group label {
         color: #34495e;
         font-size: 0.9em;
         margin-bottom: 0.3em;
         font-weight: 500;
     }
 
-    .form-group input:focus,.form-field input:focus
-    .form-group select:focus,  .form-field select:focus
-    .form-group textarea:focus, .form-field textarea:focus {
+    .form-group input:focus,.form-field-sm input:focus
+    .form-group select:focus,  .form-field-sm select:focus
+    .form-group textarea:focus, .form-field-sm textarea:focus {
         border-color: #3498db;
         box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         outline: none;
     }
 
-    .form-group input[type="number"], .form-field input[type="number"] {
+    .form-group input[type="number"], .form-field-sm input[type="number"] {
         width: 100px;
     }
 
@@ -117,7 +117,7 @@
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         position: relative;
-        margin-bottom: 1em;
+        width: auto;
     }
 
     .allDetails {
@@ -208,17 +208,12 @@
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
-        #form_to_add_stuffs {
+        .form_to_add_stuffs,#implementCodeForm {
             padding: 1.5em;
-            max-width: 95%;
-        }
-
-        .numbers {
-            grid-template-columns: 1fr;
         }
 
         .allDetails {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(3, 1fr);
         }
 
         .buttons-group {
@@ -230,6 +225,72 @@
             width: 100%;
         }
     }
+    @media (max-width: 500px) {
+        .form_to_add_stuffs,#implementCodeForm {
+            padding: 1em;
+            max-width: 98%;
+            max-height: 98%;
+        }
+         #fieldsetsContainerTab,#fieldsetsContainerBlog{
+            flex-direction: column;
+        }
+        #close {
+            right: 10px;
+            top: 5px;
+        }
+
+        #Title {
+            font-size: 1.4em;
+            margin-bottom: 0em;
+        }
+        .fieldset-container {
+            margin-top: 1em;
+            padding: 1em;
+            .numbers{
+                padding: 0.8em;
+                input{
+                    width: 5em;
+                }
+            }
+        }
+        .preview-container {
+            margin-top: 1em;
+            padding: 0.5em;
+        }
+
+        .preview-container h3 {
+            margin-bottom: 1em;
+            font-size: medium;
+        }
+
+        .form-preview {
+            padding: 1em;
+        }
+        .buttons-group button {
+            padding: 0.5em 1em;
+        }
+
+    }
+     @media (max-width: 325px) {
+        .form_to_add_stuffs,#implementCodeForm {
+            padding: 0.5em;
+        }
+        .fieldset-container {
+            margin-top: 0.5em;
+            padding: 0.5em;
+            .numbers{
+                padding: 0.5em;
+            }
+        }
+        .preview-container {
+            margin-top: 0.8em;
+        }
+
+        .form-preview {
+            padding: 0.5em;
+        }
+
+    }
 </style>
 <form action="" method="post" class="form_to_add_stuffs">
     <div class="form_card_header">
@@ -240,7 +301,7 @@
         <label for="T1">Heading & Position</label>
         <div class="input-group">
             <input type="text" name="headingOfForm" id="T1" placeholder="Enter form heading (e.g., Contact Form)" class="form-control" required/>
-            <input type="number" name="containerPosForm" id="containerPosForm" class="form-control" placeholder="Container-Position" style="max-width: 8em" value="0">
+            <input type="number" name="containerPosForm" id="containerPosForm" class="form-control" placeholder="Container-Position" style="max-width: 5em" value="0">
         </div>
     </div>
     <div class="d-flex gap-3">
@@ -272,17 +333,17 @@
     </div>
     
     <div class="buttons-group">
-        <button type="button" onclick="resetForm('fieldsetsContainerForm')">Reset</button>
-        <button type="button" onclick="generateFormCode(document.getElementById('containerPosForm').value)">Generate Form Code</button>
+        <button type="button" onclick="resetForm('fieldsetsContainerForm')" class="btn btn-danger">Reset</button>
+        <button type="button" onclick="generateFormCode(document.getElementById('containerPosForm').value)" class="btn btn-success">Generate Form Code</button>
     </div>
 </form>
 
 <div id="templates" hidden>
     <div class="detail" id="inputTemplate">
         <h5 class="text-primary">Input</h5>
-        <div class="form-field">
+        <div class="form-field-sm">
             <label for="">Type</label>
-            <select name="inputType" class="form-control form-control-sm">
+            <select name="inputType">
                 <option value="text">Text</option>
                 <option value="email">Email</option>
                 <option value="password">Password</option>
@@ -300,107 +361,107 @@
                 <option value="tel">Tel</option>
             </select>
         </div>
-        <div class="form-group-sm">
+        <div class="form-field-sm">
             <label>Placeholder</label>
-            <input type="text" name="inputPlaceholder" placeholder="Enter placeholder text" class="form-control">
+            <input type="text" name="inputPlaceholder" placeholder="Enter placeholder text">
         </div>
-        <div class="form-group">
+        <div class="form-field-sm">
             <label for='logicalNameInp'>Logical name</label>
             <input type="text" name="inputName" id="logicalNameInp" class="lnInp" required placeholder="Enter name attribute for input" oninput="toVarName(this.className,' ','_')">
         </div>
-        <div class="form-group smallButtons">
+        <div class="form-field-sm smallButtons">
             <label for="reqOrNOt">Required</label>
             <input type="checkbox" name="requiredInp" id="reqForInp" value="inpReqTrue" >
         </div>
-         <div class="form-group">
+         <div class="form-field-sm">
             <label>Label Text</label>
             <input type="text" name="inputLabel" placeholder="Enter label for input">
         </div>
     </div>
 
     <div class="detail" id="textareaTemplate">
-        <h5>Textarea</h5>
-        <div class="form-group">
+        <h5 class="text-primary">Textarea</h5>
+        <div class="form-field-sm">
             <label>Placeholder</label>
             <input type="text" name="textareaPlaceholder" placeholder="Enter placeholder text">
         </div>
-        <div class="form-group">
+        <div class="form-field-sm">
             <label for="logicalNameTextarea">Logical name</label>
             <input type="text" name="textareaName" id="logicalNameTextarea" class="lnTexta" required placeholder="Enter name attribute for textarea" oninput="toVarName(this.className,' ','_')">
         </div>
-        <div class="form-group">
+        <div class="form-field-sm">
             <label>Rows</label>
             <input type="number" name="textareaRows" value="4" min="1" placeholder="Number of rows">
         </div>
-        <div class="form-group smallButtons">
+        <div class="form-field-sm smallButtons">
             <label for="reqForTextarea">Required</label>
             <input type="checkbox" id="reqForTextarea" name="requiredTextarea" value="textaReqTrue">
         </div>
-        <div class="form-group">
+        <div class="form-field-sm">
             <label>Label Text</label>
             <input type="text" name="textareaLabel" placeholder="Enter label for textarea">
         </div>
     </div>
 
     <div class="detail" id="selectTemplate">
-        <h5>Select Tag</h5>
-        <div class="form-group">
+        <h5 class="text-primary">Select Tag</h5>
+        <div class="form-field-sm">
             <label>Options separated by comma( , )</label>
             <textarea name="selectOptions" placeholder="e.g., Small, Medium, Large" required></textarea>
         </div>
-        <div class="form-group">
+        <div class="form-field-sm">
             <label id="logicalNameSelect">Logical name</label>
             <input type="text" name="selectName" id="logicalNameSelect" class="lnSel" required placeholder="Enter name attribute for select" oninput="toVarName(this.className,' ','_')">
         </div>
-        <div class="form-group smallButtons">
+        <div class="form-field-sm smallButtons">
             <label for="reqForSelect">Required</label>
             <input type="checkbox" id="reqForSelect" name="requiredSelect" value="selectReqTrue">
         </div>
-        <div class="form-group">
+        <div class="form-field-sm">
             <label>Label Text</label>
             <input type="text" name="selectLabel"   placeholder="Enter label for select">
         </div>
     </div>
 
     <div class="detail" id="radioTemplate">
-        <h5>Radio Button</h5>
-        <div class="form-group">
+        <h5 class="text-primary">Radio Button</h5>
+        <div class="form-field-sm">
             <label>Options separated by comma( , )</label>
             <textarea name="radioOptions" placeholder="e.g., Male, Female, Other" required></textarea>
         </div>
-        <div class="form-group">
+        <div class="form-field-sm">
             <label  for="logicalNameRadio" >Logical name</label>
             <input type="text" name="radioName" id="logicalNameRadio" class="lnRad" required placeholder="Enter name attribute for radio group" oninput="toVarName(this.className,' ','_')">
         </div>
-        <div class="form-group smallButtons">
+        <div class="form-field-sm smallButtons">
             <label for="reqForRadio">Required</label>
             <input type="checkbox" id="reqForRadio" name="requiredRadio" value="radioRwqTrue">
         </div>
-        <div class="form-group">
+        <div class="form-field-sm">
             <label>Label Text</label>
             <input type="text" name="radioLabel" placeholder="Enter label for radio group">
         </div>
     </div>
 
     <div class="detail" id="checkboxTemplate">
-        <h5>Checkbox</h5>
-        <div class="form-group">
+        <h5 class="text-primary" >Checkbox</h5>
+        <div class="form-field-sm">
             <label>Options separated by comma( , )</label>
             <textarea name="checkboxOptions" placeholder="e.g., Swimming, Reading, Gaming" required></textarea>
         </div>
-        <div class="form-group">
+        <div class="form-field-sm">
             <label for="logicalNamecheckbox">Logical name</label>
             <input type="text" name="checkboxName" id="logicalNamecheckbox" class="lnCheck" required placeholder="Enter name attribute for checkbox group" oninput="toVarName(this.className,' ','_')">
         </div>
-        <div class="form-group">
+        <div class="form-field-sm">
             <label>Label Text</label>
             <input type="text" name="checkboxLabel" placeholder="Enter label for checkbox group">
         </div>
     </div>
 
     <div class="detail" id="buttonTemplate">
-        <h5>Button</h5>
-        <div class="form-group">
+        <h5 class="text-primary" >Button</h5>
+        <div class="form-field-sm">
             <label>Type</label>
             <select name="buttonType">
                 <option value="button">Button</option>
@@ -409,7 +470,7 @@
                 <option value="disabled">disabled</option>
             </select>
         </div>
-        <div class="form-group">
+        <div class="form-field-sm">
             <label>Text</label>
             <input type="text" name="buttonText" required placeholder="Enter button text (e.g., Submit, Save)" />
         </div>
@@ -443,26 +504,26 @@
                 fieldsetDiv.id = `Table-${i}`;
                 fieldsetDiv.innerHTML = `
                     <div class="fieldset-header">${legends[i-1]}</div>
-                     <div class="form-group">
+                     <div class="form-field-sm">
                         <select name="typeOfTable${i}" id="typeOfTab${i}" oninput='updatePreviewTab('tablePreview')'>
                             <option value="hAtTop">Header(s) at the Top</option>
                             <option value="hAtLeft">Header(s) at The Left</option>
                             <option value="hBoth">Header(s) at AT The Left and Top </option>
                         </select>
                     </div>
-                    <div class="form-group" id="normal_headers${i}" >
+                    <div class="form-field-sm" id="normal_headers${i}" >
                         <label for="F3${i}">Headers of table ( , ) separated</label>
                         <textarea name="headersOfTab${i}" id="F3${i}" oninput="updatePreviewTab('tablePreview')" ></textarea>
                     </div>                
-                    <div class="form-group" id="numberOfRows${i}">
+                    <div class="form-field-sm" id="numberOfRows${i}">
                         <label for="F4${i}">Number Of data Rows</label>
                         <input type="number" name="numOfRows${i}" id="F4${i}" min="0" oninput="generateTbody(this.value, ${i})"/>
                     </div>
-                    <div class="form-group" id="top_headers${i}" style="display:none;">
+                    <div class="form-field-sm" id="top_headers${i}" style="display:none;">
                         <label for="top${i}">Top Headers of table (↩) separated</label>
                         <textarea name="topHeadersOfTab${i}" id="top${i}" oninput="updatePreviewTab('tablePreview')" ></textarea>
                     </div>  
-                    <div class="form-group" id="left_headers${i}" style="display:none;" >
+                    <div class="form-field-sm" id="left_headers${i}" style="display:none;" >
                         <label for="left${i}">Left Headers of table (↩) separated</label>
                         <textarea name="lefthHeadersOfTab${i}" id="left${i}" oninput="updatePreviewTab('tablePreview')" ></textarea>
                     </div>  
@@ -470,7 +531,7 @@
                         <div id="dataContainers${i}" style="overflow: auto;"></div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-field-sm">
                         <label for="F5${i}">Footers of table ( , ) separated</label>
                         <textarea name="footersOfTab${i}" id="F5${i}" oninput="updatePreviewTab('tablePreview')" value=''></textarea>
                     </div>`

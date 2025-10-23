@@ -30,7 +30,7 @@
             <label for="cImg" class="form-label-sm">Image (optional)</label>
             <select id="cImg" class="form-control form-control-sm" onselect="updatePreviewImgCard('imgCardPreview')">
                 <option class="me-auto text-truncate" value="noImg">No Image</option >
-                {% for icon in all['images'] %}
+                {% for icon in web.images %}
                     <option class="me-auto text-truncate" value="../static/images/{{icon}}">{{icon}}</option>
                 {%endfor%}
             </select>

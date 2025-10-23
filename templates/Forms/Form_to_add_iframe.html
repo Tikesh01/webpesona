@@ -6,8 +6,8 @@
     <div class="form-group">
         <label for="containerPosIframe">Url to embed the document, video or webpage</label>
         <div class="input-group">
-            <input type="url" name="urlIframe" id="UrlIframe" class="form-control" required placeholder="e.g. https://example.com/">
-            <input type="number" name="containerPosIframe" id="contPosIframe" class="form-control" placeholder="Container-Position" style="max-width: 5em" value="0">
+            <input type="url" name="urlIframe" id="UrlIframe" class="form-control" required placeholder="e.g. https://example.com/" oninput="updatePreviewIframe('iframePreview')">
+            <input type="number" name="containerPosIframe" id="contPosIframe" class="form-control" placeholder="Container-Position" style="max-width: 5em" value="0" >
         </div>
     </div>
     <div class="form-group">

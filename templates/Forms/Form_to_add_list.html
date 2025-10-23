@@ -5,7 +5,7 @@
     </div>
     <div class="form-group">
         <label for="L2">Type of the List</label>
-        <select name="typeOfList" id="L2" onchange="updatePreviewList()">
+        <select name="typeOfList" id="L2" onchange="updatePreviewList()" class="form-control">
             <option value="ol">Ordered List</option>
             <option value="ul">Unordered List</option>
             <option value="dl">Description List</option>
@@ -15,16 +15,16 @@
         <label for="L1">Heading & Position</label>
         <div class="input-group">
             <input type="text" name="headingOfTab" id="L1" placeholder="e.g., My favourite places" oninput="updatePreviewList()" class="form-control" required />
-            <input type="number" name="containerPosList" id="containerPosList" class="form-control" placeholder="Container-Position" style="max-width: 7em" value="0">
+            <input type="number" name="containerPosList" id="containerPosList" class="form-control" placeholder="Container-Position" style="max-width: 5em" value="0">
         </div>
     </div>
     <div id="fieldsetsContainerList" class="biggerContainer">
         <div id="olCreaterForm" class="listCreators">
-            <div class="form-group">
+            <div class="form-field-sm">
                 <label for="L3">Create Ordered list using Enter key</label>
                 <textarea name="olListItems" rows="3" id="L3" oninput="updatePreviewList()"></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-field-sm">
                 <label for="L4">Type of Ordered List</label>
                 <select name="typeOfOlList" id="L4" onchange="updatePreviewList()">
                     <option value="1">1</option>
@@ -36,11 +36,11 @@
             </div>
         </div>
         <div id="ulCreaterForm" class="listCreators">
-            <div class="form-group">
+            <div class="form-field-sm">
                 <label for="L5">Create Unordered list using Enter key</label>
                 <textarea name="ulListItems" rows="3" id="L5" oninput="updatePreviewList()"></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-field-sm">
                 <label for="L6">Type of Unordered List</label>
                 <select name="typeOfUlList" id="L6" onchange="updatePreviewList()">
                     <option value="disc">Disc</option>
@@ -52,7 +52,7 @@
         </div>
         <div id="dlCreaterForm" class="listCreators">
             <h4>Create Description List</h4>
-            <div class="form-group">
+            <div class="form-field-sm">
                 <label for="L7">Enter the terms using Enter (↩) key</label>
                 <textarea name="dlDterms" rows="3" id="L7" oninput="updatePreviewList()" ></textarea>
             </div>

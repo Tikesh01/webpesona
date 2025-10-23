@@ -4,13 +4,13 @@ Footer Webpersona
 {%endblock%} 
 {% block page %}
 {% include 'Extra/UpperFooter.html' %}
-<footer id="footer.html" contenteditable="{{ 'true' if all['body_content_editable'] and all['previewPage']=='footer.html' else 'false' }}" class="bg-dark text-light pt-5 pb-3 mt-auto border-top border-secondary"><!--start-->
+<footer id="footer.html" contenteditable="{{ 'true' if web.body_content_editable and web.previewPage =='footer.html' else 'false' }}" class="bg-dark text-light pt-5 pb-3 mt-auto border-top border-secondary"><!--start-->
     <div class="container ">
         <div class="row g-4 align-items-start">
 
           <div class="col-md-4 text-center text-md-start">
               <div class="d-flex align-items-center justify-content-center justify-content-md-start mb-3">
-                  <!--NO--><img src="../../static/logo/{{all['logo'][0]}}" alt="WebPersona Logo" class="img-fluid me-2" style="height: 40px;" />
+                  <!--NO--><img src="../../static/logo/{{web.logo[0]}}" alt="WebPersona Logo" class="img-fluid me-2" style="height: 40px;" />
                   <span class="fs-4 fw-bold text-primary">WebPersona</span>
               </div>
 
@@ -27,7 +27,7 @@ Footer Webpersona
         <div class="col-6 col-md-2">
             <h5 class="fw-semibold mb-3 text-primary">Site Map</h5>
             <ul class="list-unstyled small">
-                {% for i in all['pages'] %}
+                {% for i in web.pages %}
                 <li><a href="{{i}}" class="text-light text-decoration-none d-block mb-1">{{ i }}</a></li>
                 {% endfor %}
             </ul>
@@ -47,7 +47,7 @@ Footer Webpersona
 
           <div class="col-6 col-md-2">
               <h5 class="fw-semibold mb-3 text-primary">Current Page</h5>
-              <button class="btn btn-outline-light btn-sm">{{ all['currentPage'] }}</button>
+              <button class="btn btn-outline-light btn-sm">{{ web.currentPage }}</button>
           </div>
 
           <div class="col-6 col-md-2">

@@ -64,8 +64,8 @@
                         <input type="text" id="${titleId}-linkText" class="form-control" placeholder="e.g., Read more" oninput="updatePreviewGrid('gridPreview')">
                         <select class="form-select" id="${titleId}-linkSrc" onchange="toggleExternalLink('${titleId}'); updatePreviewGrid('gridPreview')">
                             <option value="">No Link</option>
-                            {% for page in all['pages'] %}
-                                {% if page not in all['unviewPages'] %}
+                            {% for page in web.pages %}
+                                {% if page not in web.unviewPages %}
                                 <option value='{{page}}'>{{page}}</option>
                                 {% endif %}
                             {% endfor %}

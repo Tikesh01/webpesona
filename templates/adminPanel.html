@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="shortcut icon" href="../static/favicon/{{all['favicon'][0]}}" type="image/x-icon" />
+		<link rel="shortcut icon" href="../static/favicon/{{ web.favicon[0]}}" type="image/x-icon" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 		<link rel="stylesheet" href="../static/css/adminPanel.css">
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -187,7 +187,7 @@
 					</form>
 				</div>
 			</div>
-			{% if all['body_content_editable'] %}
+			{% if web.body_content_editable %}
 				<div class="form_to_add_card" id="add_form_card" >{% include 'Forms/Form_to_add_form.html' %}</div>
 				<div class="form_to_add_card" id="add_table_card">{% include 'Forms/Form_to_add_table.html' %}</div>
 				<div class="form_to_add_card" id="add_blog_card" >{% include 'Forms/Form_to_add_blog.html'%}</div>
@@ -196,55 +196,6 @@
 				<div class="form_to_add_card" id="add_grid_card" >{% include 'Forms/Form_to_add_grid.html' %}</div>
 				<div class="form_to_add_card" id="add_link_card" >{% include 'Forms/Form_to_add_link.html' %}</div>
 				<div class="form_to_add_card" id="add_img_cont_card" >{% include 'Forms/Form_to_add_img_card.html' %}</div>
-				<div class="editor-toolbar-wrapper">
-					<div class="btn-toolbar" role="toolbar" aria-label="Editor toolbar">
-						<div class="btn-group me-2" role="group" aria-label="Add elements group">
-							<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Form" onclick="show_form('add_form_card')"><i class="fa-solid fa-file-alt"></i></button>
-							<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Table" onclick="show_form('add_table_card')"><i class="fas fa-table"></i></button>
-							<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Blog/Content" onclick="show_form('add_blog_card')"><i class="fab fa-blogger-b"></i></button>
-							<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add List" onclick="show_form('add_list_card')"><i class="fas fa-list"></i></button>
-							<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Iframe" onclick="show_form('add_iframe_card')"><i class="far fa-file-code"></i></button>
-							<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Grids" onclick="show_form('add_grid_card')"><i class="fas fa-th"></i></button>
-							<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Link" onclick="show_form('add_link_card')"><i class="fas fa-link"></i></button>
-							<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Image  Card" onclick="show_form('add_img_cont_card')"><i class="fas fa-images"></i></button>
-						</div>
-						<div class="btn-group" role="group" aria-label="Save group">
-							<button type="button" class="btn btn-success" onclick="saveBlock('{{web.previewPage}}', '{{web.previewPage}}', '{{web.previewPage}}')" title="Save Changes" data-bs-toggle="tooltip" data-bs-placement="bottom" ><i class="fas fa-save"></i></button>
-						</div>
-					</div>
-					<script>
-						const allForms = document.querySelectorAll('.form_to_add_card');
-
-						function show_form(targetId) {
-							const targetForm = document.getElementById(targetId);
-							if (!targetForm) return;
-
-							const isVisible = targetForm.style.display === 'flex';
-
-							// Hide all forms first
-							allForms.forEach(form => form.style.display = 'none');
-
-							// If the target form was not visible, show it
-							if (!isVisible) {
-								targetForm.style.display = 'flex';
-							}
-						}
-
-						function remove_form(className) {
-							const forms = document.getElementsByClassName(className);
-							for (let i = 0; i < forms.length; i++) {
-								forms[i].style.display = 'none';
-							}
-						}
-
-						document.addEventListener('DOMContentLoaded', function () {
-							const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-							const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-								return new bootstrap.Tooltip(tooltipTriggerEl);
-							});
-						});
-					</script>
-				</div>
 			{% endif %}
 			<div id="preview_container">
 				<div id="frameContainer" >
@@ -258,10 +209,9 @@
 						<button type='submit'>Apply</button>
 					</form>
 					{%endif%}
-					<iframe src="{{ all['previewPage']}}" id="Iframe" ></iframe>
+					<iframe src="{{ web.previewPage }}" id="Iframe" ></iframe>
 				</div>
 			</div>
-			
 			<div class="webSettingsCont">
 				<div id="sideCollapsePageCont" class="collapsed">
 					<span  id="collapseTogglePagePanel" onclick="collapse(this.id, 'sideCollapsePageCont')" ><i class="fas fa-angles-left"></i> <div class="heading">PAGES</div></span>
@@ -273,28 +223,28 @@
 							</div>
 						</div>
 						<div class="list-group list-group-flush" id="pagesList">
-							{% for page in all['pages'] %}
-								{% if page not in all['unviewPages'] %}
-								<div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center page-item {{'active' if page==all['previewPage']}}">
+							{% for page in web.pages %}
+								{% if page not in web.unviewPages %}
+								<div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center page-item {{'active' if page==web.previewPage }}">
 									<span class="page-name">{{page.removesuffix('.html')}}</span>
 									<form action="/delete-change-Favicon-page" method="post" class="d-inline-flex gap-2">
 										<button type="submit" name="preview_page" value="{{page}}" class="btn btn-sm p-0 px-2 btn-outline-primary" title="Preview Page" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-eye"></i></button>
-										{% if page not in all['unremovablePages'] %}
+										{% if page not in web.unremovablePages %}
 										<button type="submit" name="delete_page" value="{{page}}" class="btn btn-sm p-0 px-2 btn-outline-danger" title="Delete Page" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-trash-alt"></i></button>
 										{% endif %}
 									</form>
 								</div>
 								{% endif %}
 							{% endfor %}
-							{% for folder in all['folderDict'].keys() %}
+							{% for folder in web.folderDict.keys() %}
 								<div class="list-group-item folder-header" data-bs-toggle="collapse" data-bs-target="#folder-{{folder}}" aria-expanded="true" aria-controls="folder-{{folder}}">
 									<strong>{{folder}}</strong>
 									<i class="fas fa-chevron-down float-end"></i>
 								</div>
 								<div class="collapse show" id="folder-{{folder}}">
 									<div class="list-group list-group-flush ps-3">
-										{% for page in all['folderDict'][folder] %}
-										<div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center page-item {{'active' if page==all['previewPage']}}">
+										{% for page in web.folderDict[folder] %}
+										<div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center page-item {{'active' if page== web.previewPage }}">
 											<span class="page-name">{{page.removesuffix('.html')}}</span>
 											<form action="/delete-change-Favicon-page" method="post" class="d-inline-flex gap-2">
 												<button type="submit" name="preview_page" value="{{page}}" class="btn btn-sm p-0 px-2 btn-outline-primary" title="Preview Page" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-eye"></i></button>
@@ -346,12 +296,19 @@
 												<label for="navigationPage" class="form-label form-label-sm">Select page to navigate</label>
 												<select name="navigationPage" id="navigationPage" class="form-select form-select-sm" onchange="this.form.submit()">
 													<option value="none">None</option>
-													{% for page in all['pages'] %}{% if page not in all['unviewPages'] %}<option value='{{page}}'>{{page}}</option>{% endif %}{% endfor %}
+													{% for page in web.pages %}
+													{% if page not in web.unviewPages %}
+													<option value='{{page}}'>{{page}}</option>{% endif %}
+													{% endfor %}
+													{% for page in web.header_pages %}
+													{% if page not in web.unviewPages %}
+													<option value='{{page}}'>{{page}}</option>{% endif %}
+													{% endfor %}
 												</select>
 											</div>
 										</form>
 										<ul class="list-group list-group-flush">
-											{% for nav in all['navigation'] %}
+											{% for nav in web.navigation %}
 											<li class="list-group-item list-group-item-sm d-flex justify-content-between align-items-center px-0 py-1">
 												<span>{{nav['name']}} <small class="text-muted">({{nav['value']}})</small></span>
 												<form action="/Deletion" method="post" class="d-inline">
@@ -397,7 +354,7 @@
 								</h2>
 								<div id="collapsePictures" class="accordion-collapse collapse" aria-labelledby="headingPictures" data-bs-parent="#featuresAccordion">
 									<div class="accordion-body">
-										{% for icon in all['images'] %}
+										{% for icon in web.images %}
 										<div class="d-flex align-items-center mb-2">
 											<img src="../static/images/{{icon}}" alt="{{icon}}" class="me-2" style="width: 24px; height: 24px; object-fit: contain;" />
 											<small class="me-auto text-truncate" style="max-width: 120px;">{{icon}}</small>
@@ -429,7 +386,7 @@
 									<div class="accordion-body">
 										<form action="/theme-rotate" method="post" class="d-flex justify-content-between align-items-center">
 											<button type="submit" name="change_theme" value="left" class="btn btn-outline-secondary btn-sm"><i class="fa fa-angle-left"></i></button>
-											<span class="mx-2 text-center small">{{ all['themes'][-19:][0].removesuffix('*/\n').removeprefix('/*') }}</span>
+											<span class="mx-2 text-center small">{{ web.themes[-19:][0].removesuffix('*/\n').removeprefix('/*') }}</span>
 											<button type="submit" name="change_theme" value="right" class="btn btn-outline-secondary btn-sm"><i class="fas fa-angle-right"></i></button>
 										</form>
 									</div>
@@ -464,9 +421,9 @@
 								<div id="collapseSettings" class="accordion-collapse collapse" aria-labelledby="headingSettings" data-bs-parent="#featuresAccordion">
 									<div class="accordion-body">
 										<form action="/Content-editable" method="post" class="form-check form-switch">
-											<input class="form-check-input" type="checkbox" role="switch" id="Content_editable" name="contentEditable" onchange="this.form.submit()" {% if all['body_content_editable'] %}checked{% endif %}>
+											<input class="form-check-input" type="checkbox" role="switch" id="Content_editable" name="contentEditable" onchange="this.form.submit()" {% if web.body_content_editable %}checked{% endif %}>
 											<label class="form-check-label" for="Content_editable">Content Editable</label>
-											{% if all['body_content_editable'] %}<div class="form-text text-danger mt-1 small"><i class="fas fa-info-circle"></i> Turn off before leaving.</div>{% endif %}
+											{% if web.body_content_editable %}<div class="form-text text-danger mt-1 small"><i class="fas fa-info-circle"></i> Turn off before leaving.</div>{% endif %}
 										</form>
 										<hr class="my-2">
 										<form action="/Debug-mode" method="POST" class="form-check form-switch">
@@ -483,12 +440,61 @@
 									<input type="number" name="" style="width: 4.5em;" class="form-control" id="frameSizeInp" oninput="changeSize(String(this.value)+'px', '100%', 'Iframe'), showSize('frameSizeInpRange', this.value)" />
 								</div>
 							</div>
+							{% if web.body_content_editable %}
+							<div class="accordion-item">
+								<div class="editor-toolbar-wrapper">
+									<div class="btn-group me-2" role="group" aria-label="Add elements group">
+										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Form" onclick="show_form('add_form_card')"><i class="fa-solid fa-file-alt"></i></button>
+										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Table" onclick="show_form('add_table_card')"><i class="fas fa-table"></i></button>
+										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Blog/Content" onclick="show_form('add_blog_card')"><i class="fab fa-blogger-b"></i></button>
+										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add List" onclick="show_form('add_list_card')"><i class="fas fa-list"></i></button>
+										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Iframe" onclick="show_form('add_iframe_card')"><i class="far fa-file-code"></i></button>
+										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Grids" onclick="show_form('add_grid_card')"><i class="fas fa-th"></i></button>
+										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Link" onclick="show_form('add_link_card')"><i class="fas fa-link"></i></button>
+										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Image  Card" onclick="show_form('add_img_cont_card')"><i class="fas fa-images"></i></button>
+									</div>
+									<button type="button" class="btn btn-success mt-2 w-100" onclick="saveBlock('{{web.previewPage}}', '{{web.previewPage}}', '{{web.previewPage}}')" title="Save Changes" data-bs-toggle="tooltip" data-bs-placement="bottom" ><i class="fas fa-save"></i> Save Changes</button>
+									<script>
+										const allForms = document.querySelectorAll('.form_to_add_card');
+
+										function show_form(targetId) {
+											const targetForm = document.getElementById(targetId);
+											if (!targetForm) return;
+
+											const isVisible = targetForm.style.display === 'flex';
+
+											// Hide all forms first
+											allForms.forEach(form => form.style.display = 'none');
+
+											// If the target form was not visible, show it
+											if (!isVisible) {
+												targetForm.style.display = 'flex';
+											}
+										}
+
+										function remove_form(className) {
+											const forms = document.getElementsByClassName(className);
+											for (let i = 0; i < forms.length; i++) {
+												forms[i].style.display = 'none';
+											}
+										}
+
+										document.addEventListener('DOMContentLoaded', function () {
+											const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+											const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+												return new bootstrap.Tooltip(tooltipTriggerEl);
+											});
+										});
+									</script>
+								</div>
+							</div>
+							{%endif%}
 						</div>
 					</div>
 				</div>
 			</div>
 		</section>
-		<div id="database_container">
+		<section id="database_container">
 			<h2>Users</h2>
 			<table class="table table-stripped">
 				<tr>
@@ -508,7 +514,7 @@
 				</tr>
 			{%endfor%}
 			</table>
-		</div>
+		</section>
 		</main>
 	</body>
 </html>

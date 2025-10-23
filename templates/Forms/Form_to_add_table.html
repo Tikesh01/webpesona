@@ -21,7 +21,7 @@
         College-Student" oninput="generateFieldsets(this.value,'fieldsetsContainerTab')" class="form-control"></textarea>
     </div>
     
-    <div id="fieldsetsContainerTab" class="biggerContainer" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2em;">
+    <div id="fieldsetsContainerTab">
 
     </div>
     <div class="preview-container">
@@ -62,7 +62,7 @@
 
             headers.forEach((header, index) => {
                 const formGroup = document.createElement('div');
-                formGroup.className = 'form-group';
+                formGroup.className = 'form-field-sm';
                 formGroup.gap = "0.1em"
                 
                 const label = document.createElement('label');
@@ -73,7 +73,6 @@
                 input.type = 'text';
                 input.name = `table${n}_headerData${index}_row${i}`;
                 input.id = `table${n}_header${index}_row${i}`;
-                input.style.padding = `0.5em 1em`;
                 input.placeholder = `Enter ${header.trim()} value`;
                 input.oninput = function() {
                     updatePreviewTab('tablePreview');
