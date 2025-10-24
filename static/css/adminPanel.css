@@ -212,7 +212,7 @@ main{
 }
 @media(max-width:430px){
     .webSettingsCont{
-        max-width: 85%;
+        max-width: 90%;
     }
 }
 @media(max-width:325px){
@@ -222,7 +222,7 @@ main{
         }
     }
     .webSettingsCont{
-        max-width: 90%;
+        max-width: 93%;
     }
     .message{
         max-width: 310px;
