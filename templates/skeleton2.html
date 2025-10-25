@@ -42,18 +42,7 @@
 				ul.innerHTML = '';
 				items.forEach(li => ul.appendChild(li));
 			});
-			document.addEventListener('DOMContentLoaded', function() {
-				const inputs = document.getElementsByTagName('input');
-				for (let input of inputs) {
-					if (input && input.required) {
-						const id = input.getAttribute('id');
-						const label = document.querySelector(`label[for='${id}']`);
-						if (label) {
-							label.innerHTML += ` <span style="color: red;">*</span>`;
-						}
-					}
-				}
-			});
+			
 			function resizeIframe(iframe) {
 				iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
 			}
