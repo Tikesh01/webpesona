@@ -19,7 +19,7 @@
         <label for="" class="form-label-sm">The text and the refrence</label>
         <div class="input-group input-group-sm">
             <input type="text" id="linkText" class="form-control" placeholder="e.g., Read more" oninput="updatePreviewGrid('gridPreview')">
-            <select class="form-select" id="linkSrc" onchange="toggleExternalLink('${titleId}'); updatePreviewGrid('gridPreview')">
+            <select class="form-select" id="linkSrc" onchange="toggleExternalLink(); updatePreviewGrid('gridPreview')">
                 <option value="">No Link</option>
                 {% for page in web.pages %}
                     {% if page not in web.unviewPages %}
@@ -30,8 +30,8 @@
             </select>
         </div>
     </div>
-    <div class="form-group" id=linkUrl-group" style="display:none;">
-        <input type="url" id="${titleId}-linkUrl" placeholder="e.g., https://example.com" class="form-control form-control-sm" oninput="updatePreviewGrid('gridPreview')">
+    <div class="form-group" id="ext-linkUrl-group" style="display:none;">
+        <input type="url" id="ext-linkUrl" placeholder="e.g., https://example.com" class="form-control form-control-sm" oninput="updateLinkPreview('linkPreview')">
     </div>
     <div class="preview-container">
         <h3>Link Preview</h3>
@@ -45,3 +45,14 @@
         <button type="button">Generate Code</button>
     </div>
 </form>
+<script>
+    function updateLinkPreview(contId){
+        const pCont = document.getElementById('linkPreview')
+        pCont.innerHTML = ""
+        const Class = document.getElementsByName('linkStyle').value
+        const text = document.getElementById('linkText').value
+        let code =  `<a src="" class="${Class}">${text}</a>`
+
+        pCont.innerHTML = code
+    }
+</script>

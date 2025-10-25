@@ -54,7 +54,7 @@
       }
   }
 </style>
-<section id="login.html" class="content py-5" contenteditable="{{ 'true' if all['body_content_editable'] else 'false' }}" > <!--start-->
+<section id="login.html" class="content py-5" contenteditable="{{ 'true' if web.body_content_editable else 'false' }}" > <!--start-->
     <div class="1 card border-0  p-4" id="loginCard">
         <img src="../static/images/loginImg.svg" alt="">
         <form action="/login" method="POST" id="LoginWebpersona" class="needs-validation" id="loginForm" novalidate>
