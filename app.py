@@ -400,13 +400,19 @@ def admin():
 def nav_addition():
     navText = request.form.get('navigationText')
     navTextPos = request.form.get('navigationTextPos')
-    navPage = request.form.get('navigationPage')
+    navPage = request.form.get('navigationPage') 
+    externalLink = request.form.get('externalLink')
+
+    if navPage == 'external' and externalLink:
+        nav_value = externalLink
+    else:
+        nav_value = navPage
     try:
-        if navText and navPage:
+        if navText and nav_value and nav_value != 'none':
             with open("static/navigation.json", "r") as js:
                 nav_dict = json.load(js)
             nav_items = list(nav_dict.items())
-            new_item = (navText, navPage)
+            new_item = (navText, nav_value)
             if navTextPos:
                 try:
                     pos = int(navTextPos) - 1

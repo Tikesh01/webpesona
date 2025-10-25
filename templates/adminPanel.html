@@ -288,24 +288,32 @@
 								<div id="collapseNav" class="accordion-collapse collapse" aria-labelledby="headingNav" data-bs-parent="#featuresAccordion">
 									<div class="accordion-body">
 										<form action="/navigation_addition" method="POST">
-											<div class="input-group mb-2">
-												<input type="text" name="navigationText" class="form-control form-control-sm" placeholder="Text" required>
-												<input type="number" name="navigationTextPos" class="form-control form-control-sm" placeholder="Pos" style="max-width: 60px;">
+											<div class="mb-2">
+												<label for="navigationText" class="form-label form-label-sm">Link Text & Position</label>
+												<div class="input-group">
+													<input type="text" id="navigationText" name="navigationText" class="form-control form-control-sm" placeholder="Text" required>
+													<input type="number" name="navigationTextPos" class="form-control form-control-sm" placeholder="Pos" style="max-width: 60px;">
+												</div>
 											</div>
 											<div class="mb-3">
 												<label for="navigationPage" class="form-label form-label-sm">Select page to navigate</label>
-												<select name="navigationPage" id="navigationPage" class="form-select form-select-sm" onchange="this.form.submit()">
+												<select name="navigationPage" id="navigationPage" class="form-select form-select-sm" onchange="toggleExternalLinkInput(this.value)">
 													<option value="none">None</option>
 													{% for page in web.pages %}
 													{% if page not in web.unviewPages %}
 													<option value='{{page}}'>{{page}}</option>{% endif %}
 													{% endfor %}
 													{% for page in web.header_pages %}
-													{% if page not in web.unviewPages %}
-													<option value='{{page}}'>{{page}}</option>{% endif %}
+													<option value='{{page}}'>{{page}}</option>
 													{% endfor %}
+													<option value="external">External Link</option>
 												</select>
 											</div>
+											<div class="mb-3" id="externalLinkGroup" style="display: none;">
+												<label for="externalLink" class="form-label form-label-sm">External URL</label>
+												<input type="url" name="externalLink" id="externalLink" class="form-control form-control-sm" placeholder="https://example.com">
+											</div>
+											<button type="submit" class="btn btn-primary btn-sm w-100">Add Link</button>
 										</form>
 										<ul class="list-group list-group-flush">
 											{% for nav in web.navigation %}
@@ -320,6 +328,12 @@
 									</div>
 								</div>
 							</div>
+							<script>
+								function toggleExternalLinkInput(value) {
+									const externalLinkGroup = document.getElementById('externalLinkGroup');
+									externalLinkGroup.style.display = (value === 'external') ? 'block' : 'none';
+								}
+							</script>
 							{% endif %}
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="headingPage">
