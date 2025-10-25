@@ -169,8 +169,8 @@ class website:
                     
         file_path = self.folder + name + self.extantion
         partials = self.folder+'partials/'+name+self.extantion
-        header_pages = self.folder+'Header_pages/'+name+self.extantion
-        if not os.path.exists(file_path) and not  os.path.exists(partials) and not os.path.exists(header_pages):
+        header_page = self.folder+'Header_pages/'+name+self.extantion
+        if not os.path.exists(file_path) and not  os.path.exists(partials) and not os.path.exists(header_page):
             with open("templates/Base.html", "r") as base:
                 baseF = base.readlines()
                 for i,line in enumerate(baseF):
@@ -185,7 +185,7 @@ class website:
                         break
                     
             if self.previewPage in self.header_pages:
-                file_path = header_pages
+                file_path = header_page
                 baseF[0] = "{% extends 'skeleton2.html' %}"
                 
             code = baseF+bodyF
