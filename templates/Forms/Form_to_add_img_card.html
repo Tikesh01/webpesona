@@ -36,8 +36,15 @@
             </select>
         </div>
         <div class="form-group mb-1">
-            <label for="cText" class="form-label-sm">Card Text</label>
-            <textarea id="cText" class="form-control form-control-sm" rows="3" placeholder="Enter card content..." oninput="updatePreviewImgCard('imgCardPreview')"></textarea>
+            <label for="cText" class="form-label-sm">Card Text & the Format</label>
+            <div class="input-group">
+                <textarea id="cText" class="form-control form-control-sm" rows="3" placeholder="Enter card content..." oninput="updatePreviewImgCard('imgCardPreview')"></textarea>
+                <div class="d-flex flex-column gap-2">
+                    <i class="fas fa-align-left"></i>
+                    <i class="fas fa-align-justify"></i>
+                    <i class="fas fa-align-right"></i>
+                </div>
+            </div>
         </div>
         <div class="form-group mb-1">
             <label for="cWidth" class="form-label-sm">Width (%)</label>
@@ -45,6 +52,24 @@
                 <input id="cWidth" class="form-control" type="range" min="25" max="100" step="25" oninput="updatePreviewImgCard('imgCardPreview'), showSize('ccWidth', this.value)">
                 <input type="number" id="ccWidth" class="form-control" style="width: 5em;">
             </div>
+        </div>
+        <div class="form-group mb-1">
+            <label for="cWidth" class="form-label-sm">Link/Anchor (optional)</label>
+            <div class="input-group input-group-sm">
+                <input type="text" id="linkTextIC" class="form-control" placeholder="e.g., Read more" oninput="updatePreviewImgCard('imgCardPreview')">
+                <select class="form-select" id="linkSrc" onchange="updatePreviewImgCard('imgCardPreview')">
+                    <option value="">No Link</option>
+                    {% for page in web.pages %}
+                        {% if page not in web.unviewPages %}
+                        <option value='{{page}}'>{{page}}</option>
+                        {% endif %}
+                    {% endfor %}
+                    <option value="external">External Link</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" id="${titleId}-linkUrl-group" style="display:none;">
+            <input type="url" id="${titleId}-linkUrl" placeholder="e.g., https://example.com" class="form-control form-control-sm" oninput="updatePreviewImgCard('imgCardPreview')">
         </div>
     </div>
 
