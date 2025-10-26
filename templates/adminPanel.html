@@ -440,9 +440,9 @@
 									<input type="number" name="" style="width: 4.5em;" class="form-control" id="frameSizeInp" oninput="changeSize(String(this.value)+'px', '100%', 'Iframe'), showSize('frameSizeInpRange', this.value)" />
 								</div>
 							</div>
-							{% if web.body_content_editable %}
-							<div class="accordion-item">
-								<div class="editor-toolbar-wrapper">
+				
+							<div class="accordion-item  {% if web.body_content_editable %}{%else%}disabledButtonCont{%endif%}">
+								<div class="editor-toolbar-wrapper {% if web.body_content_editable %}{%else%}disabledButtonCont{%endif%}">
 									<div class="btn-group me-2" role="group" aria-label="Add elements group">
 										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Form" onclick="show_form('add_form_card')"><i class="fa-solid fa-file-alt"></i></button>
 										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Table" onclick="show_form('add_table_card')"><i class="fas fa-table"></i></button>
@@ -484,11 +484,20 @@
 											const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 												return new bootstrap.Tooltip(tooltipTriggerEl);
 											});
+
+											// disable if not avaible
+											const Dcont = document.getElementsByClassName('disabledButtonCont');
+
+											for (let c of Dcont) {
+												const children = c.querySelectorAll('button, input[type="submit"], input[type="button"]');
+												for (let child of children) {
+													child.disabled = true;
+												}
+											}
 										});
 									</script>
 								</div>
 							</div>
-							{%endif%}
 						</div>
 					</div>
 				</div>
