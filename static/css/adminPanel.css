@@ -88,43 +88,41 @@ main{
 #preview_container {
     display: flex;
     flex-direction: column;
-    align-items: center;
     height: 100%;
-    width: calc(100% - 80px);
-    background-color: #f0f0f0;
+    width: calc(100% - 40px);
+    background-color: #ebebeb;
     padding: 2px;
-    max-width: calc(100vw - 80px);
+    max-width: calc(100vw - 40px);
     overflow: auto;
+    border: 0.5px dotted rgb(69, 69, 69);
+}
+.dragger{
+    width: 3px;
+    background: #929191;
+}
+.dragger:hover{
+    width: 5px;
+    background: #242424;
+    cursor: ew-resize;
 }
 
-#preview_container #frameContainer {
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    border: 1px dotted rgb(0, 0, 0);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    #Iframe{
-        margin: auto;
-    }
-    #debugTextareaCode{
-        width: 98%;
-        height: 90vh;
-        line-height: 6px;
-        padding: 1em;
-    }
+
+#debugTextareaCode{
+    width: 98%;
+    height: 90vh;
+    line-height: 6px;
+    padding: 1em;
 }
 .webSettingsCont{
     position: absolute;
     right: 0px;
-    max-width: 55%;
+    max-width: 50%;
     display: flex;
     background-color: #f0f0f0;
     height: 100%;
 
 }
-#sideCollapsePageCont, #sideCollapseFeaturesCont  {
+#sideCollapseFeaturesCont  {
     height: 100%;
     width: 100%;
     background: transparent;
@@ -136,12 +134,7 @@ main{
     flex-direction: column;
 }
 
-#sideCollapsePageCont{
-    width: calc(100% + 50px);
-}
-
-
-#collapseTogglePagePanel, #collapseToggleFeaturesPanel {
+#collapseToggleFeaturesPanel {
     cursor: pointer;
     transition: all 0.3s ease;
     padding:  0.4em;
@@ -152,7 +145,7 @@ main{
     align-items: center;
     gap: 0.5em;
 }
-#sideCollapsePageCont.collapsed,#sideCollapseFeaturesCont.collapsed {
+#sideCollapseFeaturesCont.collapsed {
     overflow: hidden;
     flex-direction: row;
     width: 40px;  
@@ -165,7 +158,7 @@ main{
     }
 }
 
-#collapseTogglePagePanel:hover, #collapseToggleFeaturesPanel:hover {
+#collapseToggleFeaturesPanel:hover {
     background:rgba(144, 145, 146, 0.26);
 }
 .form_to_add_card, #implementCodeFormCont{

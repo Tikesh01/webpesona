@@ -14,9 +14,9 @@
         "1536px",
         "2560px"
     ],
-    "previewPage": "temp.html",
-    "currentPage": "UpperFooter.html",
-    "body_content_editable": true,
+    "previewPage": "home.html",
+    "currentPage": "Products.html",
+    "body_content_editable": false,
     "debugMode": false,
     "isLogedin": false,
     "isRegistered": false
