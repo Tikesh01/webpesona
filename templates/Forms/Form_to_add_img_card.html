@@ -28,41 +28,16 @@
         </div>
         <div class="form-group form-group mb-1">
             <label for="cImg" class="form-label-sm">Image (optional)</label>
-            <div class="input-group">
-                <select id="cImg" class="form-control form-control-sm" onchange="updatePreviewImgCard('imgCardPreview')">
-                    <option class="me-auto text-truncate" value="noImg">No Image</option >
-                    {% for icon in web.images %}
-                        <option class="me-auto text-truncate" value="../static/images/{{icon}}">{{icon}}</option>
-                    {%endfor%}
-                </select>
-                <label style="max-width: 3em;" for="changeImgAlignment" class="form-control form-control-sm" title="Change Image Alignment" onclick="toggleAlignment('changeImgAlignment'); updatePreviewImgCard('imgCardPreview')"><i class="fas fa-repeat"></i></label>
-                <input type="text" id="changeImgAlignment" style="display: none;" value="start">
-                <script>
-                    function toggleAlignment(inpId){
-                        const input = document.getElementById(inpId)
-                        if (input.value === "start"){
-                            input.value = "end"
-                        }
-                        else{
-                            input.value = "start"
-                        }
-                    }
-                </script>
-            </div>
+            <select id="cImg" class="form-control form-control-sm" onchange="updatePreviewImgCard('imgCardPreview')">
+                <option class="me-auto text-truncate" value="noImg">No Image</option >
+                {% for icon in web.images %}
+                    <option class="me-auto text-truncate" value="../static/images/{{icon}}">{{icon}}</option>
+                {%endfor%}
+            </select>
         </div>
         <div class="form-group mb-1">
-            <label for="cText" class="form-label-sm">Card Text & the Format</label>
-            <div class="input-group">
-                <textarea id="cText" class="form-control form-control-sm" rows="3" placeholder="Enter card content..." oninput="updatePreviewImgCard('imgCardPreview')"></textarea>
-                <div class="d-flex flex-column gap-0">
-                    <label for="left" class="btn"><i class="fas fa-align-left"></i></label>
-                    <label for="center" class="btn"><i class="fas fa-align-center"></i></label>
-                    <label for="right" class="btn"><i class="fas fa-align-right"></i></label>
-                </div>
-                <input type="radio" name="textAlign" id="left" value="d-flex align-items-start flex-column" style="display: none;" onchange="updatePreviewImgCard('imgCardPreview')" checked>
-                <input type="radio" name="textAlign" id="center" value="d-flex align-items-center flex-column" style="display: none;" onchange="updatePreviewImgCard('imgCardPreview')">
-                <input type="radio" name="textAlign" id="right" value="d-flex align-items-end flex-column" style="display: none;" onchange="updatePreviewImgCard('imgCardPreview')">
-            </div>
+            <label for="cText" class="form-label-sm">Card Text</label>
+            <textarea id="cText" class="form-control form-control-sm" rows="3" placeholder="Enter card content..." oninput="updatePreviewImgCard('imgCardPreview')"></textarea>
         </div>
         <div class="form-group mb-1">
             <label for="cWidth" class="form-label-sm">Width (%)</label>
@@ -92,7 +67,31 @@
     </div>
 
     <div class="preview-container">
-        <h3>Image card Preview</h3>
+        <h3 class="d-flex gap-3">
+            Image card Preview
+            <div class="btn-group me-2 border-1">
+                <label for="left" class="btn btn-light"><i class="fas fa-align-left"></i></label>
+                <label for="center" class="btn btn-light"><i class="fas fa-align-center"></i></label>
+                <label for="right" class="btn btn-light"><i class="fas fa-align-right"></i></label>
+            </div>
+            <input type="radio" name="textAlign" id="left" value="d-flex align-items-start flex-column" style="display: none;" onchange="updatePreviewImgCard('imgCardPreview')" checked>
+            <input type="radio" name="textAlign" id="center" value="d-flex align-items-center flex-column" style="display: none;" onchange="updatePreviewImgCard('imgCardPreview')">
+            <input type="radio" name="textAlign" id="right" value="d-flex align-items-end flex-column" style="display: none;" onchange="updatePreviewImgCard('imgCardPreview')">
+
+            <label for="changeImgAlignment" class="btn btn-light" data-bs-toggle="tooltip" title="Change Image Alignment" onclick="toggleAlignment('changeImgAlignment'); updatePreviewImgCard('imgCardPreview')"><i class="fas fa-repeat"></i></label>
+            <input type="text" id="changeImgAlignment" style="display: none;" value="start">
+            <script>
+                function toggleAlignment(inpId){
+                    const input = document.getElementById(inpId)
+                    if (input.value === "start"){
+                        input.value = "end"
+                    }
+                    else{
+                        input.value = "start"
+                    }
+                }
+            </script>
+        </h3>
         <div id="imgCardPreview" class="form-preview">
             <p>Your Image preview will appear here</p>
         </div>
@@ -102,7 +101,7 @@
         <button type="button" >Reset</button>
         <button type="button" onclick="generateCode('imgCardPreview', 'Image card',  document.getElementById('containerPosImgCard').value)">Generate Code</button>
     </div>
-</form>
+</form> 
 
 <script>
     function updatePreviewImgCard(previewContId){
@@ -116,7 +115,7 @@
         const supportingText = "This is supporting text You can Change."
         const width = document.getElementById('cWidth').value || "75"
         const linkText = document.getElementById('linkTextIC').value 
-        const linkUrl = (document.getElementById('IC-linkSrc').value ==='external')? document.getElementById('IC-linkURl').value :document.getElementById('IC-linkSrc').value
+        const linkUrl = document.getElementById('IC-linkSrc').value ==='external' ? document.getElementById('IC-linkUrl').value :document.getElementById('IC-linkSrc').value
         let cardHtml = ""
         previewCont.innerHTML = ""
         if(cardType=='horizontal'){
@@ -138,8 +137,8 @@
         }
 
         imgCaps += `    <div class="card-body ${textAlign}">
-            <h5 class="card-title">${title}</h5>
-            <p class="card-text">${text}</p>
+            <h4 class="card-title text-primary">${title}</h4>
+            <p class="card-text ${textAlign === 'd-flex align-items-end flex-column'?'text-end': textAlign === 'd-flex align-items-center flex-column'? 'text-center':''}">${text}</p>
             <p class="card-text"><small class="text-body-secondary">${sText}</small></p>`;
 
         if (linkUrl && linkText) {
@@ -163,7 +162,7 @@
                 
         overImg +=`    <div class="card-img-overlay ${textAlign}">
                     <h4 class="card-title text-primary">${title}</h4>
-                    <p class="card-text">${text}</p>
+                    <p class="card-text ${textAlign === 'd-flex align-items-end flex-column'?'text-end':textAlign === 'd-flex align-items-center flex-column'? 'text-center':''}">${text}</p>
                     <p class="card-text"><small>${sText}</small></p>`
         if (linkUrl && linkText) {
             overImg += `\n        <a href="${linkUrl}" class="btn btn-primary">${linkText}</a>`;
@@ -183,8 +182,8 @@
         }
         h +=`        <div class="col-md-8">
                     <div class="card-body ${textAlign}">
-                        <h5 class="card-title">${title}</h5>
-                        <p class="card-text">${text}</p>
+                        <h4 class="card-title text-primary">${title}</h4>
+                        <p class="card-text ${textAlign === 'd-flex align-items-end flex-column'?'text-end':textAlign === 'd-flex align-items-center flex-column'? 'text-center':''}">${text}</p>
                         <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>`
         
         if (linkUrl && linkText) {
