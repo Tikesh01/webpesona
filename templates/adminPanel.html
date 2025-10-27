@@ -10,6 +10,16 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 		<title>WebPersona-Admin Pannel</title>
 		<script>
+			function toVarName(inputId, old, New){
+				const inputs = document.getElementsByClassName(inputId);
+				for(const input of inputs){
+					input.value = input.value.replace(old, New)
+					input.value = input.value.replace(/[^a-zA-Z0-9_]/g, '');
+					if (/^[0-9]/.test(input.value)) {
+						input.value = input.value.replace(/^[0-9]+/, ''); 
+					}
+				}
+    		}
 			function saveBlock(fileName, blockId, divId) {
 				if(confirm('Are you sure!')){
 					const iframe = document.getElementById('Iframe');
@@ -54,10 +64,6 @@
 		
 				panel.classList.toggle('collapsed');
 				localStorage.setItem(panelId, String(panel.classList))
-	
-				// The icon change is now handled by CSS for better separation of concerns.
-				// See the new styles in adminPanel.css or an inline <style> block.
-				// btn.className = panel.classList.contains('collapsed') ? 'fas fa-angles-left' : 'fas fa-angles-right';
 			}
 			document.addEventListener('DOMContentLoaded', function(){
 				const container = document.getElementById('Iframe');
@@ -77,31 +83,10 @@
 
 				const col = localStorage.getItem('sideCollapsePageCont');
 				const col2 = localStorage.getItem('sideCollapseFeaturesCont');
-				console.log(col, col2)
 				document.getElementById('sideCollapsePageCont').classList = col
 				document.getElementById('sideCollapseFeaturesCont').classList = col2
 			}); 
 		</script>	
-		<script>
-			function toVarName(inputId, old, New){
-				const inputs = document.getElementsByClassName(inputId);
-				for(const input of inputs){
-					input.value = input.value.replace(old, New)
-					input.value = input.value.replace(/[^a-zA-Z0-9_]/g, '');
-					if (/^[0-9]/.test(input.value)) {
-						input.value = input.value.replace(/^[0-9]+/, ''); 
-					}
-				}
-    		}
-			function writeToPage(code, pageNameId){
-				const iframe = document.getElementById('Iframe');
-				const iframeDoc = iframe.contentWindow.document;
-				const largeContainer = iframeDoc.getElementById(pageNameId)
-				
-				largeContainer.innerHTML += code;
-				
-			}
-		</script> 
 	</head>
 	<body>
 		{% with messages = get_flashed_messages(with_categories=true) %}
@@ -454,9 +439,9 @@
 									<input type="number" name="" style="width: 4.5em;" class="form-control" id="frameSizeInp" oninput="changeSize(String(this.value)+'px', '100%', 'Iframe'), showSize('frameSizeInpRange', this.value)" />
 								</div>
 							</div>
-							{% if web.body_content_editable %}
-							<div class="accordion-item">
-								<div class="editor-toolbar-wrapper">
+				
+							<div class="accordion-item  {% if web.body_content_editable %}{%else%}disabledButtonCont{%endif%}">
+								<div class="editor-toolbar-wrapper {% if web.body_content_editable %}{%else%}disabledButtonCont{%endif%}">
 									<div class="btn-group me-2" role="group" aria-label="Add elements group">
 										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Form" onclick="show_form('add_form_card')"><i class="fa-solid fa-file-alt"></i></button>
 										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Table" onclick="show_form('add_table_card')"><i class="fas fa-table"></i></button>
@@ -498,11 +483,20 @@
 											const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 												return new bootstrap.Tooltip(tooltipTriggerEl);
 											});
+
+											// disable if not avaible
+											const Dcont = document.getElementsByClassName('disabledButtonCont');
+
+											for (let c of Dcont) {
+												const children = c.querySelectorAll('button, input[type="submit"], input[type="button"]');
+												for (let child of children) {
+													child.disabled = true;
+												}
+											}
 										});
 									</script>
 								</div>
 							</div>
-							{%endif%}
 						</div>
 					</div>
 				</div>

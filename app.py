@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request,redirect, url_for, flash, session, send_from_directory
+from flask import Flask, render_template, request,redirect, url_for, flash, session, send_from_directory, jsonify
 import re, os, shutil, json
 from models import db, User
 from flask_migrate import Migrate
@@ -615,10 +615,10 @@ def save_block_multi():
         print('done')
         
     except Exception as e:
-        flash(f'Error saving content block: {e}','error')
+        flash(f'Error saving content block: {e}','danger')
         print(e)
         
-    return redirect(url_for('admin'))
+    return jsonify()
 
 # Registration route
 @app.route('/register', methods=['GET', 'POST'])

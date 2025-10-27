@@ -28,7 +28,7 @@
         </div>
         <div class="form-group form-group mb-1">
             <label for="cImg" class="form-label-sm">Image (optional)</label>
-            <select id="cImg" class="form-control form-control-sm" onselect="updatePreviewImgCard('imgCardPreview')">
+            <select id="cImg" class="form-control form-control-sm" onchange="updatePreviewImgCard('imgCardPreview')">
                 <option class="me-auto text-truncate" value="noImg">No Image</option >
                 {% for icon in web.images %}
                     <option class="me-auto text-truncate" value="../static/images/{{icon}}">{{icon}}</option>
@@ -57,7 +57,7 @@
             <label for="cWidth" class="form-label-sm">Link/Anchor (optional)</label>
             <div class="input-group input-group-sm">
                 <input type="text" id="linkTextIC" class="form-control" placeholder="e.g., Read more" oninput="updatePreviewImgCard('imgCardPreview')">
-                <select class="form-select" id="linkSrc" onchange="updatePreviewImgCard('imgCardPreview')">
+                <select class="form-select" id="IC-linkSrc" onchange="toggleExternalLink('IC');updatePreviewImgCard('imgCardPreview')">
                     <option value="">No Link</option>
                     {% for page in web.pages %}
                         {% if page not in web.unviewPages %}
@@ -68,13 +68,37 @@
                 </select>
             </div>
         </div>
-        <div class="form-group" id="${titleId}-linkUrl-group" style="display:none;">
-            <input type="url" id="${titleId}-linkUrl" placeholder="e.g., https://example.com" class="form-control form-control-sm" oninput="updatePreviewImgCard('imgCardPreview')">
+        <div class="form-group" id="IC-linkUrl-group" style="display:none;">
+            <input type="url" id="IC-linkUrl" placeholder="e.g., https://example.com" class="form-control form-control-sm" oninput="updatePreviewImgCard('imgCardPreview')">
         </div>
     </div>
 
     <div class="preview-container">
-        <h3>Image card Preview</h3>
+        <h3 class="d-flex gap-3">
+            Image card Preview
+            <div class="btn-group me-2 border-1">
+                <label for="left" class="btn btn-light"><i class="fas fa-align-left"></i></label>
+                <label for="center" class="btn btn-light"><i class="fas fa-align-center"></i></label>
+                <label for="right" class="btn btn-light"><i class="fas fa-align-right"></i></label>
+            </div>
+            <input type="radio" name="textAlign" id="left" value="d-flex align-items-start flex-column" style="display: none;" onchange="updatePreviewImgCard('imgCardPreview')" checked>
+            <input type="radio" name="textAlign" id="center" value="d-flex align-items-center flex-column" style="display: none;" onchange="updatePreviewImgCard('imgCardPreview')">
+            <input type="radio" name="textAlign" id="right" value="d-flex align-items-end flex-column" style="display: none;" onchange="updatePreviewImgCard('imgCardPreview')">
+
+            <label for="changeImgAlignment" class="btn btn-light" data-bs-toggle="tooltip" title="Change Image Alignment" onclick="toggleAlignment('changeImgAlignment'); updatePreviewImgCard('imgCardPreview')"><i class="fas fa-repeat"></i></label>
+            <input type="text" id="changeImgAlignment" style="display: none;" value="start">
+            <script>
+                function toggleAlignment(inpId){
+                    const input = document.getElementById(inpId)
+                    if (input.value === "start"){
+                        input.value = "end"
+                    }
+                    else{
+                        input.value = "start"
+                    }
+                }
+            </script>
+        </h3>
         <div id="imgCardPreview" class="form-preview">
             <p>Your Image preview will appear here</p>
         </div>
@@ -84,7 +108,7 @@
         <button type="button" >Reset</button>
         <button type="button" onclick="generateCode('imgCardPreview', 'Image card',  document.getElementById('containerPosImgCard').value)">Generate Code</button>
     </div>
-</form>
+</form> 
 
 <script>
     function updatePreviewImgCard(previewContId){
@@ -92,65 +116,95 @@
         const cardType = document.querySelector('input[name="imgCardType"]:checked').value;
         const title = document.getElementById('cTitle').value || "Card Title"
         const img = document.getElementById('cImg').value
+        const imgAlign = document.getElementById('changeImgAlignment').value || "start"
         const text = document.getElementById('cText').value || "This is a wider card with supporting text below as a natural lead-in to additional content"
+        const textAlign = document.querySelector('input[name="textAlign"]:checked').value || 'd-flex align-items-start flex-column';
         const supportingText = "This is supporting text You can Change."
         const width = document.getElementById('cWidth').value || "75"
+        const linkText = document.getElementById('linkTextIC').value 
+        const linkUrl = document.getElementById('IC-linkSrc').value ==='external' ? document.getElementById('IC-linkUrl').value :document.getElementById('IC-linkSrc').value
         let cardHtml = ""
         previewCont.innerHTML = ""
         if(cardType=='horizontal'){
-            cardHtml = createImgHorizontal(img, title, text, supportingText, width)
+            cardHtml = createImgHorizontal(img,imgAlign, title, text, textAlign, supportingText, width, linkText, linkUrl)
         }
         else if(cardType=='overImg'){
-            cardHtml = createImgOverlaysCard(img, title, text, supportingText, width)
+            cardHtml = createImgOverlaysCard(img,title, text,  textAlign, supportingText, width, linkText, linkUrl)
         }
         else{
-            cardHtml = createImgCapsCard(img, title, text, supportingText, width)
+            cardHtml = createImgCapsCard(img,imgAlign, title, text, textAlign, supportingText, width, linkText, linkUrl)
         }
 
         previewCont.innerHTML = cardHtml;
     }
-    function createImgCapsCard(img, title, text, sText, width){
-        let imgCaps = `<div class="card mb-3 w-${width}" id="${title.replace(/ /g, " ")}">\n`
-        if (img !== "noImg")
-            imgCaps += `    <img src="${img}" class="card-img-top" alt="...">\n`
+    function createImgCapsCard(img, imgAlign, title, text, textAlign, sText, width, linkText, linkUrl) {
+        let imgCaps = `<div class="card mb-3 w-${width}" id="${title.replace(/ /g, "_")}">\n`;
+        if (img !== "noImg" && imgAlign === "start") {
+            imgCaps += `    <img src="${img}" class="card-img-top" alt="${title}">\n`;   
+        }
 
-        imgCaps += `    <div class="card-body">
-                <h5 class="card-title">${title}</h5>
-                <p class="card-text">${text}</p>
-                <p class="card-text"><small class="text-body-secondary">${sText}</small></p>
-            </div>
-        </div>`
+        imgCaps += `    <div class="card-body ${textAlign}">
+            <h4 class="card-title text-primary">${title}</h4>
+            <p class="card-text ${textAlign === 'd-flex align-items-end flex-column'?'text-end': textAlign === 'd-flex align-items-center flex-column'? 'text-center':''}">${text}</p>
+            <p class="card-text"><small class="text-body-secondary">${sText}</small></p>`;
 
-        return imgCaps
+        if (linkUrl && linkText) {
+            imgCaps += `\n        <a href="${linkUrl}" class="btn btn-primary">${linkText}</a>`;
+        }
+
+        imgCaps += `\n    </div>`;
+
+        if (img !== "noImg" && imgAlign === "end") {
+            imgCaps += `\n    <img src="${img}" class="card-img-bottom" alt="${title}">`;   
+        }
+
+        imgCaps += `\n</div>`;
+        return imgCaps;
     }
-    function createImgOverlaysCard(img, title, text, sText, width){
+
+    function createImgOverlaysCard(img, title, text, textAlign, sText, width, linkText, linkUrl){
         let overImg = `<div class="card text-bg-dark w-${width} m-auto" id="${title.replace(/ /g, " ")}">\n`
         if (img !== "noImg")
             overImg += `    <img src="${img}" class="card-img" >\n`
                 
-        overImg +=`    <div class="card-img-overlay">
-                    <h5 class="card-title">${title}</h5>
-                    <p class="card-text">${text}</p>
-                    <p class="card-text"><small>${sText}</small></p>
-                </div>
-            </div>`
+        overImg +=`    <div class="card-img-overlay ${textAlign}">
+                    <h4 class="card-title text-primary">${title}</h4>
+                    <p class="card-text ${textAlign === 'd-flex align-items-end flex-column'?'text-end':textAlign === 'd-flex align-items-center flex-column'? 'text-center':''}">${text}</p>
+                    <p class="card-text"><small>${sText}</small></p>`
+        if (linkUrl && linkText) {
+            overImg += `\n        <a href="${linkUrl}" class="btn btn-primary">${linkText}</a>`;
+        }
+
+        overImg += `\n    </div>\n</div>`;
 
         return overImg
     }
-    function createImgHorizontal(img, title, text, sText, width){
+    function createImgHorizontal(img,imgAlign,  title, text, textAlign, sText, width, linkText, linkUrl){
         let h = `<div class="card mb-3 w-${width}" id="${title.replace(/ /g, " ")}">\n`
-        h += `    <div class="row g-0">\n\t<div class="col-md-4">\n`
-        if (img !== "noImg")
-            h += `          <img src="${img}" class="img-fluid rounded-start" alt="...">\n</div>\n`
-                
+        h += `    <div class="row g-0">\n`
+        if (img !== "noImg"){
+            if(imgAlign == "start"){
+                h += `\t<div class="col-md-4">\n\t<img src="${img}" class="img-fluid rounded-start" alt="...">\n</div>\n`
+            }
+        }
         h +=`        <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">${title}</h5>
-                        <p class="card-text">${text}</p>
-                        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-            </div>
+                    <div class="card-body ${textAlign}">
+                        <h4 class="card-title text-primary">${title}</h4>
+                        <p class="card-text ${textAlign === 'd-flex align-items-end flex-column'?'text-end':textAlign === 'd-flex align-items-center flex-column'? 'text-center':''}">${text}</p>
+                        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>`
+        
+        if (linkUrl && linkText) {
+            h += `\n        <a href="${linkUrl}" class="btn btn-primary">${linkText}</a>`;
+        }
+
+        h += `\n        </div>\n</div>`;
+
+        if (img !== "noImg"){
+            if(imgAlign == "end"){
+                h += `\t<div class="col-md-4">\n\t<img src="${img}" class="img-fluid rounded-end" alt="...">\n</div>\n`
+            }
+        }
+        h += `    </div>
         </div>`
         return h
     }

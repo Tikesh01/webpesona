@@ -327,7 +327,7 @@
     
     <div class="preview-container">
         <h3>Form Preview</h3>
-        <div id="formPreview" class="form-preview">
+        <div id="formPreview" class="form-preview" contenteditable="">
             <p>Your form preview will appear here</p>
         </div>
     </div>
@@ -487,6 +487,13 @@
                 if (label) {
                     label.innerHTML += ` <span style="color: red;">*</span>`;
                 }
+            }
+        }
+        const form_P = document.getElementsByClassName('form-preview')
+
+        if(form_P){
+            for(let fp of form_P){
+                fp.contentEditable = true
             }
         }
     });

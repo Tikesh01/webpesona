@@ -20,8 +20,9 @@
     </div>
     <div id="fieldsetsContainerList" class="biggerContainer">
         <div id="olCreaterForm" class="listCreators">
+            <h5>Ordered List</h5>
             <div class="form-field-sm">
-                <label for="L3">Create Ordered list using Enter key</label>
+                <label for="L5">Enter list items using Enter key</label>
                 <textarea name="olListItems" rows="3" id="L3" oninput="updatePreviewList()"></textarea>
             </div>
             <div class="form-field-sm">
@@ -36,8 +37,9 @@
             </div>
         </div>
         <div id="ulCreaterForm" class="listCreators">
+            <h5>Unordered list</h5>
             <div class="form-field-sm">
-                <label for="L5">Create Unordered list using Enter key</label>
+                <label for="L5">Enter list items using Enter key</label>
                 <textarea name="ulListItems" rows="3" id="L5" oninput="updatePreviewList()"></textarea>
             </div>
             <div class="form-field-sm">
@@ -51,7 +53,7 @@
             </div>
         </div>
         <div id="dlCreaterForm" class="listCreators">
-            <h4>Create Description List</h4>
+            <h5>Create Description List</h5>
             <div class="form-field-sm">
                 <label for="L7">Enter the terms using Enter (↩) key</label>
                 <textarea name="dlDterms" rows="3" id="L7" oninput="updatePreviewList()" ></textarea>
@@ -72,6 +74,10 @@
 <style>
     .listCreators{
         display: none;
+        border: 0.5px solid rgba(128, 128, 128, 0.367);
+        padding: 0.5em;
+        background: rgba(155, 155, 155, 0.145);
+        border-radius: 5px;
     }   
 </style>
 <script>
@@ -79,9 +85,8 @@
     const listHeading = document.getElementById('L1').value;
     const typeOfList = document.getElementById('L2').value;
     const listPreviewCon = document.getElementById('listPreview');
-    const listCreatorsForms = document.getElementsByClassName('listCreaters');
+    const listCreatorsForms = document.getElementsByClassName('listCreators');
 
-    // Hide all creator forms first
     for (let i = 0; i < listCreatorsForms.length; i++) {
         listCreatorsForms[i].style.display = 'none';
     }
@@ -137,7 +142,6 @@
 
         const dterms = document.getElementById('L7').value.trim().split("\n");
 
-        // 🟢 Bootstrap-styled description list
         let dlList = `<dl class="row bg-light border rounded shadow-sm p-3">\n`;
 
         for (let i = 0; i < dterms.length; i++) {
