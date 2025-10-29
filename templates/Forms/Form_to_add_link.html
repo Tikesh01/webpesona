@@ -18,8 +18,8 @@
     <div class="form-group mb-1">
         <label for="" class="form-label-sm">The text and the refrence</label>
         <div class="input-group input-group-sm">
-            <input type="text" id="linkText" class="form-control" placeholder="e.g., Read more" oninput="updatePreviewGrid('gridPreview')">
-            <select class="form-select" id="linkSrc" onchange="toggleExternalLink(); updatePreviewGrid('gridPreview')">
+            <input type="text" id="linkText" class="form-control" placeholder="e.g., Read more" oninput="updateLinkPreview('gridPreview')">
+            <select class="form-select" id="linkSrc" onchange="toggleExternalLink(); updateLinkPreview('gridPreview')">
                 <option value="">No Link</option>
                 {% for page in web.pages %}
                     {% if page not in web.unviewPages %}
@@ -27,6 +27,8 @@
                     {% endif %}
                 {% endfor %}
                 <option value="external">External Link</option>
+                <option value="external">Mail to</option>
+                <option value="external">Phone (tel)</option>
             </select>
         </div>
     </div>
@@ -44,14 +46,17 @@
         <button type="button">Reset</button>
         <button type="button">Generate Code</button>
     </div>
+    <!-- <a href="http://" target="_blank" rel="noopener noreferrer"></a>
+    <a href="mailto:"></a>
+    <a href="tel:+"></a> -->
 </form>
 <script>
-    function updateLinkPreview(contId){
+    function updateLinkPreview(){
         const pCont = document.getElementById('linkPreview')
         pCont.innerHTML = ""
-        const Class = document.getElementsByName('linkStyle').value
+        const Class = document.querySelector('input[name="linkStyle"]:checked').value
         const text = document.getElementById('linkText').value
-        let code =  `<a src="" class="${Class}">${text}</a>`
+        let code =  `<a href="" class="${Class}">${text}</a>`
 
         pCont.innerHTML = code
     }

@@ -91,10 +91,21 @@ main{
     height: 100%;
     width: calc(100% - 40px);
     background-color: #ebebeb;
-    padding: 2px;
+    padding: 1px;
     max-width: calc(100vw - 40px);
     overflow: auto;
     border: 0.5px dotted rgb(69, 69, 69);
+    #iframeContainer{
+        width: 100%;
+        max-width: 2560px;
+        background: #000;
+    }
+    #debugTextareaCode{
+        width: 98%;
+        height: 90vh;
+        line-height: 6px;
+        padding: 1em;
+    }
 }
 .dragger{
     width: 3px;
@@ -106,13 +117,6 @@ main{
     cursor: ew-resize;
 }
 
-
-#debugTextareaCode{
-    width: 98%;
-    height: 90vh;
-    line-height: 6px;
-    padding: 1em;
-}
 .webSettingsCont{
     position: absolute;
     right: 0px;

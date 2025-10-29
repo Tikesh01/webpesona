@@ -50,6 +50,13 @@
                             <label for="${headingList[i-1]}_subheadings">Sub-heading(s) of ${headingList[i-1]} separedted by (↩)</label>
                             <textarea  name="${headingList[i-1]}_subheadings" id="${headingList[i-1]}_subheadings"  placeholder="e.g., Introduction Culture History ..." oninput="generateHeadings(this.value,'${headingList[i-1]}_sub-subheadingContainer'),updatePreviewBlog('blogPreview')"></textarea>   
                         </div>
+                        <div class="form-field-sm" id='${headingList[i-1]}_widthGroup'>
+                            <label for="${headingList[i-1]}_bWidth" class="form-label-sm">Width (%)</label>
+                            <div class="input-group-sm d-flex">
+                                <input id="${headingList[i-1]}_bWidth" class="form-control form-control-sm" type="range" min="25" max="100" step="25" value="75" oninput="updatePreviewBlog('blogPreview'), showSize('${headingList[i-1]}_bbWidth', this.value)">
+                                <input type="number" id="${headingList[i-1]}_bbWidth" class="form-control form-control-sm" style="width: 5em;" disabled>
+                            </div>
+                        </div>
                         <div id='${headingList[i-1]}_sub-subheadingContainer' class='biggerContainer'></div>
                     </div>`
 
@@ -82,9 +89,9 @@
 
         for (let i = 0; i < headingList.length; i++) {
             const mainHeading = headingList[i].trim().replace(/ /g, "_");
-
+            const bWidth = document.getElementById(`${mainHeading}_bWidth`).value
             // 🟢 Card structure for each main heading
-            let cardHtml = `<section class="modern-text-container" id="${mainHeading}">\n\t<h2 class="text-primary">${headingList[i]}</h2>\n`;
+            let cardHtml = `<section class="modern-text-container m-auto w-${bWidth}" id="${mainHeading}">\n\t<h2 class="text-primary">${headingList[i]}</h2>\n`;
 
             const contentOrSubhead = document.getElementById(`${mainHeading}_noSubHead`)?.checked;
 

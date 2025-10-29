@@ -106,8 +106,7 @@
 
         const listItems = document.getElementById('L3').value.trim().split("\n");
         const typeOfOl = document.getElementById('L4').value;
-
-        // 🟢 Bootstrap-enhanced ordered list
+        
         let olList = `<ol class="list-group list-group-numbered border rounded shadow-sm p-3 bg-light" type="${typeOfOl}">\n`;
 
         for (let i = 0; i < listItems.length; i++) {

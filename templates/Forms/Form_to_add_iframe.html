@@ -34,12 +34,12 @@
         const previewContainer = document.getElementById('iframePreview')
         const height = document.getElementById('iframeHeight').value
         try {
-            new URL(urlString);
+            new URL(url);
             iframeHtml = `<iframe src="${url}" style="width: 100%;height: ${height}vh;" title="${url}"></iframe>`
             previewContainer.innerHTML = iframeHtml
         
         } catch (error) {
-            previewContainer.innerHTML = 'Invalid URL'
+            previewContainer.innerHTML = 'Invalid URL ' + error;
         }
     }
 </script>
