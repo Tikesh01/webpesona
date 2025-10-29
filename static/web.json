@@ -15,8 +15,8 @@
         "2560px"
     ],
     "previewPage": "home.html",
-    "currentPage": "Products.html",
-    "body_content_editable": false,
+    "currentPage": "New.html",
+    "body_content_editable": true,
     "debugMode": false,
     "isLogedin": false,
     "isRegistered": false
