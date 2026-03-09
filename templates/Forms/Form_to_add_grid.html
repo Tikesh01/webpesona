@@ -48,7 +48,11 @@
                 </div>
                 <div class="form-group form-group mb-1">
                     <label for="${titleId}-img" class="form-label-sm">Image (optional)</label>
-                    <input type="file" id="${titleId}-img" class="form-control form-control-sm" accept="image/*" onchange="previewCardImage(this, '${titleId}-img-preview'); updatePreviewGrid('gridPreview')">
+                    <select id="${titleId}-img" class="form-control form-control-sm" onchange="previewCardImage(this, '${titleId}-img-preview'); updatePreviewGrid('gridPreview')">
+                        {% for img in web.images %}
+                            <option value="{{img}}">{{img}}</option>
+                        {%endfor%}
+                    </select>
                 </div>
                 <div class="form-group mb-1">
                     <label for="${titleId}-title" class="form-label-sm">Card Title</label>
@@ -84,13 +88,10 @@
 
     function previewCardImage(input, previewId) {
         const preview = document.getElementById(previewId);
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            }
-            reader.readAsDataURL(input.files[0]);
+        if (input.value) {
+            // const reader = new FileReader();
+            preview.src = "../../static/images/"+input.value;
+            preview.style.display = 'block';
         } else {
             preview.src = 'https://via.placeholder.com/150';
             preview.style.display = 'none';

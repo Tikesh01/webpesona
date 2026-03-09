@@ -6,9 +6,9 @@
     <div class="form-group">
         <label for="L2">Type of the List</label>
         <select name="typeOfList" id="L2" onchange="updatePreviewList()" class="form-control">
-            <option value="ol">Ordered List</option>
-            <option value="ul">Unordered List</option>
-            <option value="dl">Description List</option>
+            <option value="Ordered List">Ordered List</option>
+            <option value="Unordered List">Unordered List</option>
+            <option value="Description List">Description List</option>
         </select>
     </div>
     <div class="form-group">
@@ -18,46 +18,14 @@
             <input type="number" name="containerPosList" id="containerPosList" class="form-control" placeholder="Container-Position" style="max-width: 5em" value="0">
         </div>
     </div>
-    <div id="fieldsetsContainerList" class="biggerContainer">
-        <div id="olCreaterForm" class="listCreators">
-            <h5>Ordered List</h5>
-            <div class="form-field-sm">
-                <label for="L5">Enter list items using Enter key</label>
-                <textarea name="olListItems" rows="3" id="L3" oninput="updatePreviewList()"></textarea>
-            </div>
-            <div class="form-field-sm">
-                <label for="L4">Type of Ordered List</label>
-                <select name="typeOfOlList" id="L4" onchange="updatePreviewList()">
-                    <option value="1">1</option>
-                    <option value="A">A</option>
-                    <option value="a">a</option>
-                    <option value="I">I</option>
-                    <option value="i">i</option>
-                </select>
-            </div>
+    <div id="fieldsetsContainerList" class="bg-light p-2 border rounded" style="display: none;">
+        <div class="form-field">
+            <label for="listItems">Enter list items using Enter (↩) key</label>
+            <textarea name="ListItems" rows="3" id="listItems" oninput="updatePreviewList()" class="form-control"></textarea>
         </div>
-        <div id="ulCreaterForm" class="listCreators">
-            <h5>Unordered list</h5>
-            <div class="form-field-sm">
-                <label for="L5">Enter list items using Enter key</label>
-                <textarea name="ulListItems" rows="3" id="L5" oninput="updatePreviewList()"></textarea>
-            </div>
-            <div class="form-field-sm">
-                <label for="L6">Type of Unordered List</label>
-                <select name="typeOfUlList" id="L6" onchange="updatePreviewList()">
-                    <option value="disc">Disc</option>
-                    <option value="circle">Circle</option>
-                    <option value="square">Square</option>
-                    <option value="none">None</option>
-                </select>
-            </div>
-        </div>
-        <div id="dlCreaterForm" class="listCreators">
-            <h5>Create Description List</h5>
-            <div class="form-field-sm">
-                <label for="L7">Enter the terms using Enter (↩) key</label>
-                <textarea name="dlDterms" rows="3" id="L7" oninput="updatePreviewList()" ></textarea>
-            </div>
+        <div class="form-field">
+            <label for="">List items per row</label>
+            <input type="number" name="LIPerRow" id="LIPerRow" min="1" value="1" class="form-control" oninput="updatePreviewList()">
         </div>
     </div>
     <div class="preview-container">
@@ -82,32 +50,25 @@
 </style>
 <script>
     function updatePreviewList() {
-    const listHeading = document.getElementById('L1').value;
-    const typeOfList = document.getElementById('L2').value;
-    const listPreviewCon = document.getElementById('listPreview');
-    const listCreatorsForms = document.getElementsByClassName('listCreators');
+        const listHeading = document.getElementById('L1').value;
+        const typeOfList = document.getElementById('L2').value;
+        const listPreviewCon = document.getElementById('listPreview');
 
-    for (let i = 0; i < listCreatorsForms.length; i++) {
-        listCreatorsForms[i].style.display = 'none';
+        const fieldsetContainer = document.getElementById('fieldsetsContainerList')
+        fieldsetContainer.style.display =  'block'
+        const listItems = document.getElementById('listItems').value.trim().split('\n');
+        const cols = document.getElementById('LIPerRow').value
+
+        let listHtml = `<h2 class="text-primary mb-4">${listHeading}</h2>\n`;
+
+        if (typeOfList === 'Ordered List') listHtml += createOl(listItems, cols);
+        else if (typeOfList === 'Unordered List') listHtml += createUl(listItems, cols);
+        else if (typeOfList === 'Description List') listHtml += createDl(listItems, cols);
+
+        listPreviewCon.innerHTML = listHtml;
     }
-
-    let listHtml = `<h2 class="text-primary mb-4">${listHeading}</h2>\n`;
-
-    if (typeOfList === 'ol') listHtml += createOl();
-    else if (typeOfList === 'ul') listHtml += createUl();
-    else if (typeOfList === 'dl') listHtml += createDl();
-
-    listPreviewCon.innerHTML = listHtml;
-    }
-
-    function createOl() {
-        const olCreater = document.getElementById('olCreaterForm');
-        olCreater.style.display = 'block';
-
-        const listItems = document.getElementById('L3').value.trim().split("\n");
-        const typeOfOl = document.getElementById('L4').value;
-        
-        let olList = `<ol class="list-group list-group-numbered border rounded shadow-sm p-3 bg-light" type="${typeOfOl}">\n`;
+    function createOl(listItems, column =1) {
+        let olList = `<ol class="row row-cols-md-${column} list-group list-group-numbered border rounded shadow-sm p-3 bg-light" >\n`;
 
         for (let i = 0; i < listItems.length; i++) {
             olList += `\t<li class="list-group-item d-flex gap-2 lh-sm">\n\t\t<span>${listItems[i]}</span>\n\t</li>\n`;
@@ -117,15 +78,8 @@
         return olList;
     }
 
-    function createUl() {
-        const ulCreater = document.getElementById('ulCreaterForm');
-        ulCreater.style.display = 'block';
-
-        const listItems = document.getElementById('L5').value.trim().split("\n");
-        const typeOfUl = document.getElementById('L6').value;
-
-        // 🟢 Bootstrap-enhanced unordered list
-        let ulList = `<ul class="list-group border rounded shadow-sm p-3 bg-light" style="list-style-type:${typeOfUl};">\n`;
+    function createUl(listItems, column = 1) {
+        let ulList = `<ul class="row row-cols-md-${column} list-group border rounded shadow-sm p-3 bg-light">\n`;
 
         for (let i = 0; i < listItems.length; i++) {
             ulList += `  <li class="list-group-item d-flex justify-content-start align-items-center">${listItems[i]}</li>\n`;
@@ -135,12 +89,7 @@
         return ulList;
     }
 
-    function createDl() {
-        const dlCreater = document.getElementById('dlCreaterForm');
-        dlCreater.style.display = 'block';
-
-        const dterms = document.getElementById('L7').value.trim().split("\n");
-
+    function createDl(dterms, column=1) {
         let dlList = `<dl class="row bg-light border rounded shadow-sm p-3">\n`;
 
         for (let i = 0; i < dterms.length; i++) {

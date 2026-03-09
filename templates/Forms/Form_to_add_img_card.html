@@ -43,7 +43,7 @@
             <label for="cWidth" class="form-label-sm">Width (%)</label>
             <div class="input-group-sm d-flex">
                 <input id="cWidth" class="form-control" type="range" min="25" max="100" step="25" oninput="updatePreviewImgCard('imgCardPreview'), showSize('ccWidth', this.value)">
-                <input type="number" id="ccWidth" class="form-control" style="width: 5em;">
+                <input type="number" id="ccWidth" class="form-control" style="width: 5em;" value="75">
             </div>
         </div>
         <div class="form-group mb-1">
@@ -131,7 +131,7 @@
         previewCont.innerHTML = cardHtml;
     }
     function createImgCapsCard(img, imgAlign, title, text, textAlign, sText, width, linkText, linkUrl) {
-        let imgCaps = `<div class="card mb-3 w-${width}" id="${title.replace(/ /g, "_")}">\n`;
+        let imgCaps = `<div class="card w-${width} m-auto" id="${title.replace(/ /g, "_")}">\n`;
         if (img !== "noImg" && imgAlign === "start") {
             imgCaps += `    <img src="${img}" class="card-img-top" alt="${title}">\n`;   
         }
@@ -173,7 +173,7 @@
         return overImg
     }
     function createImgHorizontal(img,imgAlign,  title, text, textAlign, sText, width, linkText, linkUrl){
-        let h = `<div class="card mb-3 w-${width}" id="${title.replace(/ /g, " ")}">\n`
+        let h = `<div class="card w-${width} m-auto" id="${title.replace(/ /g, " ")}">\n`
         h += `    <div class="row g-0">\n`
         if (img !== "noImg"){
             if(imgAlign == "start"){

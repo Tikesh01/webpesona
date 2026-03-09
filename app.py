@@ -27,8 +27,6 @@ class website:
         self.folders = [folder for folder in os.listdir('templates/') if os.path.isdir('templates/'+folder) and folder!='Forms']
         self.folderDict = {folder: os.listdir("templates/"+folder) for folder in self.folders}
         self.images = os.listdir("static/images/")
-        self.favicon = os.listdir("static/favicon/")
-        self.logo = os.listdir("static/logo/")
         self.header_pages = [page for page in os.listdir('templates/Header_pages/')]
         self.themes = self.theme()
         self.len_of_theme_block = int()
@@ -45,8 +43,8 @@ class website:
                 self.currentPage = web_dict.get("currentPage", "")
                 self.body_content_editable = web_dict.get("body_content_editable", False)
                 self.debugMode = web_dict.get("debugMode", False)
-                self.isLogedin = web_dict.get("isLogedin", False)
-                self.isRegistered = web_dict.get("isRegistered", False)
+                self.favicon = web_dict.get("favicon", None)
+                self.logo = web_dict.get("logo",None)
                 
         except (FileNotFoundError, json.JSONDecodeError) as e:
             flash(f"Warning: Could not load web.json: {e}", "error")
@@ -55,9 +53,6 @@ class website:
             self.currentPage = str()
             self.body_content_editable = False
             self.debugMode = False
-            self.isLogedin = False
-            self.isRegistered = False
-
             self.save_state()
 
         try:
@@ -73,12 +68,12 @@ class website:
         """Save current state to web.json"""
         state = {
             "sizes": list(self.sizes),
+            "favicon": self.favicon,
+            "logo": self.logo,
             "previewPage": self.previewPage,
             "currentPage": self.currentPage,
             "body_content_editable": self.body_content_editable,
             "debugMode": self.debugMode,
-            "isLogedin": self.isLogedin,
-            "isRegistered": self.isRegistered
         }
         try:
             with open("static/web.json", "w") as f:
@@ -184,7 +179,7 @@ class website:
                         bodyF[i] = bodyF[i].replace('write_id', name+'.html')
                         break
                     
-            if self.previewPage in self.header_pages:
+            if self.previewPage == 'header.html':
                 file_path = header_page
                 baseF[0] = "{% extends 'skeleton2.html' %}"
                 
@@ -195,27 +190,16 @@ class website:
                     file.write(str(baseF)+HTML)
                 else:
                     file.writelines(code)
-                
-            if self.previewPage in self.header_pages:
-                self.header_pages = [pages for pages in os.listdir('templates/Header_pages/')]
-            else:
-                self.pages = [page for page in os.listdir(self.folder) if not os.path.isdir(self.folder+page) ]
+
+            self.header_pages = [pages for pages in os.listdir('templates/Header_pages/')]
+            self.pages = [page for page in os.listdir(self.folder) if not os.path.isdir(self.folder+page) ]
         else:
             return FileExistsError(name)
        
 
     def addFavicon(self,icon_path):
-        if len(self.favicon) < 1:
-            shutil.copy(icon_path,"static/favicon/")
-        else:
-            if os.path.exists("static/favicons/"+self.favicon[0]):
-                os.remove("static/favicons/"+self.favicon[0])
-            shutil.move("static/favicon/"+self.favicon[0], "static/favicons/")
-            shutil.copy(icon_path,"static/favicon/")
-        self.favicon = os.listdir("static/favicon/")
-        self.images = os.listdir("static/favicons")
-        print(self.favicon)
-        print(self.images)
+        self.favicon = icon_path
+        self.save_state()
         
     def deleteFile(self,path):
         os.remove(path) 
@@ -224,15 +208,8 @@ class website:
         self.header_pages = [pages for pages in os.listdir('templates/Header_pages/')]
         
     def changeLogo(self,path):
-        if len(self.logo) < 1:
-            shutil.copy(path,"static/logo/")
-        else:
-            if os.path.exists("static/images/"+self.logo[0]):
-                os.remove("static/images/"+self.logo[0])
-            shutil.move("static/logo/"+self.logo[0], "static/images/")
-            shutil.copy(path,"static/logo/")
-        self.logo = os.listdir("static/logo/")
-        self.images = os.listdir("static/images")
+        self.logo = path
+        self.save_state()
     
     def write_code_to_page(self,page,content,type, position=None):
         for folder in self.folderDict.keys():
@@ -492,14 +469,16 @@ def deletion():
     
 @app.route('/faviconAddition', methods =['POST'])
 def image_edition():
-    icon = request.files["icon_path"]
-    iconPath = os.path.join("static/images", icon.filename)
+    icons = request.files.getlist("icon_path")
     try:
-        icon.save(iconPath)
-        w.images = os.listdir("static/favicons")
+        for icon in icons:
+            if icon.filename:
+                iconPath = os.path.join("static/images", icon.filename)
+                icon.save(iconPath)
+        w.images = os.listdir("static/images")
         flash("Favicon added successfully!", "success")
     except Exception as e:
-        flash(f"Error adding favicon: {e}", "danger")
+        flash(f"Error adding image: {e}", "danger")
     return redirect(url_for('admin'))
 
 
@@ -514,14 +493,14 @@ def operation_with_img_files():
    
     if pathToDelete:
         try:
-            w.deleteFile("static/favicons/" + pathToDelete)
-            flash("Favicon deleted successfully!", "success")
+            w.deleteFile("static/images/" + pathToDelete)
+            flash("image deleted successfully!", "success")
         except Exception as e:
-            flash(f"Error deleting favicon: {e}", "danger")
+            flash(f"Error deleting image: {e}", "danger")
             
     if pathToChange:
         try:
-            w.addFavicon("static/favicons/" + pathToChange)
+            w.addFavicon("static/images/" + pathToChange)
             flash("Favicon changed successfully!", "success")
         except Exception as e:
             flash(f"Error changing favicon: {e}", "danger")
@@ -680,7 +659,7 @@ def implement_code():
 
 @app.route('/favicon.ico')
 def faviconn():
-    return send_from_directory('static/favicon', 'logo.png')
+    return send_from_directory('static/images', 'logo.png')
 
 #New Logic
 @app.route('/<name>')

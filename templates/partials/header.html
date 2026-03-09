@@ -16,13 +16,11 @@ Header-Webpersona
         }
     }
 </style>
- {% include 'Extra/UpperHeader.html' %}
 <header id="header.html" contenteditable="{{ 'true' if web.body_content_editable and web.previewPage == 'header.html' else 'false' }}" class="bg-white  shadow-sm" ><!--start-->
     <nav class="navbar navbar-expand-lg px-3 py-2 rounded-bottom" id="Navbar">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center gap-2" href="../home.html">
-              <img src="../../static/logo/{{ web.logo[0]}}" alt="webpersona" id="Logo" class="img-fluid" style="height: 40px; width: auto;" />
-              <h1 class="fs-4 fw-bold m-0 text-primary">WEBPERSONA</h1>
+              <img src="../{{web.logo}}" alt="webpersona" id="Logo" class="img-fluid" style="height: 40px; width: auto;" /><h1 class="fs-4 fw-bold m-0 text-primary">WEBPERSONA</h1>
             </a>
           
             <button contenteditable="false" class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
@@ -59,4 +57,5 @@ Header-Webpersona
         </div>
     </nav>
 </header><!--Close-->
+ {% include 'Extra/UpperHeader.html' %}
 {%endblock%}

@@ -98,12 +98,11 @@ main{
     #iframeContainer{
         width: 100%;
         max-width: 2560px;
-        background: #000;
     }
     #debugTextareaCode{
         width: 98%;
         height: 90vh;
-        line-height: 6px;
+        line-height: 8px;
         padding: 1em;
     }
 }

@@ -1,4 +1,4 @@
-<form class="form_to_add_stuffs" action="#">
+<form class="form_to_add_stuffs" id="linkForm">
     <div class="form_card_header">
         <label id="close" onclick="remove_form('form_to_add_card')"><i class="fas fa-close"></i></label>
         <h2 id="Title">Add Links</h2>
@@ -9,55 +9,151 @@
             <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-btn-primary" value="btn btn-primary" onchange="updateLinkPreview()" checked><label class="form-check-label" for="style-btn-primary"><span class="btn btn-primary btn-sm">Primary</span></label></div>
             <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-btn-secondary" value="btn btn-secondary" onchange="updateLinkPreview()"><label class="form-check-label" for="style-btn-secondary"><span class="btn btn-secondary btn-sm">Secondary</span></label></div>
             <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-btn-success" value="btn btn-success" onchange="updateLinkPreview()"><label class="form-check-label" for="style-btn-success"><span class="btn btn-success btn-sm">Success</span></label></div>
-            <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-btn-danger" value="btn btn-danger" onchange="updateLinkPreview()"><label class="form-check-label" for="style-btn-danger"><span class="btn btn-danger btn-sm">Danger</span></label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-btn-danger" value="btn btn-outline-danger" onchange="updateLinkPreview()"><label class="form-check-label" for="style-btn-danger"><span class="btn btn-outline-danger btn-sm">Danger</span></label></div>
             <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-underline-primary" value="link-primary link-underline-opacity-50-hover" onchange="updateLinkPreview()"><label class="form-check-label" for="style-underline-primary"><span class="link-primary">Primary Link</span></label></div>
             <div class="form-check"><input class="form-check-input" type="radio" name="linkStyle" id="style-underline-secondary" value="link-secondary link-underline-opacity-50-hover" onchange="updateLinkPreview()"><label class="form-check-label" for="style-underline-secondary"><span class="link-secondary">Secondary Link</span></label></div>
         </div>
     </div>
     
-    <div class="form-group mb-1">
-        <label for="" class="form-label-sm">The text and the refrence</label>
-        <div class="input-group input-group-sm">
-            <input type="text" id="linkText" class="form-control" placeholder="e.g., Read more" oninput="updateLinkPreview('gridPreview')">
-            <select class="form-select" id="linkSrc" onchange="toggleExternalLink(); updateLinkPreview('gridPreview')">
-                <option value="">No Link</option>
+    <div class="form-group mb-3">
+        <label for="linkText" class="form-label">Link Text</label>
+        <input type="text" id="linkText" class="form-control form-control-sm" placeholder="e.g., Read more" required oninput="updateLinkPreview()" minlength="1" maxlength="50">
+        <div class="invalid-feedback">Please enter link text (1-50 characters)</div>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="l-linkSrc" class="form-label">Link Type</label>
+        <select class="form-select form-select-sm" id="l-linkSrc" required onchange="toggleLinkFields(this.value)">
+            <option value="">Choose link type...</option>
+            <optgroup label="Internal Pages">
                 {% for page in web.pages %}
                     {% if page not in web.unviewPages %}
-                    <option value='{{page}}'>{{page}}</option>
+                    <option value='page:{{page}}'>{{page}}</option>
                     {% endif %}
                 {% endfor %}
-                <option value="external">External Link</option>
-                <option value="external">Mail to</option>
-                <option value="external">Phone (tel)</option>
-            </select>
-        </div>
+            </optgroup>
+            <optgroup label="Special Links">
+                <option value="external">External URL</option>
+                <option value="email">Email Address</option>
+                <option value="tel">Phone Number</option>
+            </optgroup>
+        </select>
+        <div class="invalid-feedback">Please select a link type</div>
     </div>
-    <div class="form-group" id="ext-linkUrl-group" style="display:none;">
-        <input type="url" id="ext-linkUrl" placeholder="e.g., https://example.com" class="form-control form-control-sm" oninput="updateLinkPreview('linkPreview')">
+
+    <div id="linkFields" class="mb-3">
     </div>
-    <div class="preview-container">
-        <h3>Link Preview</h3>
-        <div id="linkPreview" class="form-preview">
-            <p>Your Link preview will appear here</p>
+
+    <div class="preview-container mb-4 p-3 border rounded">
+        <h6 class="mb-3">Preview</h6>
+        <div id="linkPreview" class="form-preview p-2 text-center bg-light">
+            <p class="text-muted mb-0">Your link preview will appear here</p>
         </div>
     </div>
 
-    <div class="buttons-group">
-        <button type="button">Reset</button>
-        <button type="button">Generate Code</button>
+    <div class="buttons-group d-flex gap-2 justify-content-end">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="resetForm()">Reset</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="generateLinkCode('linkPreview')">Generate Code</button>
     </div>
-    <!-- <a href="http://" target="_blank" rel="noopener noreferrer"></a>
-    <a href="mailto:"></a>
-    <a href="tel:+"></a> -->
 </form>
-<script>
-    function updateLinkPreview(){
-        const pCont = document.getElementById('linkPreview')
-        pCont.innerHTML = ""
-        const Class = document.querySelector('input[name="linkStyle"]:checked').value
-        const text = document.getElementById('linkText').value
-        let code =  `<a href="" class="${Class}">${text}</a>`
 
-        pCont.innerHTML = code
+<script>
+    const linkFields = {
+        external: `
+            <div class="form-group">
+                <label for="extUrl" class="form-label">External URL</label>
+                <input type="url" id="extUrl" class="form-control form-control-sm" 
+                    placeholder="https://example.com" required pattern="https?://.+"
+                    oninput="updateLinkPreview()">
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="newTab" onchange="updateLinkPreview()">
+                    <label class="form-check-label" for="newTab">Open in new tab</label>
+                </div>
+                <div class="invalid-feedback">Please enter a valid URL (starting with http:// or https://)</div>
+            </div>`,
+        email: `
+            <div class="form-group">
+                <label for="emailAddr" class="form-label">Email Address</label>
+                <input type="email" id="emailAddr" class="form-control form-control-sm" 
+                    placeholder="example@domain.com" required
+                    oninput="updateLinkPreview()">
+                <div class="invalid-feedback">Please enter a valid email address</div>
+            </div>`,
+        tel: `
+            <div class="form-group">
+                <label for="phoneNum" class="form-label">Phone Number</label>
+                <input type="tel" id="phoneNum" class="form-control form-control-sm" 
+                    placeholder="+1234567890" required pattern="[+]?[0-9]+"
+                    oninput="updateLinkPreview()">
+                <div class="invalid-feedback">Please enter a valid phone number (digits only, optional + prefix)</div>
+            </div>`
+    };
+
+    function toggleLinkFields(type) {
+        const container = document.getElementById('linkFields');
+        container.innerHTML = '';
+
+        if (type.startsWith('page:')) {
+        } else if (linkFields[type]) {
+            container.innerHTML = linkFields[type];
+        }
+        
+        updateLinkPreview();
+    }
+
+    function updateLinkPreview() {
+        const preview = document.getElementById('linkPreview');
+        const linkStyle = document.querySelector('input[name="linkStyle"]:checked').value;
+        const linkText = document.getElementById('linkText').value || 'Link Text';
+        const linkType = document.getElementById('l-linkSrc').value;
+
+        let href = '#';
+        let target = '';
+        let rel = '';
+
+        if (linkType.startsWith('page:')) {
+            href = linkType.replace('page:', '');
+        } 
+        else if (linkType === 'external') {
+            const url = document.getElementById('extUrl')?.value;
+            if (url) {
+                href = url;
+                const newTab = document.getElementById('newTab')?.checked;
+                if (newTab) {
+                    target = '_blank';
+                    rel = 'noopener noreferrer';
+                }
+            }
+        } 
+        else if (linkType === 'email') {
+            const email = document.getElementById('emailAddr')?.value;
+            if (email) href = `mailto:${email}`;
+        } 
+        else if (linkType === 'tel') {
+            const phone = document.getElementById('phoneNum')?.value;
+            if (phone) href = `tel:${phone}`;
+        }
+
+        preview.innerHTML = createAnchor(href,linkText,linkStyle, target, rel)
+    }
+    function createAnchor(href,linkText,linkStyle=null, target=null, rel=null, Editable=true){
+        return `<span><a href="${href}" class="${linkStyle}" ${target ? `target="${target}"` : ''} ${rel ? `rel="${rel}"` : ''}>${linkText}</a>{% if web.body_content_editable %}<i class="fas fa-pencil"></i>{%endif%}</span>`
+    }
+
+    function resetForm() {
+        document.getElementById('linkForm').reset();
+        document.getElementById('linkFields').innerHTML = '';
+        updateLinkPreview();
+    }
+
+    function generateLinkCode(contId) {
+        remove_form('form_to_add_card');
+        const preview = document.getElementById(contId);
+        const linkCode = preview.innerHTML.trim();
+
+        const form = document.getElementById('implementCodeFormCont');
+        const texta = document.getElementById("MainCode");
+        form.style.display = 'flex';
+        texta.value = linkCode;
     }
 </script>

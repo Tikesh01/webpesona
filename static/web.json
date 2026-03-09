@@ -14,10 +14,10 @@
         "1536px",
         "2560px"
     ],
-    "previewPage": "login.html",
-    "currentPage": "Products.html",
-    "body_content_editable": false,
-    "debugMode": false,
-    "isLogedin": false,
-    "isRegistered": false
+    "favicon": "static/images/logo.png",
+    "logo": "static/images/loginImg.svg",
+    "previewPage": "home.html",
+    "currentPage": "UpperFooter.html",
+    "body_content_editable": true,
+    "debugMode": false
 }

@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="shortcut icon" href="../static/favicon/{{ web.favicon[0]}}" type="image/x-icon" />
+		<link rel="shortcut icon" href="../{{ web.favicon}}" type="image/x-icon" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 		<link rel="stylesheet" href="../static/css/adminPanel.css">
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -221,7 +221,7 @@
 											</div>
 											<div class="mb-3">
 												<label for="navigationPage" class="form-label form-label-sm">Select page to navigate</label>
-												<select name="navigationPage" id="navigationPage" class="form-select form-select-sm" onchange="toggleExternalLinkInput(this.value)">
+												<select name="navigationPage" id="navigationPage" class="form-select form-select-sm" onchange="toggleExternalLinkInput(this.value)" required>
 													<option value="none">None</option>
 													{% for page in web.pages %}
 													{% if page not in web.unviewPages %}
@@ -251,18 +251,18 @@
 										</ul>
 									</div>
 								</div>
+								<script>
+									function toggleExternalLinkInput(value) {
+										const externalLinkGroup = document.getElementById('externalLinkGroup');
+										externalLinkGroup.style.display = (value === 'external') ? 'block' : 'none';
+									}
+								</script>
 							</div>
-							<script>
-								function toggleExternalLinkInput(value) {
-									const externalLinkGroup = document.getElementById('externalLinkGroup');
-									externalLinkGroup.style.display = (value === 'external') ? 'block' : 'none';
-								}
-							</script>
 							{% endif %}
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="allPages">
 									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-										<i class="fas fa-file-code me-2"></i>See Pages ({{web.previewPage.removesuffix('.html')}})
+										<i class="fas fa-file-code me-2"></i>See Pages &nbsp;<span class="text-secondary">({{web.previewPage.removesuffix('.html')}})</span>
 									</button>
 								</h2>
 								<div id="collapsePages" class="accordion-collapse collapse" aria-labelledby="allPages" data-bs-parent="#featuresAccordion">
@@ -331,7 +331,7 @@
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="headingPage">
 									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePage" aria-expanded="false" aria-controls="collapsePage">
-										<i class="fas fa-file-alt me-2"></i> Add New Page
+										<i class="fas fa-file-alt me-2"></i> Add New {%if web.previewPage == 'header.html' %}Header{%endif%} Page
 									</button>
 								</h2>
 								<div id="collapsePage" class="accordion-collapse collapse" aria-labelledby="headingPage" data-bs-parent="#featuresAccordion">
@@ -339,6 +339,10 @@
 										<form action="/page_addition" method="POST" enctype="multipart/form-data">
 											<input type="text" name="fileName" class="filName form-control form-control-sm mb-2" placeholder="Page name (e.g., about_us)" oninput="toVarName(this.className, ' ', '_')" required/>
 											<input type="text" name="title" class="form-control form-control-sm mb-2" placeholder="Title (e.g., about-webpersona)" />
+											<div class="form-check">
+												<input type="checkbox" name="pageLoginReq" id="pageLoginReq" class="form-check-input">
+												<label for="pageLoginReq" class="form-check-label">Login required</label>
+											</div>
 											<div class="d-flex justify-content-end gap-2 mb-3">
 												<button type="reset" class="btn btn-outline-secondary btn-sm">Reset</button>
 												<button type="submit" class="btn btn-primary btn-sm">Add</button>
@@ -364,7 +368,7 @@
 										{% for icon in web.images %}
 										<div class="d-flex align-items-center mb-2">
 											<img src="../static/images/{{icon}}" alt="{{icon}}" class="me-2" style="width: 24px; height: 24px; object-fit: contain;" />
-											<small class="me-auto text-truncate" style="max-width: 120px;">{{icon}}</small>
+											<small class="me-auto text-truncate" style="max-width: 150px;">{{icon}}</small>
 											<form action="/delete-change-Favicon-page" method="post" class="d-inline-flex gap-1">
 												<button type="submit" name="delete_favicon" value="{{icon}}" class="btn btn-outline-danger btn-sm p-0 px-1" title="Remove the image" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-trash-alt"></i></button>
 												<button type="submit" name="change_favicon" value="{{icon}}" class="btn btn-outline-secondary btn-sm p-0 px-1" title="Set as Favicon" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-star"></i></button>
@@ -376,14 +380,14 @@
 										<hr>
 										<form action="/faviconAddition" method="post" enctype="multipart/form-data">
 											<div class="input-group input-group-sm">
-												<input type="file" name="icon_path" class="form-control" accept="image/*" required />
+												<input type="file" name="icon_path" class="form-control" accept="image" required  multiple/>
 												<button type="submit" class="btn btn-primary">Upload</button>
 											</div>
 										</form>
 									</div>
 								</div>
 							</div>
-							<div class="accordion-item">
+							<!-- <div class="accordion-item">
 								<h2 class="accordion-header" id="headingTheme">
 									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTheme" aria-expanded="false" aria-controls="collapseTheme">
 										<i class="fas fa-palette me-2"></i> Choose Theme
@@ -398,7 +402,7 @@
 										</form>
 									</div>
 								</div>
-							</div>
+							</div> -->
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="headingDetails">
 									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails">
@@ -447,10 +451,14 @@
 									<input type="number" name="" style="width: 4.5em;" class="form-control" id="frameSizeInp" oninput="changeSize(String(this.value)+'px', '100%', 'Iframe'), showSize('frameSizeInpRange', this.value)" />
 								</div>
 							</div>
-				
 							<div class="accordion-item  {% if web.body_content_editable %}{%else%}disabledButtonCont{%endif%}">
+								{% if web.body_content_editable == false %}
+								<div class="alert alert-warning p-2 px-4 mb-0" role="alert">
+									<i class="fas fa-info-circle"></i> On Content Edit Mode
+								</div>
+								{%endif%}
 								<div class="editor-toolbar-wrapper {% if web.body_content_editable %}{%else%}disabledButtonCont{%endif%}">
-									<div class="btn-group me-2" role="group" aria-label="Add elements group">
+									<div class="btn-group" role="group" aria-label="Add elements group">
 										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Form" onclick="show_form('add_form_card')"><i class="fa-solid fa-file-alt"></i></button>
 										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Table" onclick="show_form('add_table_card')"><i class="fas fa-table"></i></button>
 										<button type="button" class="btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Blog/Content" onclick="show_form('add_blog_card')"><i class="fab fa-blogger-b"></i></button>
